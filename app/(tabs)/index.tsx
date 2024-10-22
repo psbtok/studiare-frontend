@@ -1,10 +1,12 @@
-import { View, StyleSheet, Platform  } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
 import { captureRef } from 'react-native-view-shot';
 import domtoimage from 'dom-to-image';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Add AsyncStorage
+import { useRouter } from 'expo-router';
 
 import Button from '@/components/Button';
 import ImageViewer from '@/components/ImageViewer';
@@ -23,6 +25,22 @@ export default function Index() {
   const [pickedEmoji, setPickedEmoji] = useState<string | undefined>(undefined);
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef<View>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('login-token');
+        if (!token) {
+          router.push('/auth/login');
+        }
+      } catch (e) {
+        console.error('Error reading token', e);
+      }
+    };
+
+    checkToken();
+  }, []);
 
   if (status === null) {
     requestPermission();

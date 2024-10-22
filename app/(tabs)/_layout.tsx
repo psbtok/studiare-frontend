@@ -12,7 +12,7 @@ export default function TabLayout() {
         headerShadowVisible: false,
         headerTintColor: '#fff',
         tabBarStyle: {
-        backgroundColor: '#25292e',
+          backgroundColor: '#25292e',
         },
       }}
     >
@@ -30,7 +30,11 @@ export default function TabLayout() {
         options={{
           title: 'About',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+            <Ionicons
+              name={focused ? 'information-circle' : 'information-circle-outline'}
+              color={color}
+              size={24}
+            />
           ),
         }}
       />
