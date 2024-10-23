@@ -32,13 +32,13 @@ export default function Index() {
       try {
         const token = await AsyncStorage.getItem('login-token');
         if (!token) {
-          router.push('/auth/login');
+          router.replace('/auth/login');
         }
       } catch (e) {
         console.error('Error reading token', e);
       }
     };
-
+  
     checkToken();
   }, []);
 

@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Button from '@/components/Button';
+import { loginService } from '../services/authService';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
-  const handleLoginPress = () => {
-    console.log('Login button pressed');
+  const login = async () => {
+    try {
+      await loginService(username, password);
+      router.replace('/');
+    } catch (error: any) {
+      Alert.alert('Login Failed', error.message);
+    }
   };
 
   return (
@@ -25,13 +33,13 @@ export default function LoginScreen() {
       <TextInput
         style={styles.input}
         placeholder="Enter your password"
-        placeholderTextColor="white" 
+        placeholderTextColor="white"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
 
-      <Button theme="primary" label="Login" onPress={handleLoginPress} />
+      <Button theme="primary" label="Login" onPress={login} />
     </View>
   );
 }
