@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import Button from '@/components/Button';
+import { View, Text, TextInput, StyleSheet, Alert, Switch } from 'react-native';
+import Button from '@/components/Button'; // Ensure this import is correct
 import { useRouter } from 'expo-router';
 import { registerService, loginService } from '../services/authService';
-import { validateRegistrationInput } from '../validators/validators';
 
 export default function RegistrationScreen() {
   const [username, setUsername] = useState('');
@@ -58,6 +57,12 @@ export default function RegistrationScreen() {
 
       <View style={styles.checkboxContainer}>
         <Text style={styles.label}>Are you a tutor?</Text>
+        <Switch
+          value={isTutor}
+          onValueChange={setIsTutor} // This updates the isTutor state
+          thumbColor={isTutor ? '#ffd33d' : '#f4f3f4'} // Customize thumb color
+          trackColor={{ false: '#767577', true: '#81b0ff' }} // Customize track color
+        />
       </View>
 
       <Button theme="primary" label="Register" onPress={register} />
