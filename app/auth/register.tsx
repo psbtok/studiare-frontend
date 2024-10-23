@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Button from '@/components/Button';
-import { loginService } from '../services/authService';
 import { useRouter } from 'expo-router';
+import { registerService, loginService } from '../services/authService';
+import { validateRegistrationInput } from '../validators/validators';
 
-export default function LoginScreen() {
+export default function RegistrationScreen() {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isTutor, setIsTutor] = useState(false);
   const router = useRouter();
 
-  const login = async () => {
+  const register = async () => {
     try {
-      await loginService(username, password);
+      await registerService(username, email, password, isTutor);
+      Alert.alert('', 'Successful Registration');
+
+      await loginService(username, password); 
+
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Registration Failed', error.message);
     }
   };
 
@@ -29,6 +36,16 @@ export default function LoginScreen() {
         onChangeText={setUsername}
       />
 
+      <Text style={styles.label}>Email</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your email"
+        placeholderTextColor="white"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+
       <Text style={styles.label}>Password</Text>
       <TextInput
         style={styles.input}
@@ -39,12 +56,17 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <Button theme="primary" label="Login" onPress={login} />
+      <View style={styles.checkboxContainer}>
+        <Text style={styles.label}>Are you a tutor?</Text>
+      </View>
+
+      <Button theme="primary" label="Register" onPress={register} />
+
       <Text
         style={styles.link}
-        onPress={() => router.replace('/auth/register')}
+        onPress={() => router.replace('/auth/login')}
       >
-        Don't have an account? Register
+        Already have an account? Login
       </Text>
     </View>
   );
@@ -70,6 +92,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 16,
     paddingHorizontal: 10,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   link: {
     color: '#ffd33d',
