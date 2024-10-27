@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import CalendarList from '@/components/Calendar/CalendarList';
+import LotList from '@/components/Lot/LotList';
 
 export default function Index() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function Index() {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <CalendarList />
+      <LotList />
     </GestureHandlerRootView>
   );
 }
