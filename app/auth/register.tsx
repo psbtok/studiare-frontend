@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Switch } from 'react-native';
-import Button from '@/components/Button'; // Ensure this import is correct
+import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
 import { registerService, loginService } from '../services/authService';
 
@@ -59,9 +59,9 @@ export default function RegistrationScreen() {
         <Text style={styles.label}>Are you a tutor?</Text>
         <Switch
           value={isTutor}
-          onValueChange={setIsTutor} // This updates the isTutor state
-          thumbColor={isTutor ? '#ffd33d' : '#f4f3f4'} // Customize thumb color
-          trackColor={{ false: '#767577', true: '#81b0ff' }} // Customize track color
+          onValueChange={setIsTutor} 
+          thumbColor={isTutor ? '#ffd33d' : '#f4f3f4'} 
+          trackColor={{ false: '#767577', true: '#81b0ff' }} 
         />
       </View>
 
