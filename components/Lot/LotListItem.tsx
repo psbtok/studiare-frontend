@@ -3,13 +3,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function LotListItem({ lot }: { lot: Lot }) {
-  const { title, description, starting_price, last_bid } = lot;
+  const { title, starting_price, last_bid } = lot;
   const lastBidText = last_bid ? `Last Bid: ${last_bid.amount}` : 'No bids yet';
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
       <Text style={styles.startingPrice}>Starting Price: {starting_price}</Text>
       <Text style={styles.lastBid}>{lastBidText}</Text>
     </View>
@@ -18,6 +17,7 @@ export default function LotListItem({ lot }: { lot: Lot }) {
 
 const styles = StyleSheet.create({
   container: {
+    width: '50%',
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',

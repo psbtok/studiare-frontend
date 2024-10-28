@@ -26,6 +26,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="lotCreate"
+        options={{
+          title: 'Lot Create',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'add-circle' : 'add-circle-outline'}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
