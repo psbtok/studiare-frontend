@@ -22,31 +22,37 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{words.username}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={words.enterUsername}
-        placeholderTextColor={Colors.darkGrey}
-        value={username}
-        onChangeText={setUsername}
-      />
 
-      <Text style={styles.label}>{words.password}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={words.enterPassword}
-        placeholderTextColor={Colors.darkGrey}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <View style={styles.loginContainer}>
+        <Text style={styles.welcomeText}>{words.welcomeBack}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder={words.enterUsername}
+          placeholderTextColor={Colors.mediumGrey}
+          value={username}
+          onChangeText={setUsername}
+        />
 
-      <Button theme="primary" label={words.login} onPress={login} /> 
-      <Text
-        style={styles.link}
-        onPress={() => router.replace('/auth/register')}
-      >
-        {words.noAccount}
+        <TextInput
+          style={styles.input}
+          placeholder={words.enterPassword}
+          placeholderTextColor={Colors.mediumGrey}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        <Button theme="primary" label={words.login} onPress={login} /> 
+      </View>
+
+      <Text style={styles.link}>
+        {words.noAccount + ' '} 
+        <Text 
+          style={[styles.link, styles.linkHighlight]} 
+          onPress={() => router.replace('/auth/register')}
+        >
+          {words.doRegister}
+        </Text>
       </Text>
     </View>
   );
@@ -55,28 +61,45 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: Colors.lightGrey,
+    backgroundColor: Colors.paleGrey,
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.deepGrey,
+    marginBottom: 24
+  },
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: -50,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: Colors.darkGrey,
+    color: Colors.deepGrey,
   },
   input: {
-    height: 40,
-    color: Colors.darkGrey,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
+    paddingLeft: 16,
+    color: Colors.mediumGrey,
+    borderColor: Colors.mediumGrey,
+    backgroundColor: Colors.lightGrey,
+    borderWidth: 2,
+    height: 64,
+    borderRadius: 16,
     marginBottom: 16,
     paddingHorizontal: 10,
   },
   link: {
-    color: Colors.darkGrey,
-    textDecorationLine: 'underline',
+    color: Colors.deepGrey,
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: 20
   },
+  linkHighlight: {
+    color: Colors.linkBlue,
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid'
+  }
 });

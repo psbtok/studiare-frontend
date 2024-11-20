@@ -15,8 +15,8 @@ export default function Button({ label, theme, onPress }: Props) {
         style={[
           styles.buttonContainer
         ]}>
-        <Pressable style={[styles.button, { backgroundColor: Colors.darkGrey }]} onPress={onPress}>
-          <Text style={[styles.buttonLabel, { color: Colors.lightGrey }]}>{label}</Text>
+        <Pressable style={[styles.button, { backgroundColor: Colors.deepGrey }]} onPress={onPress}>
+          <Text style={[styles.buttonLabel, { color: Colors.paleGrey }]}>{label}</Text>
         </Pressable>
       </View>
     );
@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 3,
-    borderColor: Colors.darkGrey
+    borderColor: Colors.deepGrey
   },
   buttonIcon: {
     paddingRight: 8,
   },
   buttonLabel: {
-    color: Colors.darkGrey,
+    color: Colors.deepGrey,
     fontSize: 16,
   },
 });

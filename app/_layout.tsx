@@ -7,7 +7,7 @@ export default function RootLayout() {
   useEffect(() => {
     setTimeout(() => {
       setStatusBarStyle("dark");
-      setStatusBarBackgroundColor(Colors.lightGrey)
+      setStatusBarBackgroundColor(Colors.paleGrey)
     }, 0);
   }, []);
   

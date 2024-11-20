@@ -38,28 +38,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: Colors.lightGrey,
+    backgroundColor: Colors.paleGrey,
   },
   header: {
     flex: 1, 
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginBottom: 64,
+    marginBottom: 48,
   },
   title: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: Colors.darkGrey,
+    color: Colors.deepGrey,
     marginTop: -18,
     overflow: 'visible'
   },
   subtitle: {
     marginTop: 8,
     fontSize: 16,
-    color: Colors.darkGrey,
+    color: Colors.deepGrey,
     textAlign: 'center',
   },
   footer: {
-    marginBottom: 30,
+    marginBottom: 32,
   },
 });

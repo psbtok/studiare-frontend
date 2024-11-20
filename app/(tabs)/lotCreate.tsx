@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: Colors.lightGrey,
+    backgroundColor: Colors.paleGrey,
   },
   title: {
     fontSize: 24,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   uploadButtonText: {
-    color: Colors.lightGrey,
+    color: Colors.paleGrey,
     fontWeight: 'bold',
   },
   submitButton: {
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   submitButtonText: {
-    color: Colors.lightGrey,
+    color: Colors.paleGrey,
     fontWeight: 'bold',
     fontSize: 16,
   },
