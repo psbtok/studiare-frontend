@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Link, Stack } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 export default function NotFoundScreen() {
   return (
@@ -17,7 +18,7 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: Colors.lightGrey,
     justifyContent: 'center',
     alignItems: 'center',
   },

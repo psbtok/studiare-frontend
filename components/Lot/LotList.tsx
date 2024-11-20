@@ -9,12 +9,12 @@ export default function LotList() {
 
   useEffect(() => {
     const fetchLots = async () => {
-      try {
-        const response = await getLotsService();
-        setLots(response.results);
-      } catch (error) {
-        console.error('Error fetching lots:', error);
-      }
+      // try {
+      //   const response = await getLotsService();
+      //   setLots(response.results);
+      // } catch (error) {
+      //   console.error('Error fetching lots:', error);
+      // }
     };
 
     fetchLots();

@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import LotList from '@/components/Lot/LotList';
+import { Colors } from '@/constants/Colors';
 
 export default function Index() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Index() {
       try {
         const token = await AsyncStorage.getItem('login-token');
         if (!token) {
-          router.replace('/auth/login');
+          router.replace('/auth/welcome');
         }
       } catch (e) {
         console.error('Error reading token', e);
@@ -33,7 +34,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
+    backgroundColor: Colors.lightGrey,
     justifyContent: 'center',
     alignItems: 'center',
   },

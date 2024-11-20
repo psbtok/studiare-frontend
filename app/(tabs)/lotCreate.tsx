@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } fr
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { createLotService } from '@/app/services/lotService';
+import { Colors } from '@/constants/Colors';
 
 export default function CreateLotScreen() {
   const [form, setForm] = useState({
@@ -115,7 +116,7 @@ export default function CreateLotScreen() {
         />
       )}
 
-      <View>
+      {/* <View>
         <Text style={styles.label}>Start Date</Text>
         <DateTimePicker
           value={form.start_datetime}
@@ -133,7 +134,7 @@ export default function CreateLotScreen() {
           display="default"
           onChange={(event, date) => date && setForm({ ...form, end_datetime: date })}
         />
-      </View>
+      </View> */}
 
       <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
         <Text style={styles.uploadButtonText}>
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#25292e',
+    backgroundColor: Colors.lightGrey,
   },
   title: {
     fontSize: 24,
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   uploadButtonText: {
-    color: '#25292e',
+    color: Colors.lightGrey,
     fontWeight: 'bold',
   },
   submitButton: {
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   submitButtonText: {
-    color: '#25292e',
+    color: Colors.lightGrey,
     fontWeight: 'bold',
     fontSize: 16,
   },

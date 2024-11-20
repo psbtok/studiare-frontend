@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
-import { setStatusBarStyle } from "expo-status-bar";
+import { setStatusBarStyle, setStatusBarBackgroundColor } from "expo-status-bar";
 import { useEffect } from "react";
+import { Colors } from '@/constants/Colors';
 
 export default function RootLayout() {
   useEffect(() => {
     setTimeout(() => {
-      setStatusBarStyle("light");
+      setStatusBarStyle("dark");
+      setStatusBarBackgroundColor(Colors.lightGrey)
     }, 0);
   }, []);
   

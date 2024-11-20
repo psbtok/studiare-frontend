@@ -3,6 +3,8 @@ import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Button from '@/components/Button';
 import { loginService } from '../services/authService';
 import { useRouter } from 'expo-router';
+import { Colors } from '@/constants/Colors';
+import words from '@/locales/ru';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -14,37 +16,37 @@ export default function LoginScreen() {
       await loginService(username, password);
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert(words.loginFailed, error.message); 
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Username</Text>
+      <Text style={styles.label}>{words.username}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your username"
-        placeholderTextColor="white"
+        placeholder={words.enterUsername}
+        placeholderTextColor={Colors.darkGrey}
         value={username}
         onChangeText={setUsername}
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>{words.password}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your password"
-        placeholderTextColor="white"
+        placeholder={words.enterPassword}
+        placeholderTextColor={Colors.darkGrey}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
 
-      <Button theme="primary" label="Login" onPress={login} />
+      <Button theme="primary" label={words.login} onPress={login} /> 
       <Text
         style={styles.link}
         onPress={() => router.replace('/auth/register')}
       >
-        Don't have an account? Register
+        {words.noAccount}
       </Text>
     </View>
   );
@@ -55,16 +57,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#25292e',
+    backgroundColor: Colors.lightGrey,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: 'white',
+    color: Colors.darkGrey,
   },
   input: {
     height: 40,
-    color: 'white',
+    color: Colors.darkGrey,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
@@ -72,7 +74,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   link: {
-    color: '#ffd33d',
+    color: Colors.darkGrey,
+    textDecorationLine: 'underline',
     textAlign: 'center',
     marginVertical: 20,
   },
