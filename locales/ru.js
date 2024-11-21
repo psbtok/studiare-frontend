@@ -1,4 +1,4 @@
-export default {
+const words = {
     username: 'Имя пользователя',
     password: 'Пароль',
     login: 'Войти',
@@ -41,6 +41,20 @@ export default {
     passwordsDoNotMatch: "Пароли не совпадают",
 
     usernameEmpty: "Адрес электронной почты не может быть пустым.",
-    passwordEmpty: "Пароль не может быть пустым."
+    passwordEmpty: "Пароль не может быть пустым.",
+
+    completeProfile: "Давайте завершим регистрацию",
+    enterFirstName: "Введите имя",
+    enterLastName: "Введите фамилию",
+    saveDetails: "Сохранить",
+    registrationDetailsSaved: "Данные успешно сохранены",
+    error: "Ошибка",
+    notAuthenticated: 'Вы не авторизованы. Пожалуйста, войдите в систему.',
+    profileUpdated: 'Профиль успешно обновлен.',
+    profileUpdateFailed: 'Не удалось обновить профиль. Попробуйте снова.',
+
+    iAmStudent: 'Я - ученик',
+    iAmTutor: 'Я - репетитор'
   };
   
+  export default words

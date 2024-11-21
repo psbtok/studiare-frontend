@@ -33,10 +33,10 @@ export default function Button({ label, theme, onPress }: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    height: 68,
+    height: 64,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16
+    borderRadius: 16,
   },
   button: {
     borderRadius: 16,
@@ -52,7 +52,9 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   buttonLabel: {
+    fontWeight: 'bold',
     color: Colors.deepGrey,
     fontSize: 16,
+    marginBottom: 2
   },
 });

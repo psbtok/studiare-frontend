@@ -39,7 +39,6 @@ export const registerService = async (
   email: string,
   password: string,
   confirmPassword: string,
-  isTutor: boolean
 ) => {
   const validationErrors = validateRegistrationInput(email, password, confirmPassword);
   if (validationErrors.length) {
@@ -56,8 +55,7 @@ export const registerService = async (
         user: {
           email,
           password,
-        },
-        is_tutor: isTutor,
+        }
       }),
     });
 
@@ -101,3 +99,33 @@ export const logoutService = async () => {
     throw error;
   }
 };
+
+export const editProfileService = async (firstName: string, lastName: string, isTutor: boolean) => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/edit-profile/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify({ first_name: firstName, last_name: lastName, is_tutor: isTutor }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.detail || words.profileUpdateFailed);
+    }
+
+    console.log('Profile updated successfully.');
+  } catch (error: any) {
+    console.error('Edit profile error:', error.message);
+    throw error;
+  }
+};
+

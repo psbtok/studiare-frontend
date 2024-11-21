@@ -11,17 +11,16 @@ export default function RegistrationScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isTutor, setIsTutor] = useState(false);
   const router = useRouter();
 
   const register = async () => {
     try {
-      await registerService(email, password, confirmPassword, isTutor);
+      await registerService(email, password, confirmPassword);
       Alert.alert('', words.registrationSuccess);
 
       await loginService(email, password);
 
-      router.replace('/');
+      router.replace('/auth/registrationDetails');
     } catch (error: any) {
       Alert.alert(words.registrationFailed, error.message);
     }
@@ -57,17 +56,6 @@ export default function RegistrationScreen() {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
-
-        <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>{words.areYouTutor}</Text>
-          <Switch
-            value={isTutor}
-            onValueChange={setIsTutor}
-            thumbColor={isTutor ? Colors.highlightGreen : Colors.lightGrey}
-            trackColor={{ false: Colors.mediumGrey, true: Colors.lightGreen }}
-          />
-        </View>
-
         <Button theme="primary" label={words.register} onPress={register} />
       </View>
 
