@@ -54,7 +54,23 @@ const words = {
     profileUpdateFailed: 'Не удалось обновить профиль. Попробуйте снова.',
 
     iAmStudent: 'Я - ученик',
-    iAmTutor: 'Я - репетитор'
+    iAmTutor: 'Я - репетитор',
+
+    profile: 'Профиль',
+    email: 'Электронная почта',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    role: 'Роль',
+    tutor: 'Репетитор',
+    student: 'Студент',
+    loadingProfile: 'Загрузка профиля...',
+    logout: 'Выйти',
+
+    profile: 'Профиль',
+
+    confirmLogoutTitle: 'Подтвердите выход',
+    confirmLogoutMessage: 'Вы уверены, что хотите выйти?',
+    cancel: 'Отмена',
   };
   
   export default words

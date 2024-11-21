@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   uploadButton: {
-    backgroundColor: '#ffd33d',
+    backgroundColor: Colors.deepGrey,
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   submitButton: {
-    backgroundColor: '#ffd33d',
+    backgroundColor: Colors.deepGrey,
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

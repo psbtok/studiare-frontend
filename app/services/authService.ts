@@ -26,8 +26,8 @@ export const loginService = async (username: string, password: string) => {
 
     const token = data.token;
     await AsyncStorage.setItem('login-token', token);
-    await AsyncStorage.setItem('username', username);
-    
+    await AsyncStorage.setItem('profile', JSON.stringify(data.profile));
+
     return token;
   } catch (error: any) {
     console.error('Login error:', error.message);
@@ -92,7 +92,7 @@ export const logoutService = async () => {
     }
 
     await AsyncStorage.removeItem('login-token');
-    await AsyncStorage.removeItem('username');
+    await AsyncStorage.removeItem('profile');
     console.log(words.logoutSuccess);
   } catch (error) {
     console.error('Logout error:', error);
@@ -117,11 +117,14 @@ export const editProfileService = async (firstName: string, lastName: string, is
       body: JSON.stringify({ first_name: firstName, last_name: lastName, is_tutor: isTutor }),
     });
 
+    const data = await response.json();
+
+
     if (!response.ok) {
-      const data = await response.json();
       throw new Error(data.detail || words.profileUpdateFailed);
     }
 
+    await AsyncStorage.setItem('profile', JSON.stringify(data.profile));
     console.log('Profile updated successfully.');
   } catch (error: any) {
     console.error('Edit profile error:', error.message);

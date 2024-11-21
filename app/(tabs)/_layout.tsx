@@ -1,19 +1,31 @@
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Header from '@/components/Header';
 import { Colors } from '@/styles/Colors';
+import words from '@/locales/ru';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#ffd33d',
-        headerStyle: {
-          backgroundColor: Colors.paleGrey,
-        },
-        headerShadowVisible: false,
-        headerTintColor: '#fff',
+        tabBarActiveTintColor: Colors.linkBlue,
         tabBarStyle: {
           backgroundColor: Colors.paleGrey,
+        },
+        header: ({ route }) => {
+          const titles: Record<string, string> = {
+            index: '',
+            lotCreate: '',
+            profile: words.profile,
+          };
+          const showEditButton = route.name === 'profile';
+          return (
+            <Header
+              title={titles[route.name]}
+              showBackButton={false}
+              showEditButton={showEditButton}
+            />
+          );
         },
       }}
     >
