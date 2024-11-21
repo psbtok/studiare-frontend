@@ -5,6 +5,7 @@ export const Colors = {
   paleGrey: '#F9FCFF', 
   softGrey: '#EEF0F3',
   
+  lightGreen: '#8DEF9A',
   highlightGreen: '#0EC927',
   linkBlue: '#3682F5',
 };

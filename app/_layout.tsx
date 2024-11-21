@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { setStatusBarStyle, setStatusBarBackgroundColor } from "expo-status-bar";
 import { useEffect } from "react";
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/styles/Colors';
 
 export default function RootLayout() {
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/styles/Colors';
 
 type Props = {
   label: string;

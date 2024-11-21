@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } fr
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { createLotService } from '@/app/services/lotService';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/styles/Colors';
 
 export default function CreateLotScreen() {
   const [form, setForm] = useState({

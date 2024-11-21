@@ -1,8 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/config';
-import { validateRegistrationInput } from '../validators/validators';
+import { validateRegistrationInput, validateLoginInput } from '../validators/validators';
+import words from '@/locales/ru';
 
 export const loginService = async (username: string, password: string) => {
+  const validationErrors = validateLoginInput(username, password);
+  if (validationErrors.length) {
+    throw new Error(validationErrors.join('\n'));
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/login/`, {
       method: 'POST',
@@ -15,7 +21,7 @@ export const loginService = async (username: string, password: string) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.non_field_errors ? data.non_field_errors[0] : 'Login failed');
+      throw new Error(data.non_field_errors ? data.non_field_errors[0] : words.loginFailed);
     }
 
     const token = data.token;
@@ -30,14 +36,14 @@ export const loginService = async (username: string, password: string) => {
 };
 
 export const registerService = async (
-  username: string,
   email: string,
   password: string,
+  confirmPassword: string,
   isTutor: boolean
 ) => {
-  const validationErrors = validateRegistrationInput(username, email, password);
+  const validationErrors = validateRegistrationInput(email, password, confirmPassword);
   if (validationErrors.length) {
-    throw new Error(validationErrors.join(' '));
+    throw new Error(validationErrors.join('\n'));
   }
 
   try {
@@ -48,7 +54,6 @@ export const registerService = async (
       },
       body: JSON.stringify({
         user: {
-          username,
           email,
           password,
         },
@@ -60,7 +65,7 @@ export const registerService = async (
     console.log(data);
 
     if (!response.ok) {
-      throw new Error(data.non_field_errors ? data.non_field_errors[0] : 'Registration failed');
+      throw new Error(data.non_field_errors ? data.non_field_errors[0] : words.registrationFailed);
     }
 
     return data;
@@ -84,13 +89,13 @@ export const logoutService = async () => {
       });
 
       if (!response.ok) {
-        throw new Error('Logout failed on server');
+        throw new Error(words.logoutFailed);
       }
     }
 
     await AsyncStorage.removeItem('login-token');
     await AsyncStorage.removeItem('username');
-    console.log('User logged out successfully');
+    console.log(words.logoutSuccess);
   } catch (error) {
     console.error('Logout error:', error);
     throw error;

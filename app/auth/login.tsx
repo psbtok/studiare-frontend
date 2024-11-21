@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Button from '@/components/Button';
 import { loginService } from '../services/authService';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 
 export default function LoginScreen() {
@@ -27,7 +27,7 @@ export default function LoginScreen() {
         <Text style={styles.welcomeText}>{words.welcomeBack}</Text>
         <TextInput
           style={styles.input}
-          placeholder={words.enterUsername}
+          placeholder={words.enterEmail}
           placeholderTextColor={Colors.mediumGrey}
           value={username}
           onChangeText={setUsername}
@@ -35,7 +35,7 @@ export default function LoginScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder={words.enterPassword}
+          placeholder={words.password}
           placeholderTextColor={Colors.mediumGrey}
           secureTextEntry
           value={password}

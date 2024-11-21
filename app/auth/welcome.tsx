@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 
 export default function WelcomeScreen() {

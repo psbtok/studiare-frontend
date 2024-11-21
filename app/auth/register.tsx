@@ -3,75 +3,82 @@ import { View, Text, TextInput, StyleSheet, Alert, Switch } from 'react-native';
 import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
 import { registerService, loginService } from '../services/authService';
+import { Colors } from '@/styles/Colors';
+import commonStyles from '@/styles/CommonStyles';
+import words from '@/locales/ru';
 
 export default function RegistrationScreen() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isTutor, setIsTutor] = useState(false);
   const router = useRouter();
 
   const register = async () => {
     try {
-      await registerService(username, email, password, isTutor);
-      Alert.alert('', 'Successful Registration');
+      await registerService(email, password, confirmPassword, isTutor);
+      Alert.alert('', words.registrationSuccess);
 
-      await loginService(username, password); 
+      await loginService(email, password);
 
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Registration Failed', error.message);
+      Alert.alert(words.registrationFailed, error.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Username</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your username"
-        placeholderTextColor="white"
-        value={username}
-        onChangeText={setUsername}
-      />
-
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your email"
-        placeholderTextColor="white"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your password"
-        placeholderTextColor="white"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <View style={styles.checkboxContainer}>
-        <Text style={styles.label}>Are you a tutor?</Text>
-        <Switch
-          value={isTutor}
-          onValueChange={setIsTutor} 
-          thumbColor={isTutor ? '#ffd33d' : '#f4f3f4'} 
-          trackColor={{ false: '#767577', true: '#81b0ff' }} 
+      <View style={styles.registerContainer}>
+        <Text style={styles.welcomeText}>{words.createAccount}</Text>
+        <TextInput
+          style={commonStyles.input}
+          placeholder={words.enterEmail}
+          placeholderTextColor={Colors.mediumGrey}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
         />
+
+        <TextInput
+          style={commonStyles.input}
+          placeholder={words.enterPassword}
+          placeholderTextColor={Colors.mediumGrey}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        <TextInput
+          style={commonStyles.input}
+          placeholder={words.confirmPassword}
+          placeholderTextColor={Colors.mediumGrey}
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
+
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>{words.areYouTutor}</Text>
+          <Switch
+            value={isTutor}
+            onValueChange={setIsTutor}
+            thumbColor={isTutor ? Colors.highlightGreen : Colors.lightGrey}
+            trackColor={{ false: Colors.mediumGrey, true: Colors.lightGreen }}
+          />
+        </View>
+
+        <Button theme="primary" label={words.register} onPress={register} />
       </View>
 
-      <Button theme="primary" label="Register" onPress={register} />
-
-      <Text
-        style={styles.link}
-        onPress={() => router.replace('/auth/login')}
-      >
-        Already have an account? Login
+      <Text style={styles.link}>
+        {words.alreadyHaveAccount + ' '}
+        <Text
+          style={[styles.link, styles.linkHighlight]}
+          onPress={() => router.replace('/auth/login')}
+        >
+          {words.loginHere}
+        </Text>
       </Text>
     </View>
   );
@@ -80,32 +87,39 @@ export default function RegistrationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: '#25292e',
+    backgroundColor: Colors.paleGrey,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: 'white',
+  registerContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  input: {
-    height: 40,
-    color: 'white',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 16,
-    paddingHorizontal: 10,
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.deepGrey,
+    marginBottom: 24,
+    textAlign: 'left',
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
   },
+  label: {
+    fontSize: 16,
+    color: Colors.deepGrey,
+    marginRight: 10,
+  },
   link: {
-    color: '#ffd33d',
+    color: Colors.deepGrey,
     textAlign: 'center',
     marginVertical: 20,
+  },
+  linkHighlight: {
+    color: Colors.linkBlue,
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid',
   },
 });
