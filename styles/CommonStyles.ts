@@ -13,6 +13,12 @@ const commonStyles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 10,
   },
+  label: {
+    fontSize: 16,
+    color: Colors.deepGrey,
+    marginBottom: 8,
+    fontWeight: 'bold'
+  }
 });
 
 export default commonStyles;

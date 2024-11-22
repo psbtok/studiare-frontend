@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/Button';
+import Button from '@/components/interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+import commonStyles from '@/styles/CommonStyles';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -31,29 +32,31 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      {profile ? (
-        <View style={styles.profileDetails}>
-          <Text style={styles.info}>
-            <Text style={styles.label}>{words.email}: </Text>
-            {profile.user.email}
-          </Text>
-          <Text style={styles.info}>
-            <Text style={styles.label}>{words.firstName}: </Text>
-            {profile.user.first_name}
-          </Text>
-          <Text style={styles.info}>
-            <Text style={styles.label}>{words.lastName}: </Text>
-            {profile.user.last_name}
-          </Text>
-          <Text style={styles.info}>
-            <Text style={styles.label}>{words.role}: </Text>
-            {profile.is_tutor ? words.tutor : words.student}
-          </Text>
-        </View>
-      ) : (
-        <Text style={styles.loading}>{words.loadingProfile}</Text>
-      )}
-      <Button theme="primary" label={words.edit} onPress={handleEditProfile} />
+      <View style={styles.profileDetails}>
+        {profile ? (
+          <View>
+            <View>
+              <Text style={[commonStyles.label, styles.emailBlock]}>{words.email}: </Text>
+              <Text style={styles.info}>
+                {profile.user.email}
+              </Text>
+            </View>
+            <Text style={styles.info}>
+              <Text style={commonStyles.label}>{words.fullName}: </Text>
+              {profile.user.last_name} {profile.user.first_name}
+            </Text>
+            <Text style={styles.info}>
+              <Text style={commonStyles.label}>{words.role}: </Text>
+              {profile.is_tutor ? words.tutor : words.student}
+            </Text>
+          </View>
+        ) : (
+          <Text style={styles.loading}>{words.loadingProfile}</Text>
+        )}
+      </View>
+      <View>
+        <Button theme="primary" label={words.edit} onPress={handleEditProfile} />
+      </View>
     </View>
   );
 }
@@ -61,23 +64,22 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
     backgroundColor: Colors.paleGrey,
   },
+  emailBlock: {
+    marginBottom: 0
+  },
   profileDetails: {
+    width: '100%',
     marginBottom: 24,
-    alignSelf: 'stretch',
   },
   info: {
     fontSize: 18,
     color: Colors.deepGrey,
     marginBottom: 8,
-  },
-  label: {
-    fontWeight: 'bold',
-    color: Colors.mediumGrey,
   },
   loading: {
     fontSize: 18,

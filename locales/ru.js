@@ -70,14 +70,35 @@ const words = {
 
     confirmLogoutTitle: 'Подтвердите выход',
     confirmLogoutMessage: 'Вы уверены, что хотите выйти?',
-    cancel: 'Отмена',
 
     edit: 'Редактировать',
     success: 'Успех',
     saveChanges: 'Сохранить изменения',
     profileEdit: 'Настройки профиля',
 
-    ok: 'Окей'
+    ok: 'Окей',
+    exercises: 'Занятия',
+    fullName: 'Имя',
+
+    lessonCreated: "Занятие было успешно создано.",
+    create: "Создать",
+    createLesson: "Создать занятие",
+    cancel: "Отменить",
+    reset: 'Сбросить',
+    subject: "Предмет",
+    enterSubject: "Введите предмет",
+    date: "Дата",
+    enterDate: "Введите дату",
+    duration: "Продолжительность",
+    enterDuration: "Введите продолжительность",
+    notes: "Примечания",
+    enterNotes: "Введите примечания",
+    studentId: "ID студента",
+    enterStudentId: "Введите ID студента",
+    lessonCreateFailed: "Не удалось создать занятие. Пожалуйста, попробуйте снова.",
+    lessonCreation: 'Новое занятие',
+    chooseDate: 'Время занятия',
+    selectDate: 'Время занятия'
   };
   
   export default words

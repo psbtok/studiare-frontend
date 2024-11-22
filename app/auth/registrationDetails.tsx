@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import Button from '@/components/Button';
+import Button from '@/components/interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
-import RoleSelector from '@/components/RoleSelector';
+import RoleSelector from '@/components/interactive/RoleSelector';
 import { editProfileService } from '../services/authService';
 
 export default function RegistrationDetailsScreen() {

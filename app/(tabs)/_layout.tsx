@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Header from '@/components/Header';
@@ -8,7 +7,6 @@ import words from '@/locales/ru';
 
 export default function TabLayout() {
   return (
-    <NavigationContainer>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors.skyBlue,
@@ -18,15 +16,15 @@ export default function TabLayout() {
           header: ({ route }) => {
             const titles: Record<string, string> = {
               index: '',
-              lotCreate: '',
+              lessonCreate: words.lessonCreation,
               profile: words.profile,
             };
-            const showEditButton = route.name === 'profile';
+            const showLogoutButton = route.name === 'profile';
             return (
               <Header
                 title={titles[route.name]}
                 showBackButton={false}
-                showEditButton={showEditButton}
+                showLogoutButton={showLogoutButton}
               />
             );
           },
@@ -35,16 +33,16 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: words.exercises,
             tabBarIcon: ({ color }) => (
               <Ionicons name='home-outline' color={color} size={24} />
             ),
           }}
         />
         <Tabs.Screen
-          name="lotCreate"
+          name="lessonCreate"
           options={{
-            title: 'Lot Create',
+            title: words.createLesson,
             tabBarIcon: ({ color }) => (
               <Ionicons
                 name='add-circle-outline'
@@ -57,7 +55,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            title: 'Profile',
+            title: words.profile,
             tabBarIcon: ({ color }) => (
               <Ionicons
                 name={'person-outline'}
@@ -68,6 +66,5 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </NavigationContainer>
   );
 }

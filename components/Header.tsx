@@ -6,7 +6,7 @@ import { Colors } from '@/styles/Colors';
 import { logoutService } from '@/app/services/authService';
 import words from '@/locales/ru';
 
-const Header = ({ title, showBackButton = false, showEditButton = false }: any) => {
+const Header = ({ title, showBackButton = false, showLogoutButton = false }: any) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -45,7 +45,7 @@ const Header = ({ title, showBackButton = false, showEditButton = false }: any) 
         <View style={styles.iconContainer} />
       )}
       <Text style={styles.title}>{title}</Text>
-      {showEditButton ? (
+      {showLogoutButton ? (
         <TouchableOpacity onPress={handleLogout} style={styles.iconContainer}>
           <Feather name="log-out" size={28} color={Colors.alertRed} />
         </TouchableOpacity>

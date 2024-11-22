@@ -1,3 +1,21 @@
+export interface Lesson {
+  id: number;                
+  tutor: number;             
+  student: number;           
+  subject: string;           
+  date: string;              
+  duration: string;          
+  notes?: string | null;     
+
+  isConfirmed?: boolean | null;      
+  confirmationTime?: string | null;  
+
+  isCancelled?: boolean | null;      
+  cancellationTime?: string | null;  
+
+  isConducted?: boolean | null;      
+}
+
 export interface LastBid {
     id: number;
     amount: string; 

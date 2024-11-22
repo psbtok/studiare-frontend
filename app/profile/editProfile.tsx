@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/Button';
+import Button from '@/components/interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
@@ -58,7 +58,7 @@ export default function EditProfileScreen() {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.label}>{words.firstName}</Text>
+        <Text style={commonStyles.label}>{words.firstName}</Text>
         <TextInput
           style={commonStyles.input}
           placeholder={words.enterFirstName}
@@ -67,7 +67,7 @@ export default function EditProfileScreen() {
           onChangeText={setFirstName}
         />
 
-        <Text style={styles.label}>{words.lastName}</Text>
+        <Text style={commonStyles.label}>{words.lastName}</Text>
         <TextInput
           style={commonStyles.input}
           placeholder={words.enterLastName}
@@ -96,12 +96,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     backgroundColor: Colors.paleGrey,
-  },
-  label: {
-    fontSize: 16,
-    color: Colors.deepGrey,
-    marginBottom: 8,
-    fontWeight: 'bold'
   },
   buttonBlock: {
     width: '100%',
