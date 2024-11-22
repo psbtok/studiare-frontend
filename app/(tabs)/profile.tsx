@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '@/components/Button';
-import { logoutService } from '../services/authService';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
@@ -26,19 +25,12 @@ export default function ProfileScreen() {
     fetchProfile();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logoutService();
-      router.replace('/auth/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      Alert.alert(words.error, words.logoutFailed);
-    }
+  const handleEditProfile = () => {
+    router.push('/profile/editProfile');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{words.profile}</Text>
       {profile ? (
         <View style={styles.profileDetails}>
           <Text style={styles.info}>
@@ -61,7 +53,7 @@ export default function ProfileScreen() {
       ) : (
         <Text style={styles.loading}>{words.loadingProfile}</Text>
       )}
-      <Button theme="primary" label={words.logout} onPress={handleLogout} />
+      <Button theme="primary" label={words.edit} onPress={handleEditProfile} />
     </View>
   );
 }
@@ -73,12 +65,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: Colors.paleGrey,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.deepGrey,
-    marginBottom: 24,
   },
   profileDetails: {
     marginBottom: 24,

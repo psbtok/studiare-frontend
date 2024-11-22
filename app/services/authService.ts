@@ -100,7 +100,11 @@ export const logoutService = async () => {
   }
 };
 
-export const editProfileService = async (firstName: string, lastName: string, isTutor: boolean) => {
+export const editProfileService = async (
+  firstName: string, 
+  lastName: string, 
+  isTutor?: boolean 
+) => {
   const token = await AsyncStorage.getItem('login-token');
 
   if (!token) {
@@ -108,17 +112,25 @@ export const editProfileService = async (firstName: string, lastName: string, is
   }
 
   try {
+    const requestBody: any = { 
+      first_name: firstName, 
+      last_name: lastName 
+    };
+
+    if (typeof isTutor === 'boolean') {
+      requestBody.is_tutor = isTutor; 
+    }
+
     const response = await fetch(`${API_BASE_URL}/edit-profile/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`,
       },
-      body: JSON.stringify({ first_name: firstName, last_name: lastName, is_tutor: isTutor }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
-
 
     if (!response.ok) {
       throw new Error(data.detail || words.profileUpdateFailed);

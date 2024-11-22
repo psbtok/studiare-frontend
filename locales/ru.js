@@ -71,6 +71,13 @@ const words = {
     confirmLogoutTitle: 'Подтвердите выход',
     confirmLogoutMessage: 'Вы уверены, что хотите выйти?',
     cancel: 'Отмена',
+
+    edit: 'Редактировать',
+    success: 'Успех',
+    saveChanges: 'Сохранить изменения',
+    profileEdit: 'Настройки профиля',
+
+    ok: 'Окей'
   };
   
   export default words

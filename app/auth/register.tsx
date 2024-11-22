@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   linkHighlight: {
-    color: Colors.linkBlue,
+    color: Colors.skyBlue,
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
   },
