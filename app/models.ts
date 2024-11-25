@@ -55,3 +55,25 @@ export interface CreateLotData {
       fileName: string;
     };
   }
+
+  export interface User {
+    email: string;
+    first_name: string;
+    last_name: string;
+  }
+  
+  export interface Tutor {
+    id: number;
+    about: string;
+    birth_date: string; // Формат ISO 8601, например, "YYYY-MM-DD"
+    education: string;
+    links: string; // Ссылки в виде строки, разделённой запятыми
+    age: number;
+  }
+  
+  export interface Profile {
+    user: User;
+    is_tutor: boolean;
+    tutor?: Tutor | undefined; // Поле может быть необязательным, если пользователь не репетитор
+  }
+  

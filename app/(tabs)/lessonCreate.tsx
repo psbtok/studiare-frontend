@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, SafeAreaView } from 'react-native';
-import Button from '@/components/interactive/Button';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
+import Button from '@/components/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { createLessonService } from '../services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePickerComponent from '@/components/interactive/DatePicker';
+import DateTimePickerComponent from '@/components/Interactive/DatePicker';
+import NumberPicker from '@/components/Interactive/NumberPicker';
 
 export default function CreateLessonScreen() {
   const [subject, setSubject] = useState('');
@@ -17,26 +17,7 @@ export default function CreateLessonScreen() {
   const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
-  const [mode, setMode] = useState<'date' | 'time'>('date');
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
-
-  const onChangeStart = (_, selectedDate: any) => {
-    const currentDate = selectedDate || dateStart;
-    setShowStartPicker(false);
-    setDateStart(currentDate);
-  };
-
-  const onChangeEnd = (_, selectedDate: any) => {
-    const currentDate = selectedDate || dateEnd;
-    setShowEndPicker(false);
-    setDateEnd(currentDate);
-  };
-
-  const showMode = (setPickerVisibility: (value: boolean) => void, currentMode: 'date' | 'time') => {
-    setPickerVisibility(true);
-    setMode(currentMode);
-  };
+  const [price, setPrice] = useState(0)
 
   const handleCreateLesson = async () => {
     try {
@@ -76,6 +57,14 @@ export default function CreateLessonScreen() {
   return (
     <View style={styles.container}>
       <View>
+        <View style={styles.dateTimePicker}>
+          <DateTimePickerComponent
+              onDateTimeChange={(date, startTime, endTime) => {
+                  setDateStart(startTime)
+                  setDateEnd(endTime)
+              }}
+            />
+        </View>
         <Text style={commonStyles.label}>{words.subject}</Text>
         <TextInput
           style={commonStyles.input}
@@ -84,14 +73,14 @@ export default function CreateLessonScreen() {
           value={subject}
           onChangeText={setSubject}
         />
-        <DateTimePickerComponent
-            onDateTimeChange={(date, startTime, endTime) => {
-                console.log('Selected Date:', date);
-                console.log('Start Time:', startTime);
-                console.log('End Time:', endTime);
-            }}
+        <View style={styles.dateTimePicker}>
+          <NumberPicker
+              onDateTimeChange={(date, startTime, endTime) => {
+                  setDateStart(startTime)
+                  setDateEnd(endTime)
+              }}
             />
-
+        </View>
         {/* <SafeAreaView>
           <Button onPress={() => showMode(setShowStartPicker, 'date')} label="Выберите дату начала" />
           <Button onPress={() => showMode(setShowStartPicker, 'time')} label="Выберите время начала" />
@@ -122,14 +111,14 @@ export default function CreateLessonScreen() {
           )}
         </SafeAreaView> */}
 
-        <Text style={commonStyles.label}>{words.duration}</Text>
+        {/* <Text style={commonStyles.label}>{words.duration}</Text>
         <TextInput
           style={commonStyles.input}
           placeholder={words.enterDuration}
           placeholderTextColor={Colors.mediumGrey}
           value={duration}
           onChangeText={setDuration}
-        />
+        /> */}
 
         <Text style={commonStyles.label}>{words.notes}</Text>
         <TextInput
@@ -169,6 +158,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     backgroundColor: Colors.paleGrey,
+  },
+  dateTimePicker: {
+    // display: 'flex',
+    // width: '60%'
   },
   buttonBlock: {
     width: '100%',

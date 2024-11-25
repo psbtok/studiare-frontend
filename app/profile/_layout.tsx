@@ -22,7 +22,7 @@ export default function AuthLayout() {
         ),
       }}
     >
-      <Stack.Screen name="editProfile" />
+      <Stack.Screen name="profileEdit" />
     </Stack>
   );
 }

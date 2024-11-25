@@ -56,7 +56,6 @@ const words = {
     iAmStudent: 'Я - ученик',
     iAmTutor: 'Я - репетитор',
 
-    profile: 'Профиль',
     email: 'Электронная почта',
     firstName: 'Имя',
     lastName: 'Фамилия',
@@ -98,7 +97,19 @@ const words = {
     lessonCreateFailed: "Не удалось создать занятие. Пожалуйста, попробуйте снова.",
     lessonCreation: 'Новое занятие',
     chooseDate: 'Время занятия',
-    selectDate: 'Время занятия'
+    selectDate: 'Время занятия',
+
+    profileFetchFailed: 'Ошибка при получении данных профиля',
+    tutorDetails: "Детали преподавателя",
+    about: "О себе",    
+    links: "Ссылки",
+    experience: "Опыт работы, лет",
+    education: "Образование",
+
+    noChangesMade: 'Изменения не найдены',
+    profileNotFound: 'Профиль не найден',
+    enterLink: 'Введите ссылку',
+    fillRequiredFields: 'Заполните все поля!'
   };
   
   export default words

@@ -1,63 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { AntDesign } from '@expo/vector-icons'; // Import FontAwesome icons
 
 interface DateTimePickerComponentProps {
   onDateTimeChange: (date: Date, startTime: Date, endTime: Date, duration: number) => void;
 }
 
-const roundToNextHour = (date: Date, addMinutes=0): Date => {
-    const newDate = new Date(date);
-    newDate.setMinutes(addMinutes, 0, 0); // Set minutes, seconds, and milliseconds to 0
-    newDate.setHours(newDate.getHours() + 1);
-  
-    return newDate;
+const roundToNextHour = (date: Date, addMinutes = 0): Date => {
+  const newDate = new Date(date);
+  newDate.setMinutes(addMinutes, 0, 0); // Set minutes, seconds, and milliseconds to 0
+  newDate.setHours(newDate.getHours() + 1);
+
+  return newDate;
 };
 
 export default function DateTimePickerComponent({
   onDateTimeChange,
 }: DateTimePickerComponentProps) {
-  const addMinutes = 30;
+  const addMinutes = 60;
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(roundToNextHour(new Date()));
   const [endTime, setEndTime] = useState(roundToNextHour(new Date(), addMinutes));
   const [showPicker, setShowPicker] = useState<'date' | 'startTime' | 'endTime' | null>(null);
   const [duration, setDuration] = useState(addMinutes); // Duration in minutes
 
+  const mergeDateAndTime = (baseDate: Date, time: Date): Date => {
+    const mergedDate = new Date(baseDate);
+    mergedDate.setHours(time.getHours(), time.getMinutes(), 0, 0);
+    return mergedDate;
+  };
+  
   const handlePickerChange = (_: any, selectedDate?: Date) => {
-    setShowPicker(null); // Close picker
+    setShowPicker(null); 
     if (!selectedDate) return;
-
-    let newStartTime = startTime;
-    let newEndTime = endTime;
-
+  
     if (showPicker === 'date') {
       setDate(selectedDate);
-      newStartTime = new Date(selectedDate.setHours(startTime.getHours(), startTime.getMinutes()));
-      newEndTime = new Date(selectedDate.setHours(endTime.getHours(), endTime.getMinutes()));
+      const newStartTime = mergeDateAndTime(selectedDate, startTime);
+      const newEndTime = mergeDateAndTime(selectedDate, endTime);
+      setStartTime(newStartTime);
+      setEndTime(newEndTime);
+      onDateTimeChange(selectedDate, newStartTime, newEndTime, duration);
     } else if (showPicker === 'startTime') {
-      newStartTime = selectedDate;
-      newEndTime = new Date(selectedDate.getTime() + duration * 60000); // Update end time based on duration
+      const newStartTime = mergeDateAndTime(date, selectedDate);
+      const newEndTime = new Date(newStartTime.getTime() + duration * 60000);
+      setStartTime(newStartTime);
+      setEndTime(newEndTime);
+      onDateTimeChange(date, newStartTime, newEndTime, duration);
     } else if (showPicker === 'endTime') {
-      newEndTime = selectedDate;
+      const newEndTime = mergeDateAndTime(date, selectedDate);
+      const newDuration = Math.max(0, (newEndTime.getTime() - startTime.getTime()) / 60000);
+      setEndTime(newEndTime);
+      setDuration(newDuration);
+      onDateTimeChange(date, startTime, newEndTime, newDuration);
     }
-
-    const newDuration = Math.max(0, (newEndTime.getTime() - newStartTime.getTime()) / 60000); // Calculate duration in minutes
-    setStartTime(newStartTime);
-    setEndTime(newEndTime);
-    setDuration(newDuration);
-    onDateTimeChange(date, newStartTime, newEndTime, newDuration);
   };
 
   const handleDurationChange = (increment: boolean) => {
     setDuration((prevDuration) => {
       const newDuration = increment ? prevDuration + 30 : prevDuration - 30;
-      const validDuration = Math.max(30, newDuration); // Ensure duration doesn't go below 30 minutes
-      const newEndTime = new Date(startTime.getTime() + validDuration * 60000); // Update end time based on new duration
+      const validDuration = Math.max(30, newDuration);
+      const newEndTime = new Date(startTime.getTime() + validDuration * 60000); 
       setEndTime(newEndTime);
       onDateTimeChange(date, startTime, newEndTime, validDuration);
       return validDuration;
@@ -66,33 +74,35 @@ export default function DateTimePickerComponent({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => setShowPicker('date')}>
-        <Text style={[commonStyles.label, styles.label, styles.monthLabel]}>
+      <View style={styles.monthContainer}>
+        <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('date')}>
+          <Text style={[commonStyles.label, styles.label, styles.monthLabel]}>
             {`${format(date, 'd MMMM', { locale: ru })}`}
-        </Text>
-      </TouchableOpacity>
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.timeContainer}>
         <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('startTime')}>
-          <Text style={[commonStyles.label, styles.label]}>
-            {`${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false})}`}
+          <Text style={[commonStyles.label, styles.label, styles.timeLabel]}>
+            {`${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
           </Text>
         </TouchableOpacity>
-
+        <Text style={[commonStyles.label, styles.label]}>-</Text>
         <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('endTime')}>
-          <Text style={[commonStyles.label, styles.label]}>
-            {`${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false})}`}
+          <Text style={[commonStyles.label, styles.label, styles.timeLabel]}>
+            {`${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.durationContainer}>
         <TouchableOpacity onPress={() => handleDurationChange(false)}>
-          <Text style={[commonStyles.label, styles.label]}>-</Text>
+          <AntDesign name="minus" size={36} color={Colors.deepGrey} />
         </TouchableOpacity>
-        <Text style={styles.durationText}>{`${duration} мин`}</Text>
+        <Text style={[commonStyles.label, styles.label, styles.durationLabel]}>{`${duration} мин`}</Text>
         <TouchableOpacity onPress={() => handleDurationChange(true)}>
-          <Text style={[commonStyles.label, styles.label]}>+</Text>
+          <AntDesign name="plus" size={36} color={Colors.deepGrey} />
         </TouchableOpacity>
       </View>
 
@@ -113,42 +123,56 @@ export default function DateTimePickerComponent({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: Colors.deepGrey,
+    backgroundColor: Colors.paleGrey,
     borderRadius: 16,
-    marginVertical: 10,
   },
   label: {
-    color: Colors.paleGrey
+    color: Colors.deepGrey,
+  },
+  monthInput: {
+    display: 'flex'
+  },
+  monthContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   monthLabel: {
     fontSize: 24,
-    paddingVertical: 4,
+    // paddingVertical: 4,
+    // color: Colors.skyBlue,
     paddingHorizontal: 16,
-    borderColor: Colors.paleGrey,
-    borderRadius: 12,
+    borderColor: Colors.deepGrey,
+    width: 220,
+    // borderRadius: 9,
     borderWidth: 3,
-    width: 'auto',
+    textAlign: 'center',
     flexShrink: 1,
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   timeContainer: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  timeInput: {
-    width: 120,
-    paddingHorizontal: 10,
-  },
-  durationContainer: {
-    display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'center'
   },
-  durationText: {
-    fontSize: 16,
-    color: Colors.paleGrey,
-    marginHorizontal: 10,
+  timeLabel: {
+    fontSize: 24,
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.deepGrey
+  },
+  timeInput: {
+    paddingHorizontal: 16,
+  },
+  durationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  durationLabel: {
+    fontSize: 20,
+    color: Colors.deepGrey,
+    width: 120,
+    textAlign: 'center',
   },
 });

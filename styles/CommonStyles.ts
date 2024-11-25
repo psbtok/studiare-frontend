@@ -8,7 +8,7 @@ const commonStyles = StyleSheet.create({
     borderColor: Colors.mediumGrey,
     backgroundColor: Colors.lightGrey,
     borderWidth: 2,
-    height: 64,
+    height: 52,
     borderRadius: 16,
     marginBottom: 16,
     paddingHorizontal: 10,

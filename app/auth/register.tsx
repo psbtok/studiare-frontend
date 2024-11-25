@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Switch } from 'react-native';
-import Button from '@/components/interactive/Button';
+import Button from '@/components/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { registerService, loginService } from '../services/authService';
 import { Colors } from '@/styles/Colors';

@@ -46,7 +46,7 @@ export const registerService = async (
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/create-profile/`, {
+    const response = await fetch(`${API_BASE_URL}/profile/create/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -85,10 +85,6 @@ export const logoutService = async () => {
           'Authorization': `Token ${token}`,
         },
       });
-
-      if (!response.ok) {
-        throw new Error(words.logoutFailed);
-      }
     }
 
     await AsyncStorage.removeItem('login-token');
@@ -100,11 +96,7 @@ export const logoutService = async () => {
   }
 };
 
-export const editProfileService = async (
-  firstName: string, 
-  lastName: string, 
-  isTutor?: boolean 
-) => {
+export const editProfileService = async (updatedProfile: any) => {
   const token = await AsyncStorage.getItem('login-token');
 
   if (!token) {
@@ -112,22 +104,15 @@ export const editProfileService = async (
   }
 
   try {
-    const requestBody: any = { 
-      first_name: firstName, 
-      last_name: lastName 
-    };
 
-    if (typeof isTutor === 'boolean') {
-      requestBody.is_tutor = isTutor; 
-    }
 
-    const response = await fetch(`${API_BASE_URL}/edit-profile/`, {
+    const response = await fetch(`${API_BASE_URL}/profile/edit/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`,
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify(updatedProfile),
     });
 
     const data = await response.json();
@@ -136,10 +121,44 @@ export const editProfileService = async (
       throw new Error(data.detail || words.profileUpdateFailed);
     }
 
+    // Update the stored profile in AsyncStorage
     await AsyncStorage.setItem('profile', JSON.stringify(data.profile));
+    console.log(updatedProfile)
     console.log('Profile updated successfully.');
   } catch (error: any) {
     console.error('Edit profile error:', error.message);
+    throw error;
+  }
+};
+
+
+export const getProfileService = async (profileId?: number) => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const url = profileId ? `${API_BASE_URL}/profile/get/?profile_id=${profileId}` : `${API_BASE_URL}/profile/get/`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || words.profileFetchFailed);
+    }
+
+    return data.profile; // Возвращаем профиль
+  } catch (error: any) {
+    console.error('Get profile error:', error.message);
     throw error;
   }
 };

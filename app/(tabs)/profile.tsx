@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/interactive/Button';
+import Button from '@/components/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import commonStyles from '@/styles/CommonStyles';
+import { getProfileService } from '../services/authService';
+import TutorDetails from '@/components/Profile/tutorDetails';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -17,6 +19,11 @@ export default function ProfileScreen() {
         const storedProfile = await AsyncStorage.getItem('profile');
         if (storedProfile) {
           setProfile(JSON.parse(storedProfile));
+          console.log(storedProfile);
+        } else {
+          const fetchedProfile = await getProfileService();
+          setProfile(fetchedProfile);
+          console.log(fetchedProfile);
         }
       } catch (error) {
         console.error('Failed to load profile:', error);
@@ -27,7 +34,7 @@ export default function ProfileScreen() {
   }, []);
 
   const handleEditProfile = () => {
-    router.push('/profile/editProfile');
+    router.push('/profile/profileEdit');
   };
 
   return (
@@ -49,6 +56,7 @@ export default function ProfileScreen() {
               <Text style={commonStyles.label}>{words.role}: </Text>
               {profile.is_tutor ? words.tutor : words.student}
             </Text>
+            {profile.is_tutor && profile.tutor && <TutorDetails tutor={profile.tutor} />}
           </View>
         ) : (
           <Text style={styles.loading}>{words.loadingProfile}</Text>
