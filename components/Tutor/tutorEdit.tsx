@@ -3,9 +3,9 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
 import TutorLinksEdit from './tutorLinksEdit';
-import DatePicker from '../Interactive/DatePicker';
+import DatePicker from '../General/Interactive/DatePicker';
 import { Colors } from '@/styles/Colors';
-import NumberPicker from '../Interactive/NumberPicker';
+import NumberPicker from '../General/Interactive/NumberPicker';
 
 interface TutorEditProps {
   tutor: {
@@ -75,7 +75,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
 
       <Text style={commonStyles.label}>{words.experienceYears}</Text>
       <NumberPicker
-        initialValue={experienceYears}
+        value={experienceYears}
         step={1}
         onValueChange={(value) => {
           if (value !== experienceYears) {

@@ -98,6 +98,7 @@ const words = {
     lessonCreation: 'Новое занятие',
     chooseDate: 'Время занятия',
     selectDate: 'Время занятия',
+    lessonPrice: 'Стоимость занятия',
 
     profileFetchFailed: 'Ошибка при получении данных профиля',
     tutorDetails: "Детали преподавателя",
@@ -114,7 +115,13 @@ const words = {
     birthDate: 'Дата рождения',
     notFilled: 'Не заполнено',
     notAvailable: 'Отсутствует профиль преподавателя',
-    experienceYears: 'Опыт работы, лет'
+    experienceYears: 'Опыт работы, лет',
+
+    subjectEmpty: 'Поле "Предмет" не может быть пустым',
+    studentIdEmpty: 'Поле "ID студента" не может быть пустым',
+    invalidStudentId: 'ID студента должен быть числом',
+    invalidDateRange: 'Дата начала должна быть раньше даты окончания',
+    invalidPrice: 'Цена должна быть больше нуля',
   };
   
   export default words

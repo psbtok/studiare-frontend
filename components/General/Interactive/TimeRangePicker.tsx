@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Colors } from '@/styles/Colors';
@@ -30,6 +30,10 @@ export default function TimeRangePickerComponent({
   const [showPicker, setShowPicker] = useState<'date' | 'startTime' | 'endTime' | null>(null);
   const [duration, setDuration] = useState(addMinutes); 
 
+  useEffect(() => {
+    onDateTimeChange(date, startTime, endTime, duration);
+  }, []);
+  
   const mergeDateAndTime = (baseDate: Date, time: Date): Date => {
     const mergedDate = new Date(baseDate);
     mergedDate.setHours(time.getHours(), time.getMinutes(), 0, 0);
@@ -140,12 +144,9 @@ const styles = StyleSheet.create({
   },
   monthLabel: {
     fontSize: Typography.fontSizes.l,
-    // paddingVertical: 4,
-    // color: Colors.skyBlue,
     paddingHorizontal: 16,
     borderColor: Colors.deepGrey,
     width: 220,
-    // borderRadius: 9,
     borderWidth: 3,
     textAlign: 'center',
     flexShrink: 1,
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
   timeLabel: {
     fontSize: Typography.fontSizes.l,
     borderBottomWidth: 3,
+    fontWeight: '500',
     borderBottomColor: Colors.deepGrey
   },
   timeInput: {
@@ -175,5 +177,6 @@ const styles = StyleSheet.create({
     color: Colors.deepGrey,
     width: 120,
     textAlign: 'center',
+    fontWeight: '500'
   },
 });

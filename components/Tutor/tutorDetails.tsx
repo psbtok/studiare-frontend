@@ -67,6 +67,16 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
       </Text>
 
       <Text style={styles.info}>
+        <Text style={commonStyles.label}>{words.education}: </Text>
+        {tutor.education ? tutor.education : <Text style={styles.notFilled}>{words.notFilled}</Text>}
+      </Text>
+
+      <Text style={styles.info}>
+        <Text style={commonStyles.label}>{words.age}: </Text>
+        {age !== null ? `${age} ${getYearsLabel(age)}` : <Text style={styles.notFilled}>{words.notFilled}</Text>}
+      </Text>
+      
+      <Text style={styles.info}>
         <Text style={commonStyles.label}>{words.experience}: </Text>
         {tutor.experienceYears !== null && tutor.experienceYears !== undefined ? (
           `${tutor.experienceYears} ${getYearsLabel(tutor.experienceYears)}`
@@ -75,15 +85,6 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
         )}
       </Text>
 
-      <Text style={styles.info}>
-        <Text style={commonStyles.label}>{words.age}: </Text>
-        {age !== null ? `${age} ${getYearsLabel(age)}` : <Text style={styles.notFilled}>{words.notFilled}</Text>}
-      </Text>
-
-      <Text style={styles.info}>
-        <Text style={commonStyles.label}>{words.education}: </Text>
-        {tutor.education ? tutor.education : <Text style={styles.notFilled}>{words.notFilled}</Text>}
-      </Text>
 
       <View style={styles.info}>
         <Text style={commonStyles.label}>{words.links}: </Text>

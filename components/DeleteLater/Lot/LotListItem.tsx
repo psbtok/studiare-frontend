@@ -1,4 +1,4 @@
-import { Lot } from '@/app/models';
+import { Lot } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';

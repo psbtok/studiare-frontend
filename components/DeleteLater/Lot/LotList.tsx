@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import LotListItem from './LotListItem';
 import { getLotsService } from '@/app/services/lotService';
-import { Lot } from '@/app/models';
+import { Lot } from '@/models/models';
 
 export default function LotList() {
   const [lots, setLots] = useState<Lot[]>([]);

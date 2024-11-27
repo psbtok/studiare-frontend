@@ -5,33 +5,36 @@ import commonStyles from '@/styles/CommonStyles';
 import { AntDesign } from '@expo/vector-icons';
 
 interface NumberPickerProps {
-  initialValue: number;
+  value: number;           // Теперь это не initialValue, а value
   step: number;
   onValueChange: (value: number) => void; 
 }
 
 export default function NumberPicker({
-  initialValue,
+  value,
   step,
   onValueChange
 }: NumberPickerProps) {
-  const [value, setValue] = useState(initialValue);
+  const [inputValue, setInputValue] = useState(value);
 
   useEffect(() => {
-    onValueChange(value);
-  }, [value, onValueChange]);
+    setInputValue(value); // синхронизация с родительским состоянием
+  }, [value]);
 
   const handleValueChange = (increment: boolean) => {
-    setValue((prevValue) => {
+    setInputValue((prevValue) => {
       const newValue = increment ? prevValue + step : prevValue - step;
-      return Math.max(0, newValue);
+      const clampedValue = Math.max(0, newValue);
+      onValueChange(clampedValue);  // Отправка нового значения в родительский компонент
+      return clampedValue;
     });
   };
 
   const handleTextInputChange = (text: string) => {
     const numericValue = Number(text);
     if (!isNaN(numericValue)) {
-      setValue(numericValue);
+      setInputValue(numericValue);
+      onValueChange(numericValue);  // Отправка нового значения в родительский компонент
     }
   };
 
@@ -39,7 +42,7 @@ export default function NumberPicker({
     <View style={styles.container}>
       <TextInput
         style={[commonStyles.input, styles.input]}
-        value={value.toString()}
+        value={inputValue.toString()}
         keyboardType="numeric"
         onChangeText={handleTextInputChange}
       />

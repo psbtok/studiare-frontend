@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
-import { logoutService } from '@/app/services/authService';
+import { logoutService } from '@/services/authService';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 
