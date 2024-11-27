@@ -37,19 +37,22 @@ const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
 
   const handleOpenLink = (link: string) => {
     const formattedLink = link.startsWith('http') ? link : `https://${link}`;
-    Linking.openURL(formattedLink).catch((err) => console.error("Не удалось открыть URL", err));
+    Linking.openURL(formattedLink).catch((err) => console.error('Не удалось открыть URL', err));
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={commonStyles.label}>{words.links}</Text>
 
       <View style={styles.addLinkContainer}>
         <TextInput
           style={[commonStyles.input, styles.input]}
+          placeholderTextColor={Colors.mediumGrey}
           placeholder={words.enterLink}
           value={currentLink}
           onChangeText={setCurrentLink}
+          onSubmitEditing={handleAddLink} 
+          returnKeyType="done"
         />
 
         <TouchableOpacity onPress={handleAddLink} style={styles.addButton}>
@@ -63,8 +66,8 @@ const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
             <TouchableOpacity onPress={() => handleOpenLink(link)} style={styles.linkButton}>
               <Text
                 style={[commonStyles.label, styles.link]}
-                numberOfLines={1} // Ограничиваем текст одной строкой
-                ellipsizeMode="tail" // Добавляем троеточие в конце, если текст не помещается
+                numberOfLines={1} 
+                ellipsizeMode="tail"
               >
                 {link}
               </Text>
@@ -80,11 +83,7 @@ const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 12,
-  },
   linksList: {
-    marginTop: 12,
     marginHorizontal: 8,
   },
   linkItem: {
@@ -95,10 +94,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   linkButton: {
-    flex: 1, // Это позволит тексту ссылки занимать все доступное пространство
+    flex: 1, 
   },
   removeButton: {
-    marginLeft: 8, // небольшое расстояние между кнопками
+    marginLeft: 8,
   },
   input: {
     flex: 1,

@@ -36,7 +36,6 @@ export default function ProfileEditScreen() {
 
   const handleSaveProfile = async () => {
     try {
-      // Update the profile with the changed first name and last name
       const updatedProfile = {
         ...profile,
         user: {
@@ -46,7 +45,6 @@ export default function ProfileEditScreen() {
         },
       };
 
-      // Call the editProfileService with the updated profile
       await editProfileService(updatedProfile);
 
       Alert.alert(
@@ -78,7 +76,6 @@ export default function ProfileEditScreen() {
     }));
     console.log(updatedTutor);
   };
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -86,7 +83,7 @@ export default function ProfileEditScreen() {
     >
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false} // Это скрывает скроллбар
+        showsVerticalScrollIndicator={false}
       >
         <View>
           <Text style={commonStyles.label}>{words.firstName}</Text>

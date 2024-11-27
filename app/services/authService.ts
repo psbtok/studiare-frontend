@@ -98,7 +98,6 @@ export const logoutService = async () => {
 
 export const editProfileService = async (updatedProfile: any) => {
   const token = await AsyncStorage.getItem('login-token');
-
   if (!token) {
     throw new Error(words.notAuthenticated);
   }

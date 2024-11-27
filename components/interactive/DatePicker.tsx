@@ -5,113 +5,32 @@ import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { AntDesign } from '@expo/vector-icons'; // Import FontAwesome icons
 
-interface DateTimePickerComponentProps {
-  onDateTimeChange: (date: Date, startTime: Date, endTime: Date, duration: number) => void;
-}
-
-const roundToNextHour = (date: Date, addMinutes = 0): Date => {
-  const newDate = new Date(date);
-  newDate.setMinutes(addMinutes, 0, 0); // Set minutes, seconds, and milliseconds to 0
-  newDate.setHours(newDate.getHours() + 1);
-
-  return newDate;
-};
-
-export default function DateTimePickerComponent({
-  onDateTimeChange,
-}: DateTimePickerComponentProps) {
-  const addMinutes = 60;
+export default function DatePicker({ onDateChange }: { onDateChange: (date: Date) => void }) {
   const [date, setDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(roundToNextHour(new Date()));
-  const [endTime, setEndTime] = useState(roundToNextHour(new Date(), addMinutes));
-  const [showPicker, setShowPicker] = useState<'date' | 'startTime' | 'endTime' | null>(null);
-  const [duration, setDuration] = useState(addMinutes); // Duration in minutes
+  const [showPicker, setShowPicker] = useState(false);
 
-  const mergeDateAndTime = (baseDate: Date, time: Date): Date => {
-    const mergedDate = new Date(baseDate);
-    mergedDate.setHours(time.getHours(), time.getMinutes(), 0, 0);
-    return mergedDate;
-  };
-  
   const handlePickerChange = (_: any, selectedDate?: Date) => {
-    setShowPicker(null); 
-    if (!selectedDate) return;
-  
-    if (showPicker === 'date') {
+    setShowPicker(false);
+    if (selectedDate) {
       setDate(selectedDate);
-      const newStartTime = mergeDateAndTime(selectedDate, startTime);
-      const newEndTime = mergeDateAndTime(selectedDate, endTime);
-      setStartTime(newStartTime);
-      setEndTime(newEndTime);
-      onDateTimeChange(selectedDate, newStartTime, newEndTime, duration);
-    } else if (showPicker === 'startTime') {
-      const newStartTime = mergeDateAndTime(date, selectedDate);
-      const newEndTime = new Date(newStartTime.getTime() + duration * 60000);
-      setStartTime(newStartTime);
-      setEndTime(newEndTime);
-      onDateTimeChange(date, newStartTime, newEndTime, duration);
-    } else if (showPicker === 'endTime') {
-      const newEndTime = mergeDateAndTime(date, selectedDate);
-      const newDuration = Math.max(0, (newEndTime.getTime() - startTime.getTime()) / 60000);
-      setEndTime(newEndTime);
-      setDuration(newDuration);
-      onDateTimeChange(date, startTime, newEndTime, newDuration);
+      onDateChange(selectedDate);
     }
-  };
-
-  const handleDurationChange = (increment: boolean) => {
-    setDuration((prevDuration) => {
-      const newDuration = increment ? prevDuration + 30 : prevDuration - 30;
-      const validDuration = Math.max(30, newDuration);
-      const newEndTime = new Date(startTime.getTime() + validDuration * 60000); 
-      setEndTime(newEndTime);
-      onDateTimeChange(date, startTime, newEndTime, validDuration);
-      return validDuration;
-    });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.monthContainer}>
-        <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('date')}>
-          <Text style={[commonStyles.label, styles.label, styles.monthLabel]}>
-            {`${format(date, 'd MMMM', { locale: ru })}`}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.dateInput}>
+        <Text style={[commonStyles.label, styles.dateLabel]}>
+          {format(date, 'd MMMM yyyy', { locale: ru })}
+        </Text>
+      </TouchableOpacity>
 
-      <View style={styles.timeContainer}>
-        <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('startTime')}>
-          <Text style={[commonStyles.label, styles.label, styles.timeLabel]}>
-            {`${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
-          </Text>
-        </TouchableOpacity>
-        <Text style={[commonStyles.label, styles.label]}>-</Text>
-        <TouchableOpacity style={styles.timeInput} onPress={() => setShowPicker('endTime')}>
-          <Text style={[commonStyles.label, styles.label, styles.timeLabel]}>
-            {`${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.durationContainer}>
-        <TouchableOpacity onPress={() => handleDurationChange(false)}>
-          <AntDesign name="minus" size={36} color={Colors.deepGrey} />
-        </TouchableOpacity>
-        <Text style={[commonStyles.label, styles.label, styles.durationLabel]}>{`${duration} мин`}</Text>
-        <TouchableOpacity onPress={() => handleDurationChange(true)}>
-          <AntDesign name="plus" size={36} color={Colors.deepGrey} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Date/Time Picker Modal */}
       {showPicker && (
         <DateTimePicker
-          testID="dateTimePicker"
-          value={showPicker === 'date' ? date : showPicker === 'startTime' ? startTime : endTime}
-          mode={showPicker === 'date' ? 'date' : 'time'}
+          testID="datePicker"
+          value={date}
+          mode="date"
           is24Hour={true}
           display="default"
           onChange={handlePickerChange}
@@ -123,56 +42,25 @@ export default function DateTimePickerComponent({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.paleGrey,
+    paddingLeft: 16,
+    color: Colors.mediumGrey,
+    borderColor: Colors.mediumGrey,
+    backgroundColor: Colors.lightGrey,
+    borderWidth: 2,
+    height: 52,
     borderRadius: 16,
-  },
-  label: {
-    color: Colors.deepGrey,
-  },
-  monthInput: {
-    display: 'flex'
-  },
-  monthContainer: {
-    flexDirection: 'row',
+    marginBottom: 16,
+    paddingHorizontal: 10,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  monthLabel: {
-    fontSize: 24,
-    // paddingVertical: 4,
-    // color: Colors.skyBlue,
-    paddingHorizontal: 16,
-    borderColor: Colors.deepGrey,
-    width: 220,
-    // borderRadius: 9,
-    borderWidth: 3,
-    textAlign: 'center',
-    flexShrink: 1,
-    textTransform: 'uppercase',
+  dateInput: {
+    width: '100%',
+    paddingTop: 8,
   },
-  timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  timeLabel: {
-    fontSize: 24,
-    borderBottomWidth: 3,
-    borderBottomColor: Colors.deepGrey
-  },
-  timeInput: {
-    paddingHorizontal: 16,
-  },
-  durationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  durationLabel: {
-    fontSize: 20,
-    color: Colors.deepGrey,
-    width: 120,
-    textAlign: 'center',
+  dateLabel: {
+    fontSize: 16,
+    color: Colors.mediumGrey,
+    fontWeight: '400',
+    textAlign: 'left',
   },
 });

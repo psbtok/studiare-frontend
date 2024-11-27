@@ -56,7 +56,7 @@ export default function ProfileScreen() {
               <Text style={commonStyles.label}>{words.role}: </Text>
               {profile.is_tutor ? words.tutor : words.student}
             </Text>
-            {profile.is_tutor && profile.tutor && <TutorDetails tutor={profile.tutor} />}
+            {profile.is_tutor && <TutorDetails tutor={profile.tutor} />}
           </View>
         ) : (
           <Text style={styles.loading}>{words.loadingProfile}</Text>

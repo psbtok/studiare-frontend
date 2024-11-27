@@ -6,7 +6,7 @@ import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { createLessonService } from '../services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
-import DateTimePickerComponent from '@/components/Interactive/DatePicker';
+import TimeRangePickerComponent from '@/components/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/Interactive/NumberPicker';
 
 export default function CreateLessonScreen() {
@@ -58,7 +58,7 @@ export default function CreateLessonScreen() {
     <View style={styles.container}>
       <View>
         <View style={styles.dateTimePicker}>
-          <DateTimePickerComponent
+          <TimeRangePickerComponent
               onDateTimeChange={(date, startTime, endTime) => {
                   setDateStart(startTime)
                   setDateEnd(endTime)
@@ -74,12 +74,12 @@ export default function CreateLessonScreen() {
           onChangeText={setSubject}
         />
         <View style={styles.dateTimePicker}>
-          <NumberPicker
+          {/* <NumberPicker
               onDateTimeChange={(date, startTime, endTime) => {
                   setDateStart(startTime)
                   setDateEnd(endTime)
               }}
-            />
+            /> */}
         </View>
         {/* <SafeAreaView>
           <Button onPress={() => showMode(setShowStartPicker, 'date')} label="Выберите дату начала" />

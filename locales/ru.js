@@ -103,13 +103,18 @@ const words = {
     tutorDetails: "Детали преподавателя",
     about: "О себе",    
     links: "Ссылки",
-    experience: "Опыт работы, лет",
+    experience: "Опыт работы",
     education: "Образование",
+    age: "Возраст",
 
     noChangesMade: 'Изменения не найдены',
     profileNotFound: 'Профиль не найден',
     enterLink: 'Введите ссылку',
-    fillRequiredFields: 'Заполните все поля!'
+    fillRequiredFields: 'Заполните все поля!',
+    birthDate: 'Дата рождения',
+    notFilled: 'Не заполнено',
+    notAvailable: 'Отсутствует профиль преподавателя',
+    experienceYears: 'Опыт работы, лет'
   };
   
   export default words

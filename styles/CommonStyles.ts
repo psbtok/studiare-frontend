@@ -18,7 +18,7 @@ const commonStyles = StyleSheet.create({
     color: Colors.deepGrey,
     marginBottom: 8,
     fontWeight: 'bold'
-  }
+  } 
 });
 
 export default commonStyles;

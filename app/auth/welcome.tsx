@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   title: {
-    fontSize: 48,
+    fontSize: 40,
     fontWeight: 'bold',
     color: Colors.deepGrey,
     marginTop: -18,
