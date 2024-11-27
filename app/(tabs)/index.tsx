@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import LotList from '@/components/Lot/LotList';
+import LotList from '@/components/DeleteLater/Lot/LotList';
 import { Colors } from '@/styles/Colors';
 
 export default function Index() {

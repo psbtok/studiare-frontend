@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import Button from '@/components/Interactive/Button';
-import { loginService } from '../services/authService';
+import Button from '@/components/General/Interactive/Button';
+import { loginService } from '@/services/authService';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';

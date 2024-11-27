@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/Interactive/Button';
+import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
-import { editProfileService } from '../services/authService';
+import { editProfileService } from '@/services/authService';
 import commonStyles from '@/styles/CommonStyles';
-import TutorEdit from '@/components/Profile/tutorEdit';
-import LineBreak from '@/components/NonInteractive/lineBreak';
+import TutorEdit from '@/components/Tutor/tutorEdit';
+import LineBreak from '@/components/General/NonInteractive/lineBreak';
 
 export default function ProfileEditScreen() {
   const [firstName, setFirstName] = useState('');
@@ -74,7 +74,6 @@ export default function ProfileEditScreen() {
       ...prevProfile,
       tutor: updatedTutor,
     }));
-    console.log(updatedTutor);
   };
   return (
     <KeyboardAvoidingView

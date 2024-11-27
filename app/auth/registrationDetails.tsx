@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import Button from '@/components/Interactive/Button';
+import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
-import RoleSelector from '@/components/Interactive/RoleSelector';
-import { editProfileService } from '../services/authService';
+import RoleSelector from '@/components/General/Interactive/RoleSelector';
+import { editProfileService } from '@/services/authService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Typography } from '@/styles/Typography';
 
@@ -17,7 +17,6 @@ export default function RegistrationDetailsScreen() {
   const [profile, setProfile] = useState<any>(null);
   const router = useRouter();
 
-  // Загрузка текущего профиля из AsyncStorage
   useEffect(() => {
     const loadProfile = async () => {
       const storedProfile = await AsyncStorage.getItem('profile');
@@ -32,7 +31,6 @@ export default function RegistrationDetailsScreen() {
     loadProfile();
   }, []);
 
-  // Отправка обновленных данных профиля
   const submitDetails = async () => {
     if (!firstName || !lastName) {
       Alert.alert(words.error, words.fillRequiredFields);
@@ -40,24 +38,22 @@ export default function RegistrationDetailsScreen() {
     }
 
     const updatedProfile = {
-      ...profile, // Используем текущий профиль
+      ...profile,
       user: {
         ...profile.user,
-        first_name: firstName, // Обновляем имя
-        last_name: lastName, // Обновляем фамилию
+        first_name: firstName,
+        last_name: lastName,
       },
-      is_tutor: isTutor, // Обновляем роль
+      is_tutor: isTutor,
     };
 
     try {
-      // Здесь мы передаем весь обновленный профиль в сервис
       await editProfileService(updatedProfile);
 
-      // Обновляем локальное хранилище
       await AsyncStorage.setItem('profile', JSON.stringify(updatedProfile));
 
       Alert.alert('', words.registrationDetailsSaved);
-      router.replace('/'); // Перенаправление после успешного обновления
+      router.replace('/'); 
     } catch (error: any) {
       console.error('Error saving profile details:', error);
       Alert.alert(words.error, error.message);

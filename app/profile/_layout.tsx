@@ -1,5 +1,5 @@
 import { Stack, useNavigation  } from 'expo-router';
-import Header from '@/components/Header';
+import Header from '@/components/General/Header/Header';
 import words from '@/locales/ru';
 import { useEffect } from 'react';
 

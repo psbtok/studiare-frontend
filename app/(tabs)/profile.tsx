@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/Interactive/Button';
+import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import commonStyles from '@/styles/CommonStyles';
-import { getProfileService } from '../services/authService';
-import TutorDetails from '@/components/Profile/tutorDetails';
+import { getProfileService } from '@/services/authService';
+import TutorDetails from '@/components/Tutor/tutorDetails';
 import { Typography } from '@/styles/Typography';
 
 export default function ProfileScreen() {
@@ -20,11 +20,9 @@ export default function ProfileScreen() {
         const storedProfile = await AsyncStorage.getItem('profile');
         if (storedProfile) {
           setProfile(JSON.parse(storedProfile));
-          console.log(storedProfile);
         } else {
           const fetchedProfile = await getProfileService();
           setProfile(fetchedProfile);
-          console.log(fetchedProfile);
         }
       } catch (error) {
         console.error('Failed to load profile:', error);

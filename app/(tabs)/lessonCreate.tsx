@@ -1,34 +1,44 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import Button from '@/components/Interactive/Button';
+import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
-import { createLessonService } from '../services/lessonService';
+import { createLessonService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
-import TimeRangePickerComponent from '@/components/Interactive/TimeRangePicker';
-import NumberPicker from '@/components/Interactive/NumberPicker';
+import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
+import NumberPicker from '@/components/General/Interactive/NumberPicker';
+import { validateCreateLessonInput } from '@/validators/validators';
 
 export default function CreateLessonScreen() {
+  const initialPrice = 1000;
+
   const [subject, setSubject] = useState('');
-  const [duration, setDuration] = useState('');
   const [notes, setNotes] = useState('');
   const [studentId, setStudentId] = useState('');
   const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState(initialPrice)
 
   const handleCreateLesson = async () => {
+    const errors = validateCreateLessonInput(subject, studentId, dateStart, dateEnd, price);
+  
+    if (errors.length > 0) {
+      Alert.alert(words.error, errors.join('\n'));
+      return;
+    }
+  
     try {
       await createLessonService(
         parseInt(studentId),
         subject,
         dateStart.toISOString(),
-        dateEnd.toISOString(), // Pass date_end here
+        dateEnd.toISOString(),
+        price,
         notes
       );
-
+  
       Alert.alert(
         words.success,
         words.lessonCreated,
@@ -43,21 +53,21 @@ export default function CreateLessonScreen() {
       console.error('Error creating lesson:', error.message);
       Alert.alert(words.error, error.message);
     }
-  };
+  };  
 
   const handleReset = () => {
     setSubject('');
     setDateStart(new Date());
     setDateEnd(new Date());
-    setDuration('');
     setNotes('');
     setStudentId('');
+    setPrice(initialPrice)
   };
 
   return (
     <View style={styles.container}>
       <View>
-        <View style={styles.dateTimePicker}>
+        <View>
           <TimeRangePickerComponent
               onDateTimeChange={(date, startTime, endTime) => {
                   setDateStart(startTime)
@@ -73,52 +83,6 @@ export default function CreateLessonScreen() {
           value={subject}
           onChangeText={setSubject}
         />
-        <View style={styles.dateTimePicker}>
-          {/* <NumberPicker
-              onDateTimeChange={(date, startTime, endTime) => {
-                  setDateStart(startTime)
-                  setDateEnd(endTime)
-              }}
-            /> */}
-        </View>
-        {/* <SafeAreaView>
-          <Button onPress={() => showMode(setShowStartPicker, 'date')} label="Выберите дату начала" />
-          <Button onPress={() => showMode(setShowStartPicker, 'time')} label="Выберите время начала" />
-          <Text>Начало: {dateStart.toLocaleString()}</Text>
-          {showStartPicker && (
-            <DateTimePicker
-              testID="dateTimePickerStart"
-              value={dateStart}
-              mode={mode}
-              is24Hour={true}
-              onChange={onChangeStart}
-            />
-          )}
-        </SafeAreaView> */}
-
-        {/* <SafeAreaView>
-          <Button onPress={() => showMode(setShowEndPicker, 'date')} label="Выберите дату окончания" />
-          <Button onPress={() => showMode(setShowEndPicker, 'time')} label="Выберите время окончания" />
-          <Text>Окончание: {dateEnd.toLocaleString()}</Text>
-          {showEndPicker && (
-            <DateTimePicker
-              testID="dateTimePickerEnd"
-              value={dateEnd}
-              mode={mode}
-              is24Hour={true}
-              onChange={onChangeEnd}
-            />
-          )}
-        </SafeAreaView> */}
-
-        {/* <Text style={commonStyles.label}>{words.duration}</Text>
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterDuration}
-          placeholderTextColor={Colors.mediumGrey}
-          value={duration}
-          onChangeText={setDuration}
-        /> */}
 
         <Text style={commonStyles.label}>{words.notes}</Text>
         <TextInput
@@ -137,7 +101,14 @@ export default function CreateLessonScreen() {
           value={studentId}
           onChangeText={setStudentId}
         />
+        <Text style={commonStyles.label}>{words.lessonPrice}</Text>
+        <NumberPicker
+          value={price}
+          step={100}
+          onValueChange={setPrice}
+        />
       </View>
+
 
       <View style={styles.buttonBlock}>
         <View style={[styles.buttonContainer, styles.buttonFirst]}>
@@ -158,10 +129,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     backgroundColor: Colors.paleGrey,
-  },
-  dateTimePicker: {
-    // display: 'flex',
-    // width: '60%'
   },
   buttonBlock: {
     width: '100%',
