@@ -4,6 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { createLotService } from '@/app/services/lotService';
 import { Colors } from '@/styles/Colors';
+import { Typography } from '@/styles/Typography';
 
 export default function CreateLotScreen() {
   const [form, setForm] = useState({
@@ -201,6 +202,6 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: Colors.paleGrey,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
   },
 });

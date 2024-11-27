@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from './Colors';
+import { Typography } from './Typography';
 
 const commonStyles = StyleSheet.create({
   input: {
@@ -14,7 +15,7 @@ const commonStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: Colors.deepGrey,
     marginBottom: 8,
     fontWeight: 'bold'

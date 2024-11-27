@@ -6,6 +6,7 @@ import commonStyles from '@/styles/CommonStyles';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { AntDesign } from '@expo/vector-icons'; 
+import { Typography } from '@/styles/Typography';
 
 interface TimeRangePickerComponentProps {
   onDateTimeChange: (date: Date, startTime: Date, endTime: Date, duration: number) => void;
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   monthLabel: {
-    fontSize: 20,
+    fontSize: Typography.fontSizes.l,
     // paddingVertical: 4,
     // color: Colors.skyBlue,
     paddingHorizontal: 16,
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   timeLabel: {
-    fontSize: 20,
+    fontSize: Typography.fontSizes.l,
     borderBottomWidth: 3,
     borderBottomColor: Colors.deepGrey
   },
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   durationLabel: {
-    fontSize: 18,
+    fontSize: Typography.fontSizes.m,
     color: Colors.deepGrey,
     width: 120,
     textAlign: 'center',

@@ -8,6 +8,7 @@ import words from '@/locales/ru';
 import commonStyles from '@/styles/CommonStyles';
 import { getProfileService } from '../services/authService';
 import TutorDetails from '@/components/Profile/tutorDetails';
+import { Typography } from '@/styles/Typography';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -85,12 +86,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   info: {
-    fontSize: 18,
+    fontSize: Typography.fontSizes.m,
     color: Colors.deepGrey,
     marginBottom: 8,
   },
   loading: {
-    fontSize: 18,
+    fontSize: Typography.fontSizes.m,
     color: Colors.mediumGrey,
     marginBottom: 24,
   },

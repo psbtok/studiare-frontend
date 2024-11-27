@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 interface TutorDetailsProps {
   tutor: {
@@ -115,12 +116,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tutorLabel: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   info: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: Colors.deepGrey,
     marginBottom: 8,
   },

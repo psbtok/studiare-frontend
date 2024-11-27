@@ -1,4 +1,5 @@
 import { Lot } from '@/app/models';
+import { Typography } from '@/styles/Typography';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a', 
   },
   title: {
-    fontSize: 18,
+    fontSize: Typography.fontSizes.m,
     fontWeight: 'bold',
     color: '#fff',
   },
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   startingPrice: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: '#fff',
   },
   lastBid: {

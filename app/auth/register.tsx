@@ -6,6 +6,7 @@ import { registerService, loginService } from '../services/authService';
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 export default function RegistrationScreen() {
   const [email, setEmail] = useState('');
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: Colors.deepGrey,
     marginRight: 10,
   },

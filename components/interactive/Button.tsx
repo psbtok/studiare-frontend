@@ -1,6 +1,7 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors } from '@/styles/Colors';
+import { Typography } from '@/styles/Typography';
 
 type Props = {
   label: string;
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontWeight: 'bold',
     color: Colors.deepGrey,
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     marginBottom: 2
   },
 });

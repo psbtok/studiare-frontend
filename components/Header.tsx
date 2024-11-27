@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import { logoutService } from '@/app/services/authService';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 const Header = ({ title, showBackButton = false, showLogoutButton = false }: any) => {
   const router = useRouter();
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.paleGrey,
   },
   title: {
-    fontSize: 20,
+    fontSize: Typography.fontSizes.l,
     fontWeight: 'bold',
     color: Colors.deepGrey,
     textAlign: 'center',

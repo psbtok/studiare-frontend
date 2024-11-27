@@ -5,6 +5,7 @@ import { loginService } from '../services/authService';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     marginTop: -50,
   },
   label: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     marginBottom: 8,
     color: Colors.deepGrey,
   },

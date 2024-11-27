@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 export default function RoleSelector({ isTutor, setIsTutor }: { isTutor: boolean; setIsTutor: (value: boolean) => void }) {
   return (
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGrey,
   },
   roleText: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     fontWeight: 'bold',
   },
   activeText: {

@@ -8,6 +8,7 @@ import words from '@/locales/ru';
 import RoleSelector from '@/components/Interactive/RoleSelector';
 import { editProfileService } from '../services/authService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Typography } from '@/styles/Typography';
 
 export default function RegistrationDetailsScreen() {
   const [firstName, setFirstName] = useState('');
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: Typography.fontSizes.xl,
     fontWeight: 'bold',
     color: Colors.deepGrey,
     marginBottom: 24,

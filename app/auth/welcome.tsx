@@ -4,6 +4,7 @@ import Button from '@/components/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+import { Typography } from '@/styles/Typography';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: 8,
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: Colors.deepGrey,
     textAlign: 'center',
   },

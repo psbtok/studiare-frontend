@@ -5,6 +5,7 @@ import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { Typography } from '@/styles/Typography';
 
 export default function DatePicker({ onDateChange }: { onDateChange: (date: Date) => void }) {
   const [date, setDate] = useState(new Date());
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   dateLabel: {
-    fontSize: 16,
+    fontSize: Typography.fontSizes.s,
     color: Colors.mediumGrey,
     fontWeight: '400',
     textAlign: 'left',
