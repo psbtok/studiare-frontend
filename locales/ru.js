@@ -73,7 +73,7 @@ const words = {
     edit: 'Редактировать',
     success: 'Успех',
     saveChanges: 'Сохранить изменения',
-    profileEdit: 'Настройки профиля',
+    profileEdit: 'Настройки',
 
     ok: 'Окей',
     exercises: 'Занятия',
@@ -99,6 +99,8 @@ const words = {
     chooseDate: 'Время занятия',
     selectDate: 'Время занятия',
     lessonPrice: 'Стоимость занятия',
+    lessonList: 'Список занятий',
+    aboutLesson: 'О занятии',
 
     profileFetchFailed: 'Ошибка при получении данных профиля',
     tutorDetails: "Детали преподавателя",
@@ -122,6 +124,17 @@ const words = {
     invalidStudentId: 'ID студента должен быть числом',
     invalidDateRange: 'Дата начала должна быть раньше даты окончания',
     invalidPrice: 'Цена должна быть больше нуля',
+
+    dateStart: "Дата начала",
+    dateEnd: "Дата окончания",
+    price: "Цена",
+    noLessonsAvailable: "Нет доступных занятий",
+    noNotes: "Нет заметок",
+    cancelled: "Отменено",
+    reload: 'Перезагрузить',
+    free: 'Бесплатно',
+    at: 'в',
+    currency: '₽'
   };
   
   export default words

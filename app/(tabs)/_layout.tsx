@@ -1,23 +1,32 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { TouchableWithoutFeedback, View, StyleSheet, GestureResponderEvent } from 'react-native';
 import Header from '@/components/General/Header/Header';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+
+function CustomTabBarButton({ children, onPress }: { children: React.ReactNode, onPress?: (event: GestureResponderEvent) => void }) {
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.tabButton}>{children}</View>
+    </TouchableWithoutFeedback>
+  );
+}
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.deepGrey,
+        tabBarActiveTintColor: Colors.darkBlue,
         tabBarStyle: {
           backgroundColor: Colors.paleGrey,
-          paddingTop: 5,
+          height: 56,
         },
         tabBarShowLabel: false,
         header: ({ route }) => {
           const titles: Record<string, string> = {
-            index: '',
+            index: words.lessonList,
             lessonCreate: words.lessonCreation,
             profile: words.profile,
           };
@@ -25,11 +34,11 @@ export default function TabLayout() {
           return (
             <Header
               title={titles[route.name]}
-              showBackButton={false}
               showLogoutButton={showLogoutButton}
             />
           );
         },
+        tabBarButton: (props) => <CustomTabBarButton {...props} />, // Использование кастомной кнопки для Tabs
       }}
     >
       <Tabs.Screen
@@ -38,9 +47,9 @@ export default function TabLayout() {
           title: words.exercises,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'list' : 'list-outline'}
               color={color}
-              size={26}
+              size={28}
             />
           ),
         }}
@@ -53,7 +62,7 @@ export default function TabLayout() {
             <Ionicons
               name={focused ? 'add-circle' : 'add-circle-outline'}
               color={color}
-              size={26}
+              size={28}
             />
           ),
         }}
@@ -66,7 +75,7 @@ export default function TabLayout() {
             <Ionicons
               name={focused ? 'person' : 'person-outline'}
               color={color}
-              size={26}
+              size={28}
             />
           ),
         }}
@@ -74,3 +83,11 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

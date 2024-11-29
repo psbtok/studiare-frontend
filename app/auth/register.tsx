@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   welcomeText: {
-    fontSize: 32,
+    fontSize: Typography.fontSizes.xxl,
     fontWeight: 'bold',
     color: Colors.deepGrey,
     marginBottom: 24,

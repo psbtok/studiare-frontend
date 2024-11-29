@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   timeLabel: {
     fontSize: Typography.fontSizes.l,
-    borderBottomWidth: 3,
+    borderBottomWidth: 2.25,
     fontWeight: '500',
     borderBottomColor: Colors.deepGrey
   },

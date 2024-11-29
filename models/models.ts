@@ -1,11 +1,12 @@
 export interface Lesson {
   id: number;                
   tutor: number;             
-  student: number;           
+  student: User;           
   subject: string;           
-  date: string;              
-  duration: string;          
-  notes?: string | null;     
+  date_start: string;              
+  date_end: string;          
+  notes?: string | null;    
+  price: number 
 
   isConfirmed?: boolean | null;      
   confirmationTime?: string | null;  
@@ -23,38 +24,39 @@ export interface LastBid {
     bidder: number; 
   }
   
-export interface Lot {
-    id: number;
-    title: string;
-    description: string;
-    starting_price: string; 
-    is_reserve: boolean;
-    reserve_price: string; 
-    start_datetime: string; 
-    end_datetime: string;   
-    seller: number; 
-    last_bid: LastBid | null; 
-}
+// Удалить при удалении лота
+// export interface Lot {
+//     id: number;
+//     title: string;
+//     description: string;
+//     starting_price: string; 
+//     is_reserve: boolean;
+//     reserve_price: string; 
+//     start_datetime: string; 
+//     end_datetime: string;   
+//     seller: number; 
+//     last_bid: LastBid | null; 
+// }
   
-export interface LotsResponse {
-    count: number;
-    results: Lot[];
-}
+// export interface LotsResponse {
+//     count: number;
+//     results: Lot[];
+// }
 
-export interface CreateLotData {
-    title: string;
-    description: string;
-    starting_price: number;
-    is_reserve: boolean;
-    reserve_price?: number;
-    start_datetime: string;
-    end_datetime: string;
-    image?: {
-      uri: string;
-      type: string;
-      fileName: string;
-    };
-  }
+// export interface CreateLotData {
+//     title: string;
+//     description: string;
+//     starting_price: number;
+//     is_reserve: boolean;
+//     reserve_price?: number;
+//     start_datetime: string;
+//     end_datetime: string;
+//     image?: {
+//       uri: string;
+//       type: string;
+//       fileName: string;
+//     };
+//   }
 
   export interface User {
     email: string;
@@ -77,3 +79,9 @@ export interface CreateLotData {
     tutor?: Tutor | undefined; // Поле может быть необязательным, если пользователь не репетитор
   }
   
+  export interface LessonResponse {
+    count: number;
+    next: string | null;       // URL для следующей страницы или null
+    previous: string | null;   // URL для предыдущей страницы или null
+    results: Lesson[];         // Список уроков
+  }

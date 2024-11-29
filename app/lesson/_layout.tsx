@@ -15,14 +15,14 @@ export default function AuthLayout() {
       screenOptions={{
         header: ({ navigation }) => (
           <HeaderSmall
-            title={words.profileEdit} 
+            title={words.aboutLesson} 
             showBackButton={true}
             onBackPress={navigation.goBack}
           />
         ),
       }}
     >
-      <Stack.Screen name="profileEdit" />
+      <Stack.Screen name="lessonDetail" />
     </Stack>
   );
 }

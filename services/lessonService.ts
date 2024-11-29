@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/config';
 import words from '@/locales/ru';
-import { Lesson } from '@/models/models';
+import { Lesson, LessonResponse } from '@/models/models';
 
 export const createLessonService = async (
   student: number,
@@ -35,7 +35,7 @@ export const createLessonService = async (
     });
 
     const data: Lesson = await response.json();
-
+    console.log(data)
     if (!response.ok) {
       throw new Error(data.notes || words.lessonCreateFailed);
     }
@@ -43,6 +43,39 @@ export const createLessonService = async (
     return data; 
   } catch (error: any) {
     console.error('Create lesson error:', error.message);
+    throw error;
+  }
+};
+
+export const getLessonListService = async (filters: Record<string, any> = {}): Promise<LessonResponse> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const queryParams = new URLSearchParams({
+      ...filters,
+      ordering: filters.orderByDesc ? `-${filters.orderByDesc}` : filters.orderBy || 'date_start', // Если нужна обратная сортировка
+    }).toString();
+
+    const response = await fetch(`${API_BASE_URL}/lessons/?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+
+    const data: LessonResponse = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Fetch lessons error:', error.message);
     throw error;
   }
 };

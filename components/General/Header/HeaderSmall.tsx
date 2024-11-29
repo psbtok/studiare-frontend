@@ -7,7 +7,7 @@ import { logoutService } from '@/services/authService';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 
-const Header = ({ title, showLogoutButton = false }: any) => {
+const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }: any) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -38,6 +38,13 @@ const Header = ({ title, showLogoutButton = false }: any) => {
 
   return (
     <View style={styles.header}>
+      {showBackButton ? (
+        <TouchableOpacity onPress={() => router.back()} style={styles.iconContainer}>
+          <Ionicons name="arrow-back" size={28} color={Colors.deepGrey} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.iconContainer} />
+      )}
       <Text style={styles.title}>{title}</Text>
       {showLogoutButton ? (
         <TouchableOpacity onPress={handleLogout} style={styles.iconContainer}>
@@ -63,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.xxl,
     fontWeight: 'bold',
     color: Colors.deepGrey,
-    textAlign: 'left',
+    textAlign: 'center',
     flex: 1,
   },
   iconContainer: {
@@ -74,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default HeaderSmall;

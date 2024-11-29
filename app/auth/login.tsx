@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.paleGrey,
   },
   welcomeText: {
-    fontSize: 32,
+    fontSize: Typography.fontSizes.xxl,
     fontWeight: 'bold',
     color: Colors.deepGrey,
     marginBottom: 24
