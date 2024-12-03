@@ -7,6 +7,8 @@ import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import PersonBadge from '../General/NonInteractive/personBadge';
+import commonStyles from '@/styles/CommonStyles';
 
 function LessonListItem(props: { lesson: Lesson }) {
   const { lesson } = props;
@@ -30,16 +32,12 @@ function LessonListItem(props: { lesson: Lesson }) {
         <Text style={styles.subject}>{lesson.subject}</Text>
         <Text style={styles.date}>{formattedDate}</Text>
       </View>
-      <View style={styles.personContainer}>
-        <Text style={styles.person}>
-          {lesson.student.last_name} {lesson.student.first_name}
-        </Text>
-      </View>
+      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name}></PersonBadge>
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
         </Text>
-        <Text style={styles.price}>
+        <Text style={commonStyles.priceLabel}>
           {lesson.price ?? 0} {words.currency}
         </Text>
       </View>
@@ -74,36 +72,10 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.m,
     fontWeight: '500'
   },
-  personContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-    marginLeft: -12,
-  },
-  person: {
-    color: Colors.mediumGrey,
-    fontSize: Typography.fontSizes.s,
-    fontWeight: '500',
-    backgroundColor: Colors.lightGrey,
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    flexShrink: 1,
-  },
   lessonDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  price: {
-    textAlign: 'right',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    fontSize: Typography.fontSizes.m,
-    fontWeight: 'bold',
-    borderRadius: 12,
-    color: Colors.lightGrey,
-    backgroundColor: Colors.deepGrey,
   },
   dates: {
     fontSize: Typography.fontSizes.m,

@@ -142,8 +142,9 @@ const styles = StyleSheet.create({
   },
   buttonFirst: {
     marginRight: 16,
+    flex: 1,
   },
   buttonContainer: {
-    flex: 1,
+    flex: 1.5
   },
 });

@@ -35,7 +35,6 @@ export const createLessonService = async (
     });
 
     const data: Lesson = await response.json();
-    console.log(data)
     if (!response.ok) {
       throw new Error(data.notes || words.lessonCreateFailed);
     }
@@ -78,4 +77,46 @@ export const getLessonListService = async (filters: Record<string, any> = {}): P
     console.error('Fetch lessons error:', error.message);
     throw error;
   }
+};
+
+type LessonAction = 'cancel' | 'confirm' | 'conduct';
+
+export const updateLessonService = async (
+  lesson: Lesson,
+  action: 'cancel' | 'confirm' | 'conduct'
+): Promise<Lesson> => {
+  const token = await AsyncStorage.getItem('login-token');
+  
+  if (!token) throw new Error(words.notAuthenticated);
+
+  let payload = {};
+  switch (action) {
+    case 'cancel':
+      payload = { isCancelled: true, cancellationTime: new Date().toISOString() };
+      break;
+    case 'confirm':
+      payload = { isConfirmed: true, confirmationTime: new Date().toISOString() };
+      break;
+    case 'conduct':
+      payload = { isConducted: true };
+      break;
+    default:
+      throw new Error(words.error);
+  }
+
+  const response = await fetch(`${API_BASE_URL}/lessons/${lesson.id}/`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || words.error);
+  }
+
+  return await response.json();
 };

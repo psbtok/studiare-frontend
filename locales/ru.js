@@ -62,6 +62,7 @@ const words = {
     role: 'Роль',
     tutor: 'Репетитор',
     student: 'Студент',
+    learner: 'Ученик',
     loadingProfile: 'Загрузка профиля...',
     logout: 'Выйти',
 
@@ -134,7 +135,28 @@ const words = {
     reload: 'Перезагрузить',
     free: 'Бесплатно',
     at: 'в',
-    currency: '₽'
+    currency: '₽',
+    isConfirmed: 'Подтверждено',
+    confirmationTime: 'Время подтверждения',
+    isCancelled: 'Отменено',
+    cancellationTime: 'Время отмены',
+    isConducted: 'Проведено',
+    yes: 'Да',
+    no: 'Нет',
+    confirm: 'Подтвердить',
+    reject: 'Отменить',
+    lessonCanceled: 'Занятие отменено',
+    lessonConducted: 'Занятие проведено и оплачено',
+    lessonUpdated: 'Занятие обновлено!',
+    confirmationTitle: 'Подтверждение', 
+    confirmCancelLesson: 'Вы хотите отменить занятие?',
+    youNeedToConfirmLesson: 'Необходимо подтвердить участие в занятии',
+    confirmLesson: 'Вы хотите подтвердить участие в занятии?',
+    confirmConductLesson: 'Вы отметить занятие как проведённое?',
+    awaitingClientConfirmation: 'Ожидается подтверждение от клиента',
+    youConfrimedLesson: 'Вы подтвердили участие желание участвовать в занятии',
+    clientConfrimedLesson: 'Клиент подтвердил желание участвовать в занятии'
+
   };
   
   export default words

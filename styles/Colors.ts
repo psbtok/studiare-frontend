@@ -10,5 +10,5 @@ export const Colors = {
 
   darkBlue: 'hsl(216 90.5% 40%)',
   skyBlue: 'hsl(216 90.5% 59%)',
-  alertRed: 'hsl(10 85.1% 58)'
+  alertRed: 'hsl(10 85.1% 63%)',
 };

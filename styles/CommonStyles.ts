@@ -15,11 +15,21 @@ const commonStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    fontSize: Typography.fontSizes.s,
+    fontSize: Typography.fontSizes.m,
     color: Colors.deepGrey,
     marginBottom: 8,
     fontWeight: 'bold'
-  } 
+  },
+  priceLabel: {
+    textAlign: 'right',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    fontSize: Typography.fontSizes.m,
+    fontWeight: 'bold',
+    borderRadius: 12,
+    color: Colors.lightGrey,
+    backgroundColor: Colors.deepGrey,
+  }
 });
 
 export default commonStyles;

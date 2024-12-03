@@ -1,7 +1,7 @@
 export interface Lesson {
   id: number;                
-  tutor: number;             
-  student: User;           
+  tutor: Profile;             
+  student: Profile;           
   subject: string;           
   date_start: string;              
   date_end: string;          

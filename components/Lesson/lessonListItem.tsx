@@ -7,6 +7,11 @@ import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import PersonBadge from '../General/NonInteractive/personBadge';
+import commonStyles from '@/styles/CommonStyles';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 function LessonListItem(props: { lesson: Lesson }) {
   const { lesson } = props;
@@ -14,6 +19,30 @@ function LessonListItem(props: { lesson: Lesson }) {
 
   const formattedTimeStart = format(new Date(lesson.date_start), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(new Date(lesson.date_end), 'HH:mm', { locale: ru });
+
+  const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
+    lesson.isCancelled
+      ? 'canceled'
+      : lesson.isConducted
+      ? 'conducted'
+      : lesson.isConfirmed
+      ? 'confirmed'
+      : 'awaitingConfirmation';
+
+  const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
+    switch (status) {
+      case 'canceled':
+        return <AntDesign name="closecircle" size={22} color={Colors.alertRed} />;
+      case 'conducted':
+        return <MaterialIcons name="paid" size={28} color={Colors.deepGrey} />;
+      case 'confirmed':
+        return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
+      case 'awaitingConfirmation':
+        return <Ionicons name="time" size={26} color={Colors.deepGrey} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -27,18 +56,19 @@ function LessonListItem(props: { lesson: Lesson }) {
 >
 
       <Text style={styles.subject}>{lesson.subject}</Text>
-      <View style={styles.personContainer}>
-        <Text style={styles.person}>
-          {lesson.student.last_name} {lesson.student.first_name}
-        </Text>
-      </View>
+      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name}></PersonBadge>
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
         </Text>
-        <Text style={styles.price}>
-          {lesson.price ?? 0} {words.currency}
-        </Text>
+        <View style={styles.statusContainer}>
+          <View style={styles.statusIcon}>
+            {getStatusIcon(status)}
+          </View>
+          <Text style={commonStyles.priceLabel}>
+            {lesson.price ?? 0} {words.currency}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -59,36 +89,10 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 4,
   },
-  personContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-    marginLeft: -12,
-  },
-  person: {
-    color: Colors.mediumGrey,
-    fontSize: Typography.fontSizes.s,
-    fontWeight: '500',
-    backgroundColor: Colors.lightGrey,
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    flexShrink: 1,
-  },
   lessonDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  price: {
-    textAlign: 'right',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    fontSize: Typography.fontSizes.m,
-    fontWeight: 'bold',
-    borderRadius: 12,
-    color: Colors.lightGrey,
-    backgroundColor: Colors.deepGrey,
   },
   dates: {
     fontSize: Typography.fontSizes.m,
@@ -101,6 +105,14 @@ const styles = StyleSheet.create({
     color: Colors.deepGrey,
     flexShrink: 1,       
     flexWrap: 'wrap', 
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  statusIcon: {
+    marginRight: 8
   }
 });
 
