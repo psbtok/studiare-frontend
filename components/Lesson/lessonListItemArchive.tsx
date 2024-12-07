@@ -9,14 +9,41 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import PersonBadge from '../General/NonInteractive/personBadge';
 import commonStyles from '@/styles/CommonStyles';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-function LessonListItem(props: { lesson: Lesson }) {
+function LessonListItemArchive(props: { lesson: Lesson }) {
   const { lesson } = props;
   const router = useRouter();
 
   const formattedDate = format(new Date(lesson.date_start), 'dd.MM.yyyy', { locale: ru });
   const formattedTimeStart = format(new Date(lesson.date_start), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(new Date(lesson.date_end), 'HH:mm', { locale: ru });
+
+  const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
+    lesson.isCancelled
+      ? 'canceled'
+      : lesson.isConducted
+      ? 'conducted'
+      : lesson.isConfirmed
+      ? 'confirmed'
+      : 'awaitingConfirmation';
+
+  const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
+    switch (status) {
+      case 'canceled':
+        return <AntDesign name="closecircleo" size={22} color={Colors.deepGrey} />;
+      case 'conducted':
+        return <MaterialIcons name="paid" size={28} color={Colors.deepGrey} />;
+      case 'confirmed':
+        return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
+      case 'awaitingConfirmation':
+        return <Ionicons name="time" size={26} color={Colors.deepGrey} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -27,19 +54,24 @@ function LessonListItem(props: { lesson: Lesson }) {
           params: { lesson: JSON.stringify(lesson) }
         })
       }
->
+    >
       <View style={styles.subjectContainer}>
         <Text style={styles.subject}>{lesson.subject}</Text>
         <Text style={styles.date}>{formattedDate}</Text>
       </View>
-      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name}></PersonBadge>
+      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name} />
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
         </Text>
-        <Text style={commonStyles.priceLabel}>
-          {lesson.price ?? 0} {words.currency}
-        </Text>
+        <View style={styles.statusContainer}>
+          <View style={styles.statusIcon}>
+            {getStatusIcon(status)}
+          </View>
+          <Text style={commonStyles.priceLabel}>
+            {lesson.price ?? 0} {words.currency}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -64,13 +96,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start'
-    
   },
   date: {
     paddingTop: 3,
     color: Colors.mediumGrey,
     fontSize: Typography.fontSizes.m,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   lessonDetails: {
     flexDirection: 'row',
@@ -88,7 +119,15 @@ const styles = StyleSheet.create({
     color: Colors.deepGrey,
     flexShrink: 1,       
     flexWrap: 'wrap', 
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  statusIcon: {
+    marginRight: 8,
   }
 });
 
-export default LessonListItem;
+export default LessonListItemArchive;

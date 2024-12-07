@@ -1,12 +1,13 @@
 export const Colors = {  
-  // deepGrey: '#25292E', 
-  // mediumGrey: '#8B98A6', 
-  // lightGrey: '#EEF1F7',
-  // paleGrey: '#F9FCFF', 
   deepGrey: 'hsl(213 25% 25%)', 
   mediumGrey: 'hsl(213 25% 50%)', 
   lightGrey: 'hsl(213 25% 95%)',
   paleGrey: '#hsl(213 25% 99%)', 
+
+  // deepGrey: 'hsl(213 25% 75%)', 
+  // mediumGrey: 'hsl(213 25% 70%)', 
+  // lightGrey: 'hsl(213 25% 10%)',
+  // paleGrey: '#hsl(213 25% 1%)',
 
   darkBlue: 'hsl(216 90.5% 40%)',
   skyBlue: 'hsl(216 90.5% 59%)',

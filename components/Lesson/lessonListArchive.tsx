@@ -6,6 +6,7 @@ import words from '@/locales/ru';
 import LessonListItemArchive from './lessonListItemArchive';
 import { Lesson } from '@/models/models';
 import { Typography } from '@/styles/Typography';
+import { format } from 'date-fns';
 
 export default function LessonListArchive() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -15,7 +16,12 @@ export default function LessonListArchive() {
   const fetchLessons = async () => {
     setLoading(true);
     try {
-      const response = await getLessonListService({orderBy: '-date_start'});
+      const today = format(new Date(), 'yyyy-MM-dd 00:00:00');
+      const response = await getLessonListService({
+        date_start_to: today, 
+        orderBy: '-date_start', 
+      });
+
       setLessons(response.results || []);
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
@@ -40,7 +46,7 @@ export default function LessonListArchive() {
   }, []);
 
   if (loading && !refreshing) {
-    return <ActivityIndicator size="large" color={Colors.alertRed} />;
+    return <ActivityIndicator size="large" color={Colors.deepGrey} />;
   }
 
   if (!lessons.length && !loading) {

@@ -2,20 +2,22 @@ import { Lesson, Profile } from "@/models/models";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import Button from "../General/Interactive/Button";
 import words from "@/locales/ru";
-import { updateLessonService } from "@/services/lessonService"; 
+import { updateLessonStatusService } from "@/services/lessonService"; 
 import React, { useState } from 'react';
 import { Colors } from "@/styles/Colors";
 import commonStyles from "@/styles/CommonStyles";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     const { profile } = props;
     const [lesson, setLesson] = useState(props.lesson);  
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
 
+    const router = useRouter();
+    
     let status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation';
     if (lesson.isCancelled) {
         status = 'canceled';
@@ -50,7 +52,7 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
                     text: words.yes,
                     onPress: async () => {
                         try {
-                            const updatedLesson = await updateLessonService(lesson, action);
+                            const updatedLesson = await updateLessonStatusService(lesson, action);
                             setLesson(updatedLesson);
                             Alert.alert(words.success, words.lessonUpdated);
                         } catch (error: any) {
@@ -62,19 +64,25 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
         );
     };
 
+    console.log(lesson)
+    const handleEdit = () => {
+        const serializedLesson = encodeURIComponent(JSON.stringify(lesson));
+        router.push(`/lesson/lessonEdit?lesson=${serializedLesson}`);
+    };
+
     const getAvailableActions = () => {
         switch (status) {
             case 'canceled':
                 return (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
-                        <AntDesign style={styles.icon} name="closecircle" size={22} color={Colors.alertRed} />
+                        <AntDesign style={styles.icon} name="closecircleo" size={22} color={Colors.deepGrey} />
                         <Text style={commonStyles.label}>{words.lessonCanceled}</Text>
                     </View>
                 )
             case 'conducted':
                 return (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
-                        <MaterialIcons style={styles.icon} name="paid" size={28} color={Colors.deepGrey} />
+                        <MaterialIcons style={[styles.icon, styles.paidIcon]} name="paid" size={28} color={Colors.deepGrey} />
                         <Text style={commonStyles.label}>{words.lessonConducted}</Text>
                     </View>
                 )
@@ -112,11 +120,21 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
             case 'awaitingConfirmation':
                 if (isTutor) {
                     return (
-                        <View style={[styles.actionBlock, styles.actionLabel]}>
-                            <Text style={commonStyles.label}>
+                        <View>
+                            <View style={[styles.actionBlock, styles.actionLabel]}>
                                 <Ionicons style={styles.icon}  name="time" size={24} color={Colors.deepGrey} />
-                                {words.awaitingClientConfirmation}
-                            </Text>
+                                <Text style={commonStyles.label}>
+                                    {words.awaitingClientConfirmation}
+                                </Text>
+                            </View>
+                            <View style={styles.actionBlock}>
+                                <View style={styles.buttonSmall}>
+                                    <Button label={words.reject} onPress={() => handleAction('cancel')} />
+                                </View>
+                                <View style={styles.buttonBig}>
+                                    <Button theme="primary" label={words.edit} onPress={() => handleEdit()} />
+                                </View>
+                            </View>
                         </View>
                     )
                 }
@@ -151,11 +169,12 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         backgroundColor: Colors.lightGrey,
         padding: 16,
-        paddingHorizontal: 24,
+        paddingHorizontal: 16,
         borderRadius: 24,
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     actionLabel: {
+        paddingHorizontal: 24,
         paddingBottom: 10,
     },
     buttonSmall: {
@@ -166,9 +185,11 @@ const styles = StyleSheet.create({
         flex: 1.5
     },
     icon: {
-        position: 'relative',
-        top: 40,
-        marginRight: 8
+        paddingTop: 4,
+        marginRight: 8,
+    },
+    paidIcon: {
+        paddingTop: 1
     }
 });
 

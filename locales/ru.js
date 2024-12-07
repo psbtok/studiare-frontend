@@ -46,7 +46,6 @@ const words = {
     completeProfile: "Давайте завершим регистрацию",
     enterFirstName: "Введите имя",
     enterLastName: "Введите фамилию",
-    saveDetails: "Сохранить",
     registrationDetailsSaved: "Данные успешно сохранены",
     error: "Ошибка",
     notAuthenticated: 'Вы не авторизованы. Пожалуйста, войдите в систему.',
@@ -75,6 +74,7 @@ const words = {
     success: 'Успех',
     saveChanges: 'Сохранить изменения',
     profileEdit: 'Настройки',
+    save: 'Сохранить',
 
     ok: 'Окей',
     exercises: 'Занятия',
@@ -146,15 +146,15 @@ const words = {
     confirm: 'Подтвердить',
     reject: 'Отменить',
     lessonCanceled: 'Занятие отменено',
-    lessonConducted: 'Занятие проведено и оплачено',
+    lessonConducted: 'Занятие проведено',
     lessonUpdated: 'Занятие обновлено!',
     confirmationTitle: 'Подтверждение', 
     confirmCancelLesson: 'Вы хотите отменить занятие?',
     youNeedToConfirmLesson: 'Необходимо подтвердить участие в занятии',
     confirmLesson: 'Вы хотите подтвердить участие в занятии?',
     confirmConductLesson: 'Вы отметить занятие как проведённое?',
-    awaitingClientConfirmation: 'Ожидается подтверждение от клиента',
-    youConfrimedLesson: 'Вы подтвердили участие желание участвовать в занятии',
+    awaitingClientConfirmation: 'Ожидает подтверждения',
+    youConfrimedLesson: 'Вы подтвердили желание участвовать в занятии',
     clientConfrimedLesson: 'Клиент подтвердил желание участвовать в занятии'
 
   };

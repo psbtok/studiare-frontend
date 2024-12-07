@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/config';
 import words from '@/locales/ru';
-import { Lesson, LessonResponse } from '@/models/models';
+import { Lesson, LessonResponse, Profile } from '@/models/models';
 
 export const createLessonService = async (
   student: number,
@@ -48,15 +48,19 @@ export const createLessonService = async (
 
 export const getLessonListService = async (filters: Record<string, any> = {}): Promise<LessonResponse> => {
   const token = await AsyncStorage.getItem('login-token');
+  // const profileString = await AsyncStorage.getItem('profile');
 
   if (!token) {
     throw new Error(words.notAuthenticated);
   }
 
+  // const profile: Profile = JSON.parse(profileString)
+
   try {
     const queryParams = new URLSearchParams({
       ...filters,
-      ordering: filters.orderByDesc ? `-${filters.orderByDesc}` : filters.orderBy || 'date_start', // Если нужна обратная сортировка
+      ordering: filters.orderByDesc ? `-${filters.orderByDesc}` : filters.orderBy || 'date_start',
+      // user_id: profile ? profile.user.id : ''
     }).toString();
 
     const response = await fetch(`${API_BASE_URL}/lessons/?${queryParams}`, {
@@ -79,9 +83,7 @@ export const getLessonListService = async (filters: Record<string, any> = {}): P
   }
 };
 
-type LessonAction = 'cancel' | 'confirm' | 'conduct';
-
-export const updateLessonService = async (
+export const updateLessonStatusService = async (
   lesson: Lesson,
   action: 'cancel' | 'confirm' | 'conduct'
 ): Promise<Lesson> => {
@@ -119,4 +121,34 @@ export const updateLessonService = async (
   }
 
   return await response.json();
+};
+
+export const modifyLessonService = async (updatedLesson: Lesson): Promise<Lesson> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/lessons/${updatedLesson.id}/`, {
+      method: 'PUT', // Используем PUT для полного обновления
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify(updatedLesson), // Отправляем весь обновленный урок
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+
+    const data: Lesson = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Modify lesson error:', error.message);
+    throw error;
+  }
 };

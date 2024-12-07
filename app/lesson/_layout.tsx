@@ -23,6 +23,7 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name="lessonDetail" />
+      <Stack.Screen name="lessonEdit" />
     </Stack>
   );
 }

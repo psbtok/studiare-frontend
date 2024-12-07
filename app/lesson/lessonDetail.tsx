@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
 import { useLocalSearchParams } from 'expo-router';
-import { Lesson } from '@/models/models';
+import { Lesson, Profile } from '@/models/models';
 import words from '@/locales/ru';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -17,7 +17,7 @@ export default function LessonDetailScreen() {
   const { lesson } = useLocalSearchParams();
   const lessonString = Array.isArray(lesson) ? lesson[0] : lesson;
   const parsedLesson: Lesson = JSON.parse(lessonString);
-  const [profile, setProfile] = useState<any | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   const formattedDate = format(new Date(parsedLesson.date_start), 'dd.MM.yyyy', { locale: ru });
   const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });

@@ -32,7 +32,7 @@ function LessonListItem(props: { lesson: Lesson }) {
   const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
     switch (status) {
       case 'canceled':
-        return <AntDesign name="closecircle" size={22} color={Colors.alertRed} />;
+        return <AntDesign name="closecircleo" size={22} color={Colors.deepGrey} />;
       case 'conducted':
         return <MaterialIcons name="paid" size={28} color={Colors.deepGrey} />;
       case 'confirmed':

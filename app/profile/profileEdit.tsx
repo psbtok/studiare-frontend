@@ -114,7 +114,7 @@ export default function ProfileEditScreen() {
           <Button label={words.cancel} onPress={handleCancel} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.saveDetails} onPress={handleSaveProfile} />
+          <Button theme="primary" label={words.save} onPress={handleSaveProfile} />
         </View>
       </View>
     </KeyboardAvoidingView>

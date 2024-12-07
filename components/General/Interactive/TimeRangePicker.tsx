@@ -10,40 +10,60 @@ import { Typography } from '@/styles/Typography';
 
 interface TimeRangePickerComponentProps {
   onDateTimeChange: (date: Date, startTime: Date, endTime: Date, duration: number) => void;
+  initialStartTime?: Date;
+  initialEndTime?: Date;
 }
 
 const roundToNextHour = (date: Date, addMinutes = 0): Date => {
   const newDate = new Date(date);
-  newDate.setMinutes(addMinutes, 0, 0); 
+  newDate.setMinutes(addMinutes, 0, 0);
   newDate.setHours(newDate.getHours() + 1);
-
   return newDate;
+};
+
+const adjustForTimezone = (date: Date): Date => {
+  const timezoneOffset = date.getTimezoneOffset(); // смещение в минутах от UTC
+  const adjustedDate = new Date(date.getTime() - timezoneOffset * 60000); // корректируем дату на смещение
+  return adjustedDate;
 };
 
 export default function TimeRangePickerComponent({
   onDateTimeChange,
+  initialStartTime,
+  initialEndTime,
 }: TimeRangePickerComponentProps) {
-  const addMinutes = 60;
+  const defaultStartTime = roundToNextHour(new Date());
+  const defaultEndTime = roundToNextHour(new Date(), 60);
+
   const [date, setDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(roundToNextHour(new Date()));
-  const [endTime, setEndTime] = useState(roundToNextHour(new Date(), addMinutes));
+  const [startTime, setStartTime] = useState(initialStartTime || defaultStartTime);
+  const [endTime, setEndTime] = useState(initialEndTime || defaultEndTime);
+  
   const [showPicker, setShowPicker] = useState<'date' | 'startTime' | 'endTime' | null>(null);
-  const [duration, setDuration] = useState(addMinutes); 
+  const [duration, setDuration] = useState(
+    initialEndTime && initialStartTime
+      ? (initialEndTime.getTime() - initialStartTime.getTime()) / 60000
+      : (defaultEndTime.getTime() - defaultStartTime.getTime()) / 60000
+  );
 
   useEffect(() => {
-    onDateTimeChange(date, startTime, endTime, duration);
-  }, []);
-  
+    // Применяем корректировку времени с учетом временной зоны, но визуально этого не изменяем
+    const adjustedStartTime = adjustForTimezone(startTime);
+    const adjustedEndTime = adjustForTimezone(endTime);
+    const adjustedDate = adjustForTimezone(date);
+    onDateTimeChange(adjustedDate, adjustedStartTime, adjustedEndTime, duration);
+  }, [date, startTime, endTime, duration]);
+
   const mergeDateAndTime = (baseDate: Date, time: Date): Date => {
     const mergedDate = new Date(baseDate);
     mergedDate.setHours(time.getHours(), time.getMinutes(), 0, 0);
     return mergedDate;
   };
-  
+
   const handlePickerChange = (_: any, selectedDate?: Date) => {
-    setShowPicker(null); 
+    setShowPicker(null);
     if (!selectedDate) return;
-  
+
     if (showPicker === 'date') {
       setDate(selectedDate);
       const newStartTime = mergeDateAndTime(selectedDate, startTime);
@@ -70,7 +90,7 @@ export default function TimeRangePickerComponent({
     setDuration((prevDuration) => {
       const newDuration = increment ? prevDuration + 30 : prevDuration - 30;
       const validDuration = Math.max(30, newDuration);
-      const newEndTime = new Date(startTime.getTime() + validDuration * 60000); 
+      const newEndTime = new Date(startTime.getTime() + validDuration * 60000);
       setEndTime(newEndTime);
       onDateTimeChange(date, startTime, newEndTime, validDuration);
       return validDuration;
@@ -111,10 +131,8 @@ export default function TimeRangePickerComponent({
         </TouchableOpacity>
       </View>
 
-      {/* Date/Time Picker Modal */}
       {showPicker && (
         <DateTimePicker
-          testID="dateTimePicker"
           value={showPicker === 'date' ? date : showPicker === 'startTime' ? startTime : endTime}
           mode={showPicker === 'date' ? 'date' : 'time'}
           is24Hour={true}
@@ -134,9 +152,6 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.deepGrey,
   },
-  monthInput: {
-    display: 'flex'
-  },
   monthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -155,13 +170,13 @@ const styles = StyleSheet.create({
   timeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   timeLabel: {
     fontSize: Typography.fontSizes.l,
     borderBottomWidth: 2.25,
     fontWeight: '500',
-    borderBottomColor: Colors.deepGrey
+    borderBottomColor: Colors.deepGrey,
   },
   timeInput: {
     paddingHorizontal: 16,
@@ -177,6 +192,6 @@ const styles = StyleSheet.create({
     color: Colors.deepGrey,
     width: 120,
     textAlign: 'center',
-    fontWeight: '500'
+    fontWeight: '500',
   },
 });

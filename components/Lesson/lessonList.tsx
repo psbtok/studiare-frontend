@@ -17,7 +17,7 @@ export default function LessonList() {
   const fetchLessons = async (filters = {}) => {
     setLoading(true);
     try {
-      const today = format(new Date(), 'yyyy-MM-dd');
+      const today = format(new Date(), 'yyyy-MM-dd 00:00:00');
       const response = await getLessonListService({
         date_start_from: today, 
         orderBy: 'date_start', 
@@ -89,7 +89,7 @@ export default function LessonList() {
   };
 
   if (loading && !refreshing) {
-    return <ActivityIndicator size="large" color={Colors.alertRed} />;
+    return <ActivityIndicator size="large" color={Colors.deepGrey} />;
   }
 
   return renderGroupedLessons();
