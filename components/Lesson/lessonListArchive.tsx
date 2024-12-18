@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert, RefreshControl } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, RefreshControl } from 'react-native';
 import { getLessonListService } from '@/services/lessonService';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
@@ -10,19 +10,30 @@ import { format } from 'date-fns';
 
 export default function LessonListArchive() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
 
-  const fetchLessons = async () => {
+  const fetchLessons = async (currentOffset: number = 0) => {
+    if (loading || !hasMore) return;
+
     setLoading(true);
     try {
       const today = format(new Date(), 'yyyy-MM-dd 00:00:00');
       const response = await getLessonListService({
-        date_start_to: today, 
-        orderBy: '-date_start', 
+        date_start_to: today,
+        orderBy: '-date_start',
+        offset: currentOffset,
+        limit: 10,
       });
 
-      setLessons(response.results || []);
+      if (response.results && response.results.length > 0) {
+        setLessons((prevLessons) => [...prevLessons, ...response.results]);
+        setHasMore(response.results.length === 10 && response.next !== null);
+      } else {
+        setHasMore(false);
+      }
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
     } finally {
@@ -32,8 +43,11 @@ export default function LessonListArchive() {
 
   const onRefresh = async () => {
     setRefreshing(true);
+    setHasMore(true);
+    setOffset(0);
+    setLessons([]);
     try {
-      fetchLessons();
+      await fetchLessons(0);
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
     } finally {
@@ -41,13 +55,25 @@ export default function LessonListArchive() {
     }
   };
 
-  useEffect(() => {
-    fetchLessons();
-  }, []);
+  const handleScroll = (e: any) => {
+    const contentHeight = e.nativeEvent.contentSize.height;
+    const contentOffsetY = e.nativeEvent.contentOffset.y;
+    const layoutMeasurementHeight = e.nativeEvent.layoutMeasurement.height;
 
-  if (loading && !refreshing) {
-    return <ActivityIndicator size="large" color={Colors.deepGrey} />;
-  }
+    if (contentHeight - contentOffsetY - layoutMeasurementHeight < 100 && hasMore && !loading) {
+      setOffset((prevOffset) => {
+        const newOffset = prevOffset + 10;
+        fetchLessons(newOffset);
+        return newOffset;
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (offset === 0) {
+      fetchLessons(0);
+    }
+  }, [offset]);
 
   if (!lessons.length && !loading) {
     return (
@@ -67,6 +93,7 @@ export default function LessonListArchive() {
       }
       contentContainerStyle={styles.listContainer}
       showsVerticalScrollIndicator={false}
+      onScroll={handleScroll}
     />
   );
 }
