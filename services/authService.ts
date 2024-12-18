@@ -151,9 +151,42 @@ export const getProfileService = async (profileId?: number) => {
       throw new Error(data.detail || words.profileFetchFailed);
     }
 
-    return data.profile; // Возвращаем профиль
+    return data.profile;
   } catch (error: any) {
     console.error('Get profile error:', error.message);
+    throw error;
+  }
+};
+
+export const getUserIdByFullNameService = async (fullName: string) => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/by-full-name/?full_name=${fullName}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || words.error);
+    }
+
+    if (data.length === 0) {
+      throw new Error(words.userNotFound);
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error('Get user ID by full name error:', error.message);
     throw error;
   }
 };

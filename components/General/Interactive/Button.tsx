@@ -1,5 +1,4 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { StyleSheet, View, Pressable, Text, ViewStyle } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
 
@@ -7,15 +6,15 @@ type Props = {
   label: string;
   theme?: 'primary';
   onPress?: () => void;
+  inline?: boolean;
 };
 
-export default function Button({ label, theme, onPress }: Props) {
+export default function Button({ label, theme, onPress, inline }: Props) {
+  const inlineStyle = inline ? styles.inlineContainer : {};
+
   if (theme === 'primary') {
     return (
-      <View
-        style={[
-          styles.buttonContainer
-        ]}>
+      <View style={[styles.buttonContainer, inlineStyle]}>
         <Pressable style={[styles.button, { backgroundColor: Colors.deepGrey }]} onPress={onPress}>
           <Text style={[styles.buttonLabel, { color: Colors.paleGrey }]}>{label}</Text>
         </Pressable>
@@ -24,8 +23,8 @@ export default function Button({ label, theme, onPress }: Props) {
   }
 
   return (
-    <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={onPress} >
+    <View style={[styles.buttonContainer, inlineStyle]}>
+      <Pressable style={styles.button} onPress={onPress}>
         <Text style={styles.buttonLabel}>{label}</Text>
       </Pressable>
     </View>
@@ -39,6 +38,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 16,
   },
+  inlineContainer: {
+    height: 52
+  },
   button: {
     borderRadius: 16,
     width: '100%',
@@ -47,15 +49,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 3,
-    borderColor: Colors.deepGrey
-  },
-  buttonIcon: {
-    paddingRight: 8,
+    borderColor: Colors.deepGrey,
   },
   buttonLabel: {
     fontWeight: 'bold',
     color: Colors.deepGrey,
     fontSize: Typography.fontSizes.s,
-    marginBottom: 2
+    marginBottom: 2,
   },
 });

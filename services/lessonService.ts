@@ -48,19 +48,16 @@ export const createLessonService = async (
 
 export const getLessonListService = async (filters: Record<string, any> = {}): Promise<LessonResponse> => {
   const token = await AsyncStorage.getItem('login-token');
-  // const profileString = await AsyncStorage.getItem('profile');
 
   if (!token) {
     throw new Error(words.notAuthenticated);
   }
 
-  // const profile: Profile = JSON.parse(profileString)
 
   try {
     const queryParams = new URLSearchParams({
       ...filters,
       ordering: filters.orderByDesc ? `-${filters.orderByDesc}` : filters.orderBy || 'date_start',
-      // user_id: profile ? profile.user.id : ''
     }).toString();
 
     const response = await fetch(`${API_BASE_URL}/lessons/?${queryParams}`, {

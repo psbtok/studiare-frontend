@@ -12,23 +12,25 @@ import { validateCreateLessonInput } from '@/validators/validators';
 import { Lesson } from '@/models/models';
 import { Router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
+import UserSearch from '@/components/General/Interactive/UserSearch';
 
-export default function CreateLessonScreen() {
+export default function LessonEditScreen() {
   const local = useLocalSearchParams();
   const lessonParam = local.lesson;
   
   let lesson: Lesson;
-
   if (typeof lessonParam === 'string') {
     lesson = JSON.parse(lessonParam) as Lesson;
   } else {
     lesson = JSON.parse(lessonParam[0]) as Lesson;
   }
+
   const initialPrice = 1000;
 
   const [subject, setSubject] = useState(lesson?.subject || '');
   const [notes, setNotes] = useState(lesson?.notes || '');
   const [studentId, setStudentId] = useState(lesson?.student.user.id.toString() || '');
+  const [resetFlag, setResetFlag] = useState(false); // Flag to trigger reset in UserSearch
   const [dateStart, setDateStart] = useState(new Date(lesson?.date_start || Date.now()));
   const [dateEnd, setDateEnd] = useState(new Date(lesson?.date_end || Date.now()));
   const [price, setPrice] = useState(lesson?.price || initialPrice);
@@ -38,20 +40,22 @@ export default function CreateLessonScreen() {
   
   const handleModifyLesson = async () => {
     const errors = validateCreateLessonInput(subject, studentId, dateStart, dateEnd, price);
-  
+
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
       return;
     }
-  
+
     try {
-      lesson.subject = subject
-      lesson.date_start = dateStart.toISOString()
-      lesson.date_end = dateEnd.toISOString()
-      lesson.price = price
-      lesson.notes = notes
+      lesson.subject = subject;
+      lesson.date_start = dateStart.toISOString();
+      lesson.date_end = dateEnd.toISOString();
+      lesson.price = price;
+      lesson.notes = notes;
+      lesson.student.user.id = parseInt(studentId); // Ensure studentId is updated
+
       await modifyLessonService(lesson);
-  
+
       Alert.alert(
         words.success,
         words.lessonUpdated,
@@ -62,14 +66,13 @@ export default function CreateLessonScreen() {
               router.replace({
                 pathname: '/lesson/lessonDetail',
                 params: { lesson: JSON.stringify(lesson) }
-              })     
+              });
             }
-            
           },
         ]
       );
     } catch (error: any) {
-      console.error('Error creating lesson:', error.message);
+      console.error('Error updating lesson:', error.message);
       Alert.alert(words.error, error.message);
     }
   };
@@ -81,6 +84,7 @@ export default function CreateLessonScreen() {
     setNotes('');
     setStudentId('');
     setPrice(initialPrice);
+    setResetFlag(true); // Trigger the reset flag to reset UserSearch
   };
 
   useEffect(() => {
@@ -98,6 +102,11 @@ export default function CreateLessonScreen() {
     };
   }, []);
 
+  const handleStudentFound = (userId: string) => {
+
+    // setStudentId(userId);
+  };
+
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
@@ -109,14 +118,14 @@ export default function CreateLessonScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View>
-        <TimeRangePickerComponent
-          onDateTimeChange={(date, startTime, endTime) => {
+          <TimeRangePickerComponent
+            onDateTimeChange={(date, startTime, endTime) => {
               setDateStart(startTime);
               setDateEnd(endTime);
-          }}
-          initialStartTime={new Date(lesson.date_start)}
-          initialEndTime={new Date(lesson.date_end)}
-        />
+            }}
+            initialStartTime={new Date(lesson.date_start)}
+            initialEndTime={new Date(lesson.date_end)}
+          />
         </View>
 
         <Text style={commonStyles.label}>{words.subject}</Text>
@@ -137,14 +146,18 @@ export default function CreateLessonScreen() {
           onChangeText={setNotes}
         />
 
-        <Text style={commonStyles.label}>{words.studentId}</Text>
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterStudentId}
-          placeholderTextColor={Colors.mediumGrey}
-          value={studentId}
-          onChangeText={setStudentId}
+        {/* Pass the lesson object to UserSearch to pre-fill the student data */}
+        <UserSearch 
+          onUserFound={handleStudentFound} 
+          resetFlag={resetFlag} 
+          setResetFlag={setResetFlag} 
+          initialStudent={{ 
+            id: lesson.student.user.id.toString(),
+            firstName: lesson.student.user.first_name, 
+            lastName: lesson.student.user.last_name 
+          }}
         />
+
         <Text style={commonStyles.label}>{words.lessonPrice}</Text>
         <NumberPicker
           value={price}

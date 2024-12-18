@@ -9,6 +9,7 @@ import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
+import UserSearch from '@/components/General/Interactive/UserSearch';
 
 export default function CreateLessonScreen() {
   const initialPrice = 1000;
@@ -16,6 +17,7 @@ export default function CreateLessonScreen() {
   const [subject, setSubject] = useState('');
   const [notes, setNotes] = useState('');
   const [studentId, setStudentId] = useState('');
+  const [resetFlag, setResetFlag] = useState(false); // Flag to trigger reset in UserSearch
   const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -25,12 +27,12 @@ export default function CreateLessonScreen() {
 
   const handleCreateLesson = async () => {
     const errors = validateCreateLessonInput(subject, studentId, dateStart, dateEnd, price);
-  
+
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
       return;
     }
-  
+
     try {
       await createLessonService(
         parseInt(studentId),
@@ -40,7 +42,7 @@ export default function CreateLessonScreen() {
         price,
         notes
       );
-  
+
       Alert.alert(
         words.success,
         words.lessonCreated,
@@ -64,6 +66,11 @@ export default function CreateLessonScreen() {
     setNotes('');
     setStudentId('');
     setPrice(initialPrice);
+    setResetFlag(true);
+  };
+
+  const handleStudentFound = (userId: string) => {
+    setStudentId(userId);
   };
 
   useEffect(() => {
@@ -118,14 +125,9 @@ export default function CreateLessonScreen() {
           onChangeText={setNotes}
         />
 
-        <Text style={commonStyles.label}>{words.studentId}</Text>
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterStudentId}
-          placeholderTextColor={Colors.mediumGrey}
-          value={studentId}
-          onChangeText={setStudentId}
-        />
+        {/* Pass resetFlag to UserSearch */}
+        <UserSearch onUserFound={handleStudentFound} resetFlag={resetFlag} setResetFlag={setResetFlag} />
+
         <Text style={commonStyles.label}>{words.lessonPrice}</Text>
         <NumberPicker
           value={price}

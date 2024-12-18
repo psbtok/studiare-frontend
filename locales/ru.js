@@ -24,7 +24,7 @@ const words = {
     areYouTutor: 'Вы преподаватель?',
     enterName: 'Введите имя',
     enterSurname: 'Введите фамилию',
-
+    userNotFound: 'Пользователь не найден',
     nameEmpty: "Имя не может быть пустым.",
     surnameEmpty: "Фамилия не может быть пустой.",
     invalidEmail: "Введите корректный адрес электронной почты.",
@@ -155,8 +155,11 @@ const words = {
     confirmConductLesson: 'Вы отметить занятие как проведённое?',
     awaitingClientConfirmation: 'Ожидает подтверждения',
     youConfrimedLesson: 'Вы подтвердили желание участвовать в занятии',
-    clientConfrimedLesson: 'Клиент подтвердил желание участвовать в занятии'
-
+    clientConfrimedLesson: 'Клиент подтвердил желание участвовать в занятии',
+    studentName: 'Имя ученика',
+    enterStudentName: 'Введите имя ученика',
+    search: 'Поиск',
+    studentNotFound: 'Ученик не найден'
   };
   
   export default words
