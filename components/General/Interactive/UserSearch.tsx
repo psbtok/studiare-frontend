@@ -6,20 +6,20 @@ import commonStyles from '@/styles/CommonStyles';
 import Button from '@/components/General/Interactive/Button';
 import { TextInput } from 'react-native';
 import { Colors } from '@/styles/Colors';
+import { Student } from '@/models/models';
 
 interface UserSearchProps {
-  onUserFound: (userId: string) => void;
+  onUserFound: (student: Student) => void;
   resetFlag: boolean;
   setResetFlag: (flag: boolean) => void;
-  initialStudent?: { id: string, firstName: string, lastName: string }; // Optional initial student prop
+  initialStudent?: Student;
 }
 
 const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setResetFlag, initialStudent }) => {
   const [studentName, setStudentName] = useState('');
-  const [students, setStudents] = useState<{ id: string, first_name: string, last_name: string }[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
-  // Handle resetting the state when the resetFlag is triggered
   useEffect(() => {
     if (resetFlag) {
       setStudentName('');
@@ -29,14 +29,13 @@ const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setRese
     }
   }, [resetFlag, setResetFlag]);
 
-  // Only set initial student if no student is selected already
   useEffect(() => {
     if (initialStudent && !selectedStudentId) {
-      setStudentName(`${initialStudent.firstName} ${initialStudent.lastName}`);
+      setStudentName(`${initialStudent.first_name} ${initialStudent.last_name}`);
       setSelectedStudentId(initialStudent.id);
-      onUserFound(initialStudent.id);  // Automatically select the initial student if no student selected
+      onUserFound(initialStudent);
     }
-  }, [initialStudent, selectedStudentId, onUserFound]);
+  }, []);
 
   const handleSearchStudent = async () => {
     if (!studentName.trim()) {
@@ -51,8 +50,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setRese
       } else {
         setStudents(users);
         if (users.length === 1) {
-          // Auto-select the first student if only one result is found
-          handleSelectStudent(users[0].id, users[0].first_name, users[0].last_name);
+          handleSelectStudent(users[0]);
         }
       }
     } catch (error) {
@@ -60,10 +58,10 @@ const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setRese
     }
   };
 
-  const handleSelectStudent = (userId: string, firstName: string, lastName: string) => {
-    setStudentName(`${firstName} ${lastName}`);
-    setSelectedStudentId(userId);
-    onUserFound(userId.toString());
+  const handleSelectStudent = (student: Student) => {
+    setStudentName(`${student.first_name} ${student.last_name}`);
+    setSelectedStudentId(student.id);
+    onUserFound(student);
   };
 
   const handleSubmitEditing = () => {
@@ -93,7 +91,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setRese
 
       {students.length > 0 &&
         students.map((item) => (
-          <TouchableOpacity key={item.id} onPress={() => handleSelectStudent(item.id, item.first_name, item.last_name)}>
+          <TouchableOpacity key={item.id} onPress={() => handleSelectStudent(item)}>
             <View style={styles.studentItem}>
               <Text
                 style={[styles.studentName, item.id === selectedStudentId && styles.selectedStudentName]}

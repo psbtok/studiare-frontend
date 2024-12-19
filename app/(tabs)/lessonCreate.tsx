@@ -10,14 +10,15 @@ import TimeRangePickerComponent from '@/components/General/Interactive/TimeRange
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
 import UserSearch from '@/components/General/Interactive/UserSearch';
+import { Student } from '@/models/models'; 
 
 export default function CreateLessonScreen() {
   const initialPrice = 1000;
 
   const [subject, setSubject] = useState('');
   const [notes, setNotes] = useState('');
-  const [studentId, setStudentId] = useState('');
-  const [resetFlag, setResetFlag] = useState(false); // Flag to trigger reset in UserSearch
+  const [student, setStudent] = useState<Student>({ id: '', first_name: '', last_name: '' });
+  const [resetFlag, setResetFlag] = useState(false);
   const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -26,7 +27,7 @@ export default function CreateLessonScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleCreateLesson = async () => {
-    const errors = validateCreateLessonInput(subject, studentId, dateStart, dateEnd, price);
+    const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
@@ -34,8 +35,8 @@ export default function CreateLessonScreen() {
     }
 
     try {
-      await createLessonService(
-        parseInt(studentId),
+      let lesson = await createLessonService(
+        parseInt(student.id),
         subject,
         dateStart.toISOString(),
         dateEnd.toISOString(),
@@ -49,7 +50,12 @@ export default function CreateLessonScreen() {
         [
           {
             text: words.ok,
-            onPress: () => router.back(),
+            onPress: () => {
+              router.replace({
+                pathname: '/lesson/lessonDetail',
+                params: { lesson: JSON.stringify(lesson) }
+              });
+            }
           },
         ]
       );
@@ -64,13 +70,13 @@ export default function CreateLessonScreen() {
     setDateStart(new Date());
     setDateEnd(new Date());
     setNotes('');
-    setStudentId('');
+    setStudent({ id: '', first_name: '', last_name: '' }); // Reset student object
     setPrice(initialPrice);
     setResetFlag(true);
   };
 
-  const handleStudentFound = (userId: string) => {
-    setStudentId(userId);
+  const handleStudentFound = (foundStudent: Student) => {
+    setStudent(foundStudent); // Set the entire Student object
   };
 
   useEffect(() => {
@@ -126,7 +132,11 @@ export default function CreateLessonScreen() {
         />
 
         {/* Pass resetFlag to UserSearch */}
-        <UserSearch onUserFound={handleStudentFound} resetFlag={resetFlag} setResetFlag={setResetFlag} />
+        <UserSearch 
+          onUserFound={handleStudentFound} 
+          resetFlag={resetFlag} 
+          setResetFlag={setResetFlag} 
+        />
 
         <Text style={commonStyles.label}>{words.lessonPrice}</Text>
         <NumberPicker

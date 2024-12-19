@@ -4,13 +4,12 @@ import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
-import { createLessonService, modifyLessonService } from '@/services/lessonService';
+import { modifyLessonService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
-import { Lesson } from '@/models/models';
-import { Router } from 'expo-router';
+import { Lesson, Student } from '@/models/models';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import UserSearch from '@/components/General/Interactive/UserSearch';
 
@@ -29,8 +28,8 @@ export default function LessonEditScreen() {
 
   const [subject, setSubject] = useState(lesson?.subject || '');
   const [notes, setNotes] = useState(lesson?.notes || '');
-  const [studentId, setStudentId] = useState(lesson?.student.user.id.toString() || '');
-  const [resetFlag, setResetFlag] = useState(false); // Flag to trigger reset in UserSearch
+  const [student, setStudent] = useState<Student>(lesson?.student.user || { id: '', first_name: '', last_name: '' });
+  const [resetFlag, setResetFlag] = useState(false);
   const [dateStart, setDateStart] = useState(new Date(lesson?.date_start || Date.now()));
   const [dateEnd, setDateEnd] = useState(new Date(lesson?.date_end || Date.now()));
   const [price, setPrice] = useState(lesson?.price || initialPrice);
@@ -39,7 +38,7 @@ export default function LessonEditScreen() {
   const router = useRouter();
   
   const handleModifyLesson = async () => {
-    const errors = validateCreateLessonInput(subject, studentId, dateStart, dateEnd, price);
+    const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
@@ -52,9 +51,15 @@ export default function LessonEditScreen() {
       lesson.date_end = dateEnd.toISOString();
       lesson.price = price;
       lesson.notes = notes;
-      lesson.student.user.id = parseInt(studentId); // Ensure studentId is updated
 
-      await modifyLessonService(lesson);
+      lesson.student.user = {
+        ...lesson.student.user, 
+        first_name: student.first_name,
+        id: student.id,
+        last_name: student.last_name
+      }
+
+      await modifyLessonService({...lesson, studentId: student.id});
 
       Alert.alert(
         words.success,
@@ -82,9 +87,9 @@ export default function LessonEditScreen() {
     setDateStart(new Date());
     setDateEnd(new Date());
     setNotes('');
-    setStudentId('');
+    setStudent({ id: '', first_name: '', last_name: '' });
     setPrice(initialPrice);
-    setResetFlag(true); // Trigger the reset flag to reset UserSearch
+    setResetFlag(true);
   };
 
   useEffect(() => {
@@ -102,9 +107,12 @@ export default function LessonEditScreen() {
     };
   }, []);
 
-  const handleStudentFound = (userId: string) => {
-
-    // setStudentId(userId);
+  const handleStudentFound = (student: Student) => {
+    setStudent({
+      first_name: student.first_name,
+      id: student.id,
+      last_name: student.last_name
+    })
   };
 
   return (
@@ -153,8 +161,8 @@ export default function LessonEditScreen() {
           setResetFlag={setResetFlag} 
           initialStudent={{ 
             id: lesson.student.user.id.toString(),
-            firstName: lesson.student.user.first_name, 
-            lastName: lesson.student.user.last_name 
+            first_name: lesson.student.user.first_name, 
+            last_name: lesson.student.user.last_name 
           }}
         />
 

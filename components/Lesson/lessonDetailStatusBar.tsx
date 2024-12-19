@@ -64,7 +64,6 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
         );
     };
 
-    console.log(lesson)
     const handleEdit = () => {
         const serializedLesson = encodeURIComponent(JSON.stringify(lesson));
         router.push(`/lesson/lessonEdit?lesson=${serializedLesson}`);

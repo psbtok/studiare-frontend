@@ -120,9 +120,8 @@ export const updateLessonStatusService = async (
   return await response.json();
 };
 
-export const modifyLessonService = async (updatedLesson: Lesson): Promise<Lesson> => {
+export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<Lesson> => {
   const token = await AsyncStorage.getItem('login-token');
-
   if (!token) {
     throw new Error(words.notAuthenticated);
   }

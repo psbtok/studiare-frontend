@@ -17,6 +17,12 @@ export interface Lesson {
   isConducted?: boolean | null;      
 }
 
+export interface Student {
+  id: string, 
+  first_name: string, 
+  last_name: string
+}
+
 export interface LastBid {
     id: number;
     amount: string; 

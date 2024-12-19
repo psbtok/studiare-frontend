@@ -53,9 +53,9 @@ export default function LessonDetailScreen() {
             {`${format(new Date(parsedLesson.date_start), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}
           </Text>
           {isTutor ? (
-            <PersonBadge name={`${words.learner}: ${parsedLesson.student.user.last_name} ${parsedLesson.student.user.first_name}`} />
+            <PersonBadge name={`${words.learner}: ${parsedLesson.student.user.first_name} ${parsedLesson.student.user.last_name}`} />
           ) : (
-            <PersonBadge name={`${words.tutor}: ${parsedLesson.tutor.user.last_name} ${parsedLesson.tutor.user.first_name}`} />
+            <PersonBadge name={`${words.tutor}: ${parsedLesson.tutor.user.first_name} ${parsedLesson.tutor.user.last_name}`} />
           )}
         </View>
         { parsedLesson.notes ? 
