@@ -66,6 +66,5 @@ export const validateCreateLessonInput = (
   if (price <= 0) {
     errors.push(words.invalidPrice); 
   }
-  console.log(errors)
   return errors;
 };

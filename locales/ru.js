@@ -159,7 +159,8 @@ const words = {
     studentName: 'Имя ученика',
     enterStudentName: 'Введите имя ученика',
     search: 'Поиск',
-    studentNotFound: 'Ученик не найден'
+    studentNotFound: 'Ученик не найден',
+    lessonStartsSoon: 'Занятие скоро начнется'
   };
   
   export default words

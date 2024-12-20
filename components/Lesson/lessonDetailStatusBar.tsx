@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert } from "react-native";
 import Button from "../General/Interactive/Button";
 import words from "@/locales/ru";
 import { updateLessonStatusService } from "@/services/lessonService"; 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors } from "@/styles/Colors";
 import commonStyles from "@/styles/CommonStyles";
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -13,11 +13,13 @@ import { useRouter } from "expo-router";
 
 function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     const { profile } = props;
-    const [lesson, setLesson] = useState(props.lesson);  
+    const [lesson, setLesson] = useState(props.lesson);
+    const [startsSoon, setStartsSoon] = useState(false); 
+    const lessonStartTime = new Date(lesson.date_start);
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
 
     const router = useRouter();
-    
+
     let status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation';
     if (lesson.isCancelled) {
         status = 'canceled';
@@ -28,6 +30,23 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     } else {
         status = 'awaitingConfirmation';
     }
+
+    const checkStartsSoon = () => {
+        const currentTime = new Date();
+        const timeDifference = lessonStartTime.getTime() - currentTime.getTime();
+        const threeHoursInMs = 3 * 60 * 60 * 1000; 
+        setStartsSoon(timeDifference <= threeHoursInMs && timeDifference > 0); 
+    };
+
+    useEffect(() => {
+        checkStartsSoon();
+        
+        const intervalId = setInterval(() => {
+            checkStartsSoon();
+        }, 10000);
+        
+        return () => clearInterval(intervalId);
+    }, [lesson]);
 
     const handleAction = (action: 'cancel' | 'confirm' | 'conduct') => {
         let confirmationMessage = '';
@@ -130,9 +149,9 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
                                 <View style={styles.buttonSmall}>
                                     <Button label={words.reject} onPress={() => handleAction('cancel')} />
                                 </View>
-                                <View style={styles.buttonBig}>
+                                {!startsSoon && <View style={styles.buttonBig}>
                                     <Button theme="primary" label={words.edit} onPress={() => handleEdit()} />
-                                </View>
+                                </View>}
                             </View>
                         </View>
                     )
@@ -159,7 +178,22 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
         }
     };
 
-    return <View>{getAvailableActions()}</View>;
+    return (
+        <View>
+            {
+                startsSoon &&
+                ['awaitingConfirmation', 'confirmed'].includes(status) &&
+                (
+                <View style={[styles.actionBlock, styles.actionLabel]}>
+                    <Ionicons style={styles.icon}  name="time-outline" size={24} color={Colors.deepGrey} />
+                    <Text style={commonStyles.label}>
+                        {words.lessonStartsSoon}
+                    </Text>
+                </View>
+            )}
+            {getAvailableActions()}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
