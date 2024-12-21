@@ -79,6 +79,7 @@ const words = {
     ok: 'Окей',
     exercises: 'Занятия',
     fullName: 'Имя',
+    calendar: 'Календарь',
 
     lessonCreated: "Занятие было успешно создано.",
     create: "Создать",

@@ -29,6 +29,7 @@ export default function TabLayout() {
             index: words.lessonList,
             lessonCreate: words.lessonCreation,
             profile: words.profile,
+            calendar: words.calendar,
           };
           const showLogoutButton = route.name === 'profile';
           return (
@@ -38,7 +39,7 @@ export default function TabLayout() {
             />
           );
         },
-        tabBarButton: (props) => <CustomTabBarButton {...props} />, // Использование кастомной кнопки для Tabs
+        tabBarButton: (props) => <CustomTabBarButton {...props} />,
       }}
     >
       <Tabs.Screen
@@ -48,6 +49,19 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'list' : 'list-outline'}
+              color={color}
+              size={28}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: words.calendar,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'calendar' : 'calendar-outline'}
               color={color}
               size={28}
             />

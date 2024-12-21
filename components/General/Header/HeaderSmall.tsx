@@ -36,10 +36,18 @@ const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }
     );
   };
 
+  const handleBack = () => {
+    try {
+      router.back();
+    } catch (error) {
+    }
+    router.replace('/(tabs)');
+  };
+
   return (
     <View style={styles.header}>
       {showBackButton ? (
-        <TouchableOpacity onPress={() => router.back()} style={styles.iconContainer}>
+        <TouchableOpacity onPress={handleBack} style={styles.iconContainer}>
           <Ionicons name="arrow-back" size={28} color={Colors.deepGrey} />
         </TouchableOpacity>
       ) : (

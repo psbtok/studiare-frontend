@@ -46,18 +46,26 @@ export const createLessonService = async (
   }
 };
 
-export const getLessonListService = async (filters: Record<string, any> = {}): Promise<LessonResponse> => {
+export const getLessonListService = async (filters: Record<string, any> = {}, limit: string): Promise<LessonResponse> => {
   const token = await AsyncStorage.getItem('login-token');
+  const profileString = await AsyncStorage.getItem('profile');
+  const profile: Profile | null = profileString ? JSON.parse(profileString) : null;
 
-  if (!token) {
+  if (!token || !profile) {
     throw new Error(words.notAuthenticated);
   }
 
+  const userId = profile.user?.id;
+
+  if (userId) {
+    filters.userId = userId;
+  }
 
   try {
     const queryParams = new URLSearchParams({
       ...filters,
       ordering: filters.orderByDesc ? `-${filters.orderByDesc}` : filters.orderBy || 'date_start',
+      limit: limit ?? ''
     }).toString();
 
     const response = await fetch(`${API_BASE_URL}/lessons/?${queryParams}`, {
@@ -79,6 +87,7 @@ export const getLessonListService = async (filters: Record<string, any> = {}): P
     throw error;
   }
 };
+
 
 export const updateLessonStatusService = async (
   lesson: Lesson,
