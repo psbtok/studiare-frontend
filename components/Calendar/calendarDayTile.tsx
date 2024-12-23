@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Lesson } from '@/models/models';
 import { Typography } from '@/styles/Typography';
-
+import CalendarLessonListModal from './calendarLessonListModal';
 interface DayTileProps {
   dayNumber: number;
   isToday: boolean;
@@ -11,6 +11,8 @@ interface DayTileProps {
 }
 
 const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   const circleColors = {
     canceled: Colors.alertRed,
     conducted: Colors.successGreen,
@@ -34,7 +36,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
   };
 
   return (
-    <View style={[styles.dayTile, isToday ? styles.todayTile : null]}>
+    <TouchableOpacity onPress={() => setModalVisible(true)} style={[styles.dayTile, isToday ? styles.todayTile : null]}>
       <Text style={[styles.dayText, isToday ? styles.todayText : null]}>
         {dayNumber}
       </Text>
@@ -47,7 +49,13 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
         {renderCircle(hasConfirmed, circleColors.confirmed)}
         {renderCircle(hasConducted, circleColors.conducted)}
       </View>
-    </View>
+
+      <CalendarLessonListModal 
+        visible={modalVisible} 
+        lessons={lessons} 
+        onClose={() => setModalVisible(false)} 
+      />
+    </TouchableOpacity>    
   );
 };
 
@@ -95,6 +103,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: Colors.lightGrey,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: Colors.paleGrey,
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: Typography.fontSizes.l,
+    color: Colors.deepGrey,
+    marginBottom: 10,
+  },
+  closeButton: {
+    marginTop: 10,
+    padding: 5,
+    backgroundColor: Colors.skyBlue,
+    borderRadius: 4,
+  },
+  closeButtonText: {
+    color: Colors.paleGrey,
   },
 });
 

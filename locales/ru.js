@@ -14,7 +14,7 @@ const words = {
     
     welcome: 'Добро пожаловать!',
     slogan: 'Leet — платформа для обучения',
-
+    close: 'Закрыть',
     welcomeBack: 'С возвращением!',
     createAccount: 'Создайте аккаунт',
     registrationSuccess: 'Регистрация прошла успешно',
