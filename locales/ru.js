@@ -63,6 +63,7 @@ const words = {
     student: 'Студент',
     learner: 'Ученик',
     loadingProfile: 'Загрузка профиля...',
+    loading: 'Загрузка',
     logout: 'Выйти',
 
     profile: 'Профиль',
@@ -151,9 +152,10 @@ const words = {
     lessonUpdated: 'Занятие обновлено!',
     confirmationTitle: 'Подтверждение', 
     confirmCancelLesson: 'Вы хотите отменить занятие?',
+    confirmCancelLessonWithFee: 'Вы хотите отменить занятие? При поздней отмене репетитор получает 30% от стоимости занятия.',
     youNeedToConfirmLesson: 'Необходимо подтвердить участие в занятии',
     confirmLesson: 'Вы хотите подтвердить участие в занятии?',
-    confirmConductLesson: 'Вы отметить занятие как проведённое?',
+    confirmConductLesson: 'Вы хотите отметить занятие как проведённое? Средства будут зачислены на ваш счет.',
     awaitingClientConfirmation: 'Ожидает подтверждения',
     youConfrimedLesson: 'Вы подтвердили желание участвовать в занятии',
     clientConfrimedLesson: 'Клиент подтвердил желание участвовать в занятии',
@@ -161,7 +163,12 @@ const words = {
     enterStudentName: 'Введите имя ученика',
     search: 'Поиск',
     studentNotFound: 'Ученик не найден',
-    lessonStartsSoon: 'Занятие скоро начнется'
+    lessonStartsSoon: 'Занятие скоро начнется',
+
+    balaceTopUp: 'Пополнение счета',
+    amount: 'Сумма',
+    back: 'Назад',
+    topUp: 'Пополнить'
   };
   
   export default words

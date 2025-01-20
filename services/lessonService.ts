@@ -100,13 +100,13 @@ export const updateLessonStatusService = async (
   let payload = {};
   switch (action) {
     case 'cancel':
-      payload = { isCancelled: true, cancellationTime: new Date().toISOString() };
+      payload = { isCancelled: true, cancellationTime: new Date().toISOString(), action };
       break;
     case 'confirm':
-      payload = { isConfirmed: true, confirmationTime: new Date().toISOString() };
+      payload = { isConfirmed: true, confirmationTime: new Date().toISOString(), action };
       break;
     case 'conduct':
-      payload = { isConducted: true };
+      payload = { isConducted: true, action };
       break;
     default:
       throw new Error(words.error);

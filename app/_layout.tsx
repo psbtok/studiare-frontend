@@ -17,6 +17,7 @@ export default function RootLayout() {
       <Stack.Screen name="+not-found" />
       <Stack.Screen name="auth" options={{ headerShown: false }} />
       <Stack.Screen name="lesson" options={{ headerShown: false }} />
+      <Stack.Screen name="balance" options={{ headerShown: false }} />
     </Stack>
   );
 }
