@@ -1,4 +1,3 @@
-// balanceService.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/config';
 
@@ -31,6 +30,38 @@ export const getBalanceService = async () => {
   }
 };
 
+export const getMonthlyIncomeService = async () => {
+  const token = await AsyncStorage.getItem('login-token');
+  
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/monthly-income/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || 'Failed to get monthly income');
+    }
+
+    return {
+      total_income: data.total_income,
+      transaction_count: data.transaction_count,
+    };
+  } catch (error: any) {
+    console.error('Get monthly income error:', error.message);
+    throw error;
+  }
+};
+
 export const topUpService = async (amount: number) => {
   const token = await AsyncStorage.getItem('login-token');
   
@@ -56,7 +87,7 @@ export const topUpService = async (amount: number) => {
       throw new Error(data.detail || 'Failed to top up balance');
     }
 
-    return data; // Assuming the response contains some data, e.g., new balance
+    return data;
   } catch (error: any) {
     console.error('Top-up error:', error.message);
     throw error;

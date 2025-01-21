@@ -17,7 +17,6 @@ export default function AuthLayout() {
           <HeaderSmall
             title={words.aboutLesson} 
             showBackButton={true}
-            onBackPress={navigation.goBack}
           />
         ),
       }}

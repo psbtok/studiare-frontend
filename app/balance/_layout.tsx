@@ -10,7 +10,6 @@ export default function AuthLayout() {
           <HeaderSmall
             title={words.balaceTopUp} 
             showBackButton={true}
-            onBackPress={navigation.goBack}
           />
         ),
       }}

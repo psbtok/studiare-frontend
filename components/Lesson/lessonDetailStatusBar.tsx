@@ -52,7 +52,7 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
         let confirmationMessage = '';
         switch (action) {
             case 'cancel':
-                if (startsSoon) {
+                if (startsSoon && !isTutor) {
                     confirmationMessage = words.confirmCancelLessonWithFee;
                 } else {                    
                     confirmationMessage = words.confirmCancelLesson;

@@ -11,6 +11,7 @@ import TutorDetails from '@/components/Tutor/tutorDetails';
 import BalanceTile from '@/components/Balance/balanceTile';
 import { Typography } from '@/styles/Typography';
 import { getProfileService } from '@/services/authService';
+import TutorStatistics from '@/components/Tutor/tutorStatistics';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -85,6 +86,7 @@ export default function ProfileScreen() {
           <View>
             <View>
               <BalanceTile balance={balance !== null ? balance : 0} />
+              <TutorStatistics />
             </View>
             <View>
               <Text style={[commonStyles.label, styles.emailBlock]}>{words.email}: </Text>

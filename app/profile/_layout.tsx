@@ -17,7 +17,6 @@ export default function AuthLayout() {
           <HeaderSmall
             title={words.profileEdit} 
             showBackButton={true}
-            onBackPress={navigation.goBack}
           />
         ),
       }}

@@ -18,11 +18,11 @@ const BalanceTile = ({ balance }: BalanceTileProps) => {
   return (
     <View style={styles.tileContainer}>
       <View style={styles.balanceContainer}>
-        <Text style={[styles.balanceText, styles.currency]}>{words.currency}</Text>
         <Text style={styles.balanceText}>{balance}</Text>
+        <Text style={[styles.balanceText, styles.currency]}>{words.currency}</Text>
       </View>
         <TouchableOpacity onPress={navigateTopUp} style={styles.plusButton}>
-          <AntDesign name="plus" size={36} color={Colors.deepGrey} />
+          <AntDesign name="plus" size={36} color={Colors.lightGrey} />
         </TouchableOpacity>
     </View>
   );
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   tileContainer: {
     borderRadius: 8,
     marginVertical: 8,
-    backgroundColor: Colors.lightGrey,
+    backgroundColor: Colors.deepGrey,
     padding: 12,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
   },
   balanceText: {
-    color: Colors.deepGrey,
+    color: Colors.lightGrey,
     fontSize: Typography.fontSizes.xxl,
     fontWeight: '500'
   },
   currency: { 
-    marginRight: 6
+    marginLeft: 6
   },
   plusButton: {
   },

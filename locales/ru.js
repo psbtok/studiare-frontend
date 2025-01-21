@@ -168,7 +168,10 @@ const words = {
     balaceTopUp: 'Пополнение счета',
     amount: 'Сумма',
     back: 'Назад',
-    topUp: 'Пополнить'
+    topUp: 'Пополнить',
+    monthlyStats: 'Статистика за',
+    totalIncome: 'Доход',
+    lessonsConducted: 'Уроков проведено'
   };
   
   export default words
