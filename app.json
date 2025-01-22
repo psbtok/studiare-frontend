@@ -4,26 +4,30 @@
     "slug": "studiare_frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icon.png",
     "scheme": "myapp",
+    "entryPoint": "./App.tsx",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "newArchEnabled": true,
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/icon.png"  
+      },
+      "package": "com.petosbratok.studiare_frontend"
     },
     "web": {
       "bundler": "metro",
       "output": "static"
+    },
+    "splash": {
+      "image": "./assets/icon.png",  
+      "resizeMode": "contain",  
+      "backgroundColor": "#ffffff"  
     },
     "plugins": [
       "expo-router",
@@ -31,6 +35,15 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "API_BASE_URL": "http://192.168.0.105:8000/api",
+      "eas": {
+        "projectId": "80d44f41-edbe-4c09-997b-5d785c8f5204"
+      }
     }
   }
 }

@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@/config';
+import Constants from 'expo-constants';
 import words from '@/locales/ru';
 import { Lesson, LessonResponse, Profile } from '@/models/models';
+
+const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const createLessonService = async (
   student: number,

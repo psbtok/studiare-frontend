@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@/config';
+import Constants from 'expo-constants';
 import { validateRegistrationInput, validateLoginInput } from '@/validators/validators';
 import words from '@/locales/ru';
+
+const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const loginService = async (username: string, password: string) => {
   const validationErrors = validateLoginInput(username, password);

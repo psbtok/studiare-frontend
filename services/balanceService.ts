@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@/config';
+import Constants from 'expo-constants';
+
+const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const getBalanceService = async () => {
+
   const token = await AsyncStorage.getItem('login-token');
   
   if (!token) {
