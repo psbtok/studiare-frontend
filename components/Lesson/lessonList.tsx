@@ -25,7 +25,6 @@ export default function LessonList() {
       });
       setLessons(response.results || []);
     } catch (error: any) {
-      Alert.alert(words.error, error.message || words.error);
     } finally {
       setLoading(false);
     }

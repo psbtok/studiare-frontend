@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { TouchableWithoutFeedback, View, StyleSheet, GestureResponderEvent } from 'react-native';
+import { TouchableWithoutFeedback, View, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
 import Header from '@/components/General/Header/Header';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function CustomTabBarButton({ children, onPress }: { children: React.ReactNode, onPress?: (event: GestureResponderEvent) => void }) {
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.tabButton}>{children}</View>
-    </TouchableWithoutFeedback>
-  );
-}
 
 export default function TabLayout() {
+  const [isTutor, setIsTutor] = useState(false);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const profile = await AsyncStorage.getItem('profile');
+      if (profile) {
+        const parsedProfile = JSON.parse(profile);
+        setIsTutor(parsedProfile.is_tutor);
+      }
+    };
+    loadProfile();
+  }, []);
+
   return (
     <Tabs
       screenOptions={{
@@ -22,6 +29,8 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors.paleGrey,
           height: 56,
+          position: 'relative',
+          paddingTop: 8
         },
         tabBarShowLabel: false,
         header: ({ route }) => {
@@ -39,7 +48,6 @@ export default function TabLayout() {
             />
           );
         },
-        tabBarButton: (props) => <CustomTabBarButton {...props} />,
       }}
     >
       <Tabs.Screen
@@ -53,6 +61,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
+          href: '/(tabs)',
         }}
       />
       <Tabs.Screen
@@ -66,6 +75,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
+          href: '/(tabs)/calendar'
         }}
       />
       <Tabs.Screen
@@ -79,6 +89,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
+          href: isTutor ? '/lessonCreate' : null, 
         }}
       />
       <Tabs.Screen
@@ -92,6 +103,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
+          href: '/(tabs)/profile'
         }}
       />
     </Tabs>

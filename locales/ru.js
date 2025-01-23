@@ -7,7 +7,6 @@ const words = {
     noAccount: 'Нет аккаунта?',
     doRegister: 'Зарегистрируйтесь',
 
-    loginFailed: 'Ошибка входа',
     enterUsername: 'Введите имя пользователя',
     enterPassword: 'Введите пароль',
     emailAddress: 'Почта',

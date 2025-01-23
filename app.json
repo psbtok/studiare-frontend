@@ -6,19 +6,22 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "myapp",
-    "entryPoint": "./App.tsx",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "platforms": ["ios", "android"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "ios.petosbratok.studiare_frontend"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
-        "foregroundImage": "./assets/icon.png"  
+        "foregroundImage": "./assets/icon.png"
       },
-      "package": "com.petosbratok.studiare_frontend"
+      "package": "com.petosbratok.studiare_frontend",
+      "permissions": [
+        "NOTIFICATIONS" 
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -40,7 +43,7 @@
       "router": {
         "origin": false
       },
-      "API_BASE_URL": "http://192.168.0.105:8000/api",
+      "API_BASE_URL": "https://petosbratok.pythonanywhere.com/api",
       "eas": {
         "projectId": "80d44f41-edbe-4c09-997b-5d785c8f5204"
       }
