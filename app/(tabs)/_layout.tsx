@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { TouchableWithoutFeedback, View, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import Header from '@/components/General/Header/Header';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export default function TabLayout() {
   const [isTutor, setIsTutor] = useState(false);
@@ -22,6 +21,12 @@ export default function TabLayout() {
     loadProfile();
   }, []);
 
+  const CustomTabBarButton = ({ children, onPress }: { children: React.ReactNode, onPress?: () => void }) => (
+    <Pressable onPress={onPress} style={styles.tabButton}>
+      {children}
+    </Pressable>
+  );
+
   return (
     <Tabs
       screenOptions={{
@@ -29,8 +34,9 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors.paleGrey,
           height: 56,
-          position: 'relative',
-          paddingTop: 8
+          width: isTutor ? '100%' : '133%',
+          paddingLeft: isTutor ? 0 : 16,
+          paddingRight: isTutor ? 0 : 16
         },
         tabBarShowLabel: false,
         header: ({ route }) => {
@@ -61,7 +67,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
-          href: '/(tabs)',
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
         }}
       />
       <Tabs.Screen
@@ -75,23 +81,28 @@ export default function TabLayout() {
               size={28}
             />
           ),
-          href: '/(tabs)/calendar'
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
         }}
       />
-      <Tabs.Screen
-        name="lessonCreate"
-        options={{
-          title: words.createLesson,
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'add-circle' : 'add-circle-outline'}
-              color={color}
-              size={28}
-            />
-          ),
-          href: isTutor ? '/lessonCreate' : null, 
-        }}
-      />
+      
+      {/* Conditionally render the "Add Lesson" tab based on isTutor */}
+      {isTutor && (
+        <Tabs.Screen
+          name="lessonCreate"
+          options={{
+            title: words.createLesson,
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? 'add-circle' : 'add-circle-outline'}
+                color={color}
+                size={28}
+              />
+            ),
+            tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          }}
+        />
+      )}
+
       <Tabs.Screen
         name="profile"
         options={{
@@ -103,7 +114,7 @@ export default function TabLayout() {
               size={28}
             />
           ),
-          href: '/(tabs)/profile'
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
         }}
       />
     </Tabs>

@@ -142,9 +142,15 @@ const CalendarScreen = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color={Colors.deepGrey} />;
+    return (
+      <View style={[styles.container, { backgroundColor: Colors.paleGrey }]}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.deepGrey} />
+        </View>
+      </View>
+    );
   }
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -197,10 +203,15 @@ const CalendarScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.paleGrey,
+    backgroundColor: Colors.paleGrey,  // Ensure the background is set here
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
+  },
+  loadingContainer: {
+    flex: 1,  
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -230,6 +241,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-});
+})
 
 export default CalendarScreen;

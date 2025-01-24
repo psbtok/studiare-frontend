@@ -41,7 +41,7 @@ const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }
       router.back();
     } catch (error) {
     }
-    router.back();
+    router.replace('/(tabs)');
   };
 
   return (

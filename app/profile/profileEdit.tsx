@@ -66,7 +66,7 @@ export default function ProfileEditScreen() {
   };
 
   const handleCancel = () => {
-    router.back();
+    router.push('/(tabs)/profile');
   };
 
   const handleUpdateTutor = (updatedTutor: any) => {
