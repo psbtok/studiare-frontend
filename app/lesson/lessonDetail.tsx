@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, ScrollView } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
 import { useLocalSearchParams } from 'expo-router';
@@ -12,12 +12,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfileService } from '@/services/authService';
 import LessonDetailStatusBar from '@/components/Lesson/lessonDetailStatusBar';
 import commonStyles from '@/styles/CommonStyles';
+import { getLessonService } from '@/services/lessonService';
 
 export default function LessonDetailScreen() {
   const { lesson } = useLocalSearchParams();
   const lessonString = Array.isArray(lesson) ? lesson[0] : lesson;
   const parsedLesson: Lesson = JSON.parse(lessonString);
+
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [lessonData, setLessonData] = useState<Lesson>(parsedLesson);
+  const [refreshing, setRefreshing] = useState(false);
 
   const formattedDate = format(new Date(parsedLesson.date_start), 'dd.MM.yyyy', { locale: ru });
   const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });
@@ -43,35 +47,53 @@ export default function LessonDetailScreen() {
 
   const isTutor = parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id;
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const updatedLesson = await getLessonService(parsedLesson.id); 
+      setLessonData(updatedLesson); 
+    } catch (error) {
+      console.error('Error refreshing lesson details:', error.message);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.lessonDetailWrapper}>
-        <View style={styles.lessonHeader}>
-          <Text style={styles.lessonSubjectText}>{parsedLesson.subject}</Text>
-          <Text style={styles.lessonSubjectText}>{parsedLesson.price} {words.currency}</Text>
-          <Text style={styles.lessonTimeText}>
-            {`${format(new Date(parsedLesson.date_start), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}
-          </Text>
-          {isTutor ? (
-            <PersonBadge name={`${words.learner}: ${parsedLesson.student.user.first_name} ${parsedLesson.student.user.last_name}`} />
-          ) : (
-            <PersonBadge name={`${words.tutor}: ${parsedLesson.tutor.user.first_name} ${parsedLesson.tutor.user.last_name}`} />
-          )}
-        </View>
-        { parsedLesson.notes ? 
-          <View style={styles.lessonDetailsSection}>
-            <Text style={[commonStyles.label, styles.notesLabel]}>
-              {words.notes + ':'}
-            </Text>
-            <Text style={commonStyles.label}>
-              {parsedLesson.notes}
-            </Text>
-          </View>
-          : ''
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.deepGrey]} />
         }
-      </View>
+      >
+        <View style={styles.lessonDetailWrapper}>
+          <View style={styles.lessonHeader}>
+            <Text style={styles.lessonSubjectText}>{lessonData?.subject}</Text>
+            <Text style={styles.lessonSubjectText}>{lessonData?.price} {words.currency}</Text>
+            <Text style={styles.lessonTimeText}>
+              {`${format(new Date(lessonData?.date_start || ''), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}
+            </Text>
+            {isTutor ? (
+              <PersonBadge name={`${words.learner}: ${lessonData?.student.user.first_name} ${lessonData?.student.user.last_name}`} />
+            ) : (
+              <PersonBadge name={`${words.tutor}: ${lessonData?.tutor.user.first_name} ${lessonData?.tutor.user.last_name}`} />
+            )}
+          </View>
+          {lessonData?.notes ? (
+            <View style={styles.lessonDetailsSection}>
+              <Text style={[commonStyles.label, styles.notesLabel]}>
+                {words.notes + ':'}
+              </Text>
+              <Text style={commonStyles.label}>
+                {lessonData?.notes}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      </ScrollView>
       <View style={styles.actionButtonWrapper}>
-        <LessonDetailStatusBar lesson={parsedLesson} profile={profile} />
+        <LessonDetailStatusBar lesson={lessonData} profile={profile} />
       </View>
     </View>
   );
@@ -82,6 +104,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: Colors.paleGrey,
+  },
+  scrollView: {
+    flex: 1,
   },
   lessonDetailWrapper: {
     flex: 1,
@@ -98,7 +123,7 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingHorizontal: 24,
     borderRadius: 16,
-},
+  },
   lessonHeader: {
     paddingVertical: 12,
     paddingHorizontal: 21,
@@ -122,5 +147,5 @@ const styles = StyleSheet.create({
   },
   notesLabel: {
     marginBottom: 0,
-  }
+  },
 });

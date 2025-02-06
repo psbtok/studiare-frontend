@@ -7,7 +7,12 @@ import { logoutService } from '@/services/authService';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 
-const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }: any) => {
+const HeaderSmall = ({
+  title,
+  showBackButton = false,
+  showLogoutButton = false,
+  showAgreement = false,
+}: any) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -40,8 +45,12 @@ const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }
     try {
       router.back();
     } catch (error) {
+      router.replace('/(tabs)');
     }
-    router.replace('/(tabs)');
+  };
+
+  const handleAgreementPress = () => {
+    router.push('/lesson/lessonInfo');
   };
 
   return (
@@ -57,6 +66,10 @@ const HeaderSmall = ({ title, showBackButton = false, showLogoutButton = false }
       {showLogoutButton ? (
         <TouchableOpacity onPress={handleLogout} style={styles.iconContainer}>
           <Feather name="log-out" size={28} color={Colors.alertRed} />
+        </TouchableOpacity>
+      ) : showAgreement ? (
+        <TouchableOpacity onPress={handleAgreementPress} style={styles.iconContainer}>
+          <Ionicons name="information-circle-outline" size={28} color={Colors.deepGrey} />
         </TouchableOpacity>
       ) : (
         <View style={styles.iconContainer} />
@@ -82,7 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconContainer: {
-    width: 40, 
+    width: 40,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',

@@ -76,17 +76,6 @@ export const registerService = async (
 
 export const logoutService = async () => {
   try {
-    const token = await AsyncStorage.getItem('login-token');
-    
-    if (token) {
-      const response = await fetch(`${API_BASE_URL}/logout/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-      });
-    }
 
     await AsyncStorage.removeItem('login-token');
     await AsyncStorage.removeItem('profile');

@@ -86,7 +86,7 @@ export default function ProfileScreen() {
           <View>
             <View>
               <BalanceTile balance={balance !== null ? balance : 0} />
-              <TutorStatistics />
+              {profile.is_tutor && <TutorStatistics />}
             </View>
             <View>
               <Text style={[commonStyles.label, styles.emailBlock]}>{words.email}: </Text>

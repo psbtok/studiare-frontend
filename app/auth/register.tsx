@@ -21,7 +21,7 @@ export default function RegistrationScreen() {
 
       await loginService(email, password);
 
-      router.replace('/auth/registrationDetails');
+      router.replace('/auth/agreement');
     } catch (error: any) {
       Alert.alert(words.registrationFailed, error.message);
     }

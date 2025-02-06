@@ -159,3 +159,31 @@ export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<
     throw error;
   }
 };
+
+export const getLessonService = async (lessonId: number): Promise<Lesson> => {
+  const token = await AsyncStorage.getItem('login-token');
+  
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/lessons/${lessonId}/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+
+    const data: Lesson = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Fetch lesson error:', error.message);
+    throw error;
+  }
+};

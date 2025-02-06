@@ -32,13 +32,13 @@ function LessonListItem(props: { lesson: Lesson }) {
   const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
     switch (status) {
       case 'canceled':
-        return <AntDesign name="closecircleo" size={22} color={Colors.deepGrey} />;
+        return <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />;
       case 'conducted':
-        return <MaterialIcons name="paid" size={28} color={Colors.deepGrey} />;
-      case 'confirmed':
         return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
+      case 'confirmed':
+        return <AntDesign name="checkcircleo" size={22} color={Colors.deepGrey} />;
       case 'awaitingConfirmation':
-        return <Ionicons name="time" size={26} color={Colors.deepGrey} />;
+        return <AntDesign name="clockcircleo" size={22} color={Colors.deepGrey} />;
       default:
         return null;
     }
@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     marginVertical: 8,
     borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: Colors.alertRed,
     shadowColor: Colors.deepGrey,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

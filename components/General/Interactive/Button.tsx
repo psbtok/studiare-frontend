@@ -9,32 +9,39 @@ type Props = {
   onPress?: () => void;
   inline?: boolean;
   isClosing?: boolean;
+  disabled?: boolean; 
 };
 
-export default function Button({ label, theme, onPress, inline, isClosing }: Props) {
+export default function Button({ label, theme, onPress, inline, isClosing, disabled }: Props) {
   const inlineStyle = inline ? styles.inlineContainer : {};
 
   const renderContent = isClosing ? (
     <Ionicons name="close" size={32} color={Colors.deepGrey} />
   ) : (
-    <Text style={[styles.buttonLabel, theme === 'primary' && { color: Colors.paleGrey }]}>
+    <Text
+      style={[
+        styles.buttonLabel,
+        theme === 'primary' && { color: Colors.paleGrey },
+        disabled && styles.disabledText,
+      ]}
+    >
       {label}
     </Text>
   );
 
-  if (theme === 'primary') {
-    return (
-      <View style={[styles.buttonContainer, inlineStyle]}>
-        <Pressable style={[styles.button, { backgroundColor: Colors.deepGrey }]} onPress={onPress}>
-          {renderContent}
-        </Pressable>
-      </View>
-    );
-  }
+  const buttonStyle = [
+    styles.button,
+    theme === 'primary' && { backgroundColor: Colors.deepGrey },
+    disabled && styles.disabledButton,
+  ];
 
   return (
     <View style={[styles.buttonContainer, inlineStyle]}>
-      <Pressable style={styles.button} onPress={onPress}>
+      <Pressable
+        style={buttonStyle}
+        onPress={onPress}
+        disabled={disabled}
+      >
         {renderContent}
       </Pressable>
     </View>
@@ -66,5 +73,12 @@ const styles = StyleSheet.create({
     color: Colors.deepGrey,
     fontSize: Typography.fontSizes.s,
     marginBottom: 2,
+  },
+  disabledButton: {
+    backgroundColor: Colors.lightGrey, 
+    borderColor: Colors.mediumGrey, 
+  },
+  disabledText: {
+    color: Colors.mediumGrey, 
   },
 });

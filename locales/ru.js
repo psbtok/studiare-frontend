@@ -10,7 +10,7 @@ const words = {
     enterUsername: 'Введите имя пользователя',
     enterPassword: 'Введите пароль',
     emailAddress: 'Почта',
-    
+    info: 'Справка',
     welcome: 'Добро пожаловать!',
     slogan: 'Leet — платформа для обучения',
     close: 'Закрыть',
@@ -170,7 +170,25 @@ const words = {
     topUp: 'Пополнить',
     monthlyStats: 'Статистика за',
     totalIncome: 'Доход',
-    lessonsConducted: 'Уроков проведено'
+    lessonsConducted: 'Уроков проведено',
+    agreementTitle: 'Соглашение',
+    agreementText: 'Пожалуйста, ознакомьтесь и согласитесь с нашими ',
+    agreementLink: 'условиями и положениями',
+    agreeToContinue: 'Вы должны согласиться, чтобы продолжить',
+    agreed: 'Согласен',
+    notAgreed: 'Не согласен',
+    proceed: 'Продолжить',
+    agreementTitle: 'Пользовательское соглашение',
+
+    agreementTextInfo: 'Пожалуйста, ознакомьтесь с нашим',
+    agreementLinkInfo: 'пользовательским соглашением',
+    agreementSuffix: ', чтобы продолжить.',
+    statusTitle: 'Статусы занятий',
+    statusCanceled: 'Отменено',
+    statusConducted: 'Проведено',
+    statusConfirmed: 'Подтверждено',
+    statusAwaitingConfirmation: 'Ожидает подтверждения',
+    agreementInfo: 'Ознакомьтесь с нашими ',
   };
   
   export default words

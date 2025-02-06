@@ -7,8 +7,6 @@ import React, { useState, useEffect } from 'react';
 import { Colors } from "@/styles/Colors";
 import commonStyles from "@/styles/CommonStyles";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
@@ -97,14 +95,14 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
             case 'canceled':
                 return (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
-                        <AntDesign style={styles.icon} name="closecircleo" size={22} color={Colors.deepGrey} />
+                        <AntDesign style={styles.icon} name="closecircle" size={22} color={Colors.deepGrey} />
                         <Text style={commonStyles.label}>{words.lessonCanceled}</Text>
                     </View>
                 )
             case 'conducted':
                 return (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
-                        <MaterialIcons style={[styles.icon, styles.paidIcon]} name="paid" size={28} color={Colors.deepGrey} />
+                        <AntDesign style={styles.icon} name="checkcircle" size={22} color={Colors.deepGrey} />
                         <Text style={commonStyles.label}>{words.lessonConducted}</Text>
                     </View>
                 )
@@ -144,7 +142,7 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
                     return (
                         <View>
                             <View style={[styles.actionBlock, styles.actionLabel]}>
-                                <Ionicons style={styles.icon}  name="time" size={24} color={Colors.deepGrey} />
+                                <AntDesign style={styles.icon} name="clockcircleo" size={22} color={Colors.deepGrey} />
                                 <Text style={commonStyles.label}>
                                     {words.awaitingClientConfirmation}
                                 </Text>
@@ -189,7 +187,7 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
                 ['awaitingConfirmation', 'confirmed'].includes(status) &&
                 (
                 <View style={[styles.actionBlock, styles.actionLabel]}>
-                    <Ionicons style={styles.icon}  name="time-outline" size={24} color={Colors.deepGrey} />
+                    <AntDesign style={styles.icon} name="clockcircle" size={22} color={Colors.deepGrey} />
                     <Text style={commonStyles.label}>
                         {words.lessonStartsSoon}
                     </Text>
@@ -222,12 +220,9 @@ const styles = StyleSheet.create({
         flex: 1.5
     },
     icon: {
-        paddingTop: 4,
+        paddingTop: 3,
         marginRight: 8,
     },
-    paidIcon: {
-        paddingTop: 1
-    }
 });
 
 export default LessonDetailStatusBar;
