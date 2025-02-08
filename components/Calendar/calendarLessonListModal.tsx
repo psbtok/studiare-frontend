@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Modal, TouchableOpacity, RefreshControl } from 'react-native';
 import { Colors } from '@/styles/Colors';
-import { Lesson } from '@/models/models';
+import { Lesson, Profile } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import LessonListItem from '../Lesson/lessonListItem';
 import Button from '../General/Interactive/Button';
 import words from '@/locales/ru';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface CalendarLessonListModalProps {
   visible: boolean;
@@ -17,6 +18,7 @@ interface CalendarLessonListModalProps {
 
 const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonListModalProps) => {
   const [refreshing, setRefreshing] = useState(false);
+  const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
 
   const groupLessonsByDate = (lessons: Lesson[]) => {
     return lessons.reduce((acc: Record<string, Lesson[]>, lesson) => {
@@ -27,6 +29,16 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
     }, {});
   };
 
+  useEffect(() => {
+    const loadProfile = async () => {
+      const profile = await AsyncStorage.getItem('profile');
+      if (profile) {
+        setParsedProfile(JSON.parse(profile));
+      }
+    };
+    loadProfile();
+  }, []);
+  
   const renderGroupedLessons = () => {
     const groupedLessons = groupLessonsByDate(lessons);
     const groupedArray = Object.entries(groupedLessons);
@@ -43,11 +55,17 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
                 <Text style={styles.dateHeader}>{item[0].split(',')[1].trim()}</Text>
               </View>
               <View style={styles.buttonContainer}>
-                <Button onPress={onClose} label={words.close} inline={true} isClosing={true}></Button>
+                <Button onPress={onClose} label={words.close}  isClosing={true}></Button>
               </View>
             </View>
             {item[1].map((lesson) => (
-              <LessonListItem key={lesson.id} lesson={lesson} />
+              <LessonListItem 
+                key={lesson.id} 
+                lesson={lesson} 
+                isTutor={
+                  lesson.tutor?.tutor && parsedProfile?.tutor?.id && parsedProfile.tutor.id === lesson.tutor.tutor.id
+                }              
+              />
             ))}
           </View>
         )}

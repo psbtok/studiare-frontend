@@ -14,10 +14,6 @@ export default function LessonInfoScreen() {
 
   const statusIcons = [
     {
-      icon: <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />,
-      name: words.statusCanceled,
-    },
-    {
       icon: <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />,
       name: words.statusConducted,
     },
@@ -28,6 +24,10 @@ export default function LessonInfoScreen() {
     {
       icon: <AntDesign name="clockcircleo" size={22} color={Colors.deepGrey} />,
       name: words.statusAwaitingConfirmation,
+    },
+    {
+      icon: <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />,
+      name: words.statusCanceled,
     },
   ];
 
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.xl,
     fontWeight: 'bold',
     color: Colors.deepGrey,
-    marginBottom: 24,
+    marginBottom: 12,
     textAlign: 'left',
   },
   text: {
@@ -86,13 +86,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: 16,
   },
   statusItem: {
-    width: '48%', 
+    width: '100%', 
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   statusText: {
     fontSize: Typography.fontSizes.m,

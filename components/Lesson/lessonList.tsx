@@ -4,16 +4,17 @@ import { getLessonListService } from '@/services/lessonService';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import LessonListItem from './lessonListItem';
-import { Lesson } from '@/models/models';
+import { Lesson, Profile } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LessonList() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
   const fetchLessons = async (filters = {}) => {
     setLoading(true);
     try {
@@ -29,6 +30,16 @@ export default function LessonList() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const profile = await AsyncStorage.getItem('profile');
+      if (profile) {
+        setParsedProfile(JSON.parse(profile));
+      }
+    };
+    loadProfile();
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -67,7 +78,13 @@ export default function LessonList() {
             <Text style={styles.dayHeader}>{item[0].split(',')[0]}</Text>
             <Text style={styles.dateHeader}>{item[0].split(',')[1].trim()}</Text>
             {item[1].map((lesson) => (
-              <LessonListItem key={lesson.id} lesson={lesson} />
+              <LessonListItem 
+                key={lesson.id} 
+                lesson={lesson} 
+                isTutor={
+                  lesson.tutor?.tutor && parsedProfile?.tutor?.id && parsedProfile.tutor.id === lesson.tutor.tutor.id
+                }
+              />
             ))}
           </View>
         )}
@@ -76,7 +93,7 @@ export default function LessonList() {
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
             </View>
-          ) : null // Используем null вместо false
+          ) : null
         }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.deepGrey]} />

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 16,
-    borderWidth: 3,
+    borderWidth: 2,
   },
   activeSwitch: {
     backgroundColor: Colors.deepGrey,

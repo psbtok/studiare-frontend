@@ -4,9 +4,10 @@ import { getLessonListService } from '@/services/lessonService';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import LessonListItemArchive from './lessonListItemArchive';
-import { Lesson } from '@/models/models';
+import { Lesson, Profile } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LessonListArchive() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -14,9 +15,10 @@ export default function LessonListArchive() {
   const [refreshing, setRefreshing] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
+  const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
 
-  const fetchLessons = async (currentOffset: number = 0) => {
-    if (loading || !hasMore) return;
+  const fetchLessons = async (currentOffset: number = 0, isRefresh=false) => {
+    if ((loading || !hasMore) && !isRefresh) return;
 
     setLoading(true);
     try {
@@ -41,13 +43,23 @@ export default function LessonListArchive() {
     }
   };
 
+  useEffect(() => {
+    const loadProfile = async () => {
+      const profile = await AsyncStorage.getItem('profile');
+      if (profile) {
+        setParsedProfile(JSON.parse(profile));
+      }
+    };
+    loadProfile();
+  }, []);
+
   const onRefresh = async () => {
     setRefreshing(true);
     setHasMore(true);
     setOffset(0);
     setLessons([]);
     try {
-      await fetchLessons(0);
+      await fetchLessons(0, true);
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
     } finally {
@@ -87,7 +99,12 @@ export default function LessonListArchive() {
     <FlatList
       data={lessons}
       keyExtractor={(lesson) => lesson.id.toString()}
-      renderItem={({ item }) => <LessonListItemArchive lesson={item} />}
+      renderItem={({ item }) => <LessonListItemArchive 
+        lesson={item} 
+        isTutor={
+          item.tutor?.tutor && parsedProfile?.tutor?.id && parsedProfile.tutor.id === item.tutor.tutor.id
+        } 
+    />}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.deepGrey]} />
       }

@@ -43,6 +43,7 @@ export default function AgreementScreen() {
           theme="primary"
           label={words.proceed}
           onPress={proceed}
+          inline={false}
           disabled={!isAgreed}
         />
       </View>

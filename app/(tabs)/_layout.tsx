@@ -34,7 +34,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors.paleGrey,
           height: 56,
-          width: isTutor ? '100%' : '133%',
+          width: isTutor ? '100%' : '167%',
           paddingLeft: isTutor ? 0 : 16,
           paddingRight: isTutor ? 0 : 16
         },
@@ -45,6 +45,7 @@ export default function TabLayout() {
             lessonCreate: words.lessonCreation,
             profile: words.profile,
             calendar: words.calendar,
+            subject: words.subject
           };
           const showLogoutButton = route.name === 'profile';
           return (
@@ -85,8 +86,24 @@ export default function TabLayout() {
         }}
       />
       
-      {/* Conditionally render the "Add Lesson" tab based on isTutor */}
       {isTutor && (
+        <Tabs.Screen
+          name="subject"
+          options={{
+            title: words.subject,
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? 'book' : 'book-outline'}
+                color={color}
+                size={28}
+              />
+            ),
+            tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          }}
+        />
+      )}
+
+    {isTutor && (
         <Tabs.Screen
           name="lessonCreate"
           options={{

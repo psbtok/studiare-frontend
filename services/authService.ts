@@ -79,6 +79,7 @@ export const logoutService = async () => {
 
     await AsyncStorage.removeItem('login-token');
     await AsyncStorage.removeItem('profile');
+    await AsyncStorage.removeItem('subjects');
   } catch (error) {
     console.error('Logout error:', error);
     throw error;

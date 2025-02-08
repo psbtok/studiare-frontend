@@ -86,7 +86,6 @@ const words = {
     createLesson: "Создать занятие",
     cancel: "Отменить",
     reset: 'Сбросить',
-    subject: "Предмет",
     enterSubject: "Введите предмет",
     date: "Дата",
     enterDate: "Введите дату",
@@ -189,6 +188,8 @@ const words = {
     statusConfirmed: 'Подтверждено',
     statusAwaitingConfirmation: 'Ожидает подтверждения',
     agreementInfo: 'Ознакомьтесь с нашими ',
+    noSubjectsAvailable: 'Список предметов пуст',
+    subject: 'Предмет'
   };
   
   export default words

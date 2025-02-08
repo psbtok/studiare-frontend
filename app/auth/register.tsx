@@ -57,7 +57,7 @@ export default function RegistrationScreen() {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
-        <Button theme="primary" label={words.register} onPress={register} />
+        <Button theme="primary" label={words.register} onPress={register} inline={false} />
       </View>
 
       <Text style={styles.link}>

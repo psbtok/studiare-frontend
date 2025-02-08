@@ -26,7 +26,7 @@ export default function LessonEditScreen() {
 
   const initialPrice = 1000;
 
-  const [subject, setSubject] = useState(lesson?.subject || '');
+  const [subject, setSubject] = useState(lesson?.subject || {'title': ''});
   const [notes, setNotes] = useState(lesson?.notes || '');
   const [student, setStudent] = useState<Student>(lesson?.student.user || { id: '', first_name: '', last_name: '' });
   const [resetFlag, setResetFlag] = useState(false);
@@ -46,6 +46,9 @@ export default function LessonEditScreen() {
     }
 
     try {
+      // 
+      // FIX LATER
+      // 
       lesson.subject = subject;
       lesson.date_start = dateStart.toISOString();
       lesson.date_end = dateEnd.toISOString();

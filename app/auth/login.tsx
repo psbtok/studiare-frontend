@@ -43,7 +43,7 @@ export default function LoginScreen() {
           onChangeText={setPassword}
         />
 
-        <Button theme="primary" label={words.login} onPress={login} /> 
+        <Button theme="primary" label={words.login} onPress={login} inline={false} /> 
       </View>
 
       <Text style={styles.link}>

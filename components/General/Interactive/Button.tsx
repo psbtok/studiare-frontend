@@ -12,7 +12,7 @@ type Props = {
   disabled?: boolean; 
 };
 
-export default function Button({ label, theme, onPress, inline, isClosing, disabled }: Props) {
+export default function Button({ label, theme, onPress, inline=true, isClosing, disabled }: Props) {
   const inlineStyle = inline ? styles.inlineContainer : {};
 
   const renderContent = isClosing ? (
@@ -31,7 +31,10 @@ export default function Button({ label, theme, onPress, inline, isClosing, disab
 
   const buttonStyle = [
     styles.button,
-    theme === 'primary' && { backgroundColor: Colors.deepGrey },
+    theme === 'primary' && { 
+      backgroundColor: Colors.deepGrey,
+      borderColor: Colors.deepGrey
+    },
     disabled && styles.disabledButton,
   ];
 
@@ -54,9 +57,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
+    backgroundColor: Colors.lightGrey
   },
   inlineContainer: {
-    height: 52,
+    height: 53,
   },
   button: {
     borderRadius: 16,
@@ -65,12 +69,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderWidth: 3,
-    borderColor: Colors.deepGrey,
+    borderWidth: 2,
+    borderColor: Colors.mediumGrey,
   },
   buttonLabel: {
     fontWeight: 'bold',
-    color: Colors.deepGrey,
+    color: Colors.mediumGrey,
     fontSize: Typography.fontSizes.s,
     marginBottom: 2,
   },

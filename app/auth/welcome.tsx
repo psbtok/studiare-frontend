@@ -23,11 +23,13 @@ export default function WelcomeScreen() {
             theme="primary"
             label={words.login}
             onPress={() => router.push('/auth/login')}
+            inline={false}
           />
         </View>
         <Button
           label={words.register}
           onPress={() => router.push('/auth/register')}
+          inline={false}
         />
       </View>
     </View>

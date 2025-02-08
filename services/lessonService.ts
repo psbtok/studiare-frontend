@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import words from '@/locales/ru';
-import { Lesson, LessonResponse, Profile } from '@/models/models';
+import { Subject, Lesson, LessonResponse, Profile } from '@/models/models';
 
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
@@ -48,7 +48,7 @@ export const createLessonService = async (
   }
 };
 
-export const getLessonListService = async (filters: Record<string, any> = {}, limit: string): Promise<LessonResponse> => {
+export const getLessonListService = async (filters: Record<string, any> = {}, limit?: string): Promise<LessonResponse> => {
   const token = await AsyncStorage.getItem('login-token');
   const profileString = await AsyncStorage.getItem('profile');
   const profile: Profile | null = profileString ? JSON.parse(profileString) : null;
@@ -184,6 +184,35 @@ export const getLessonService = async (lessonId: number): Promise<Lesson> => {
     return data;
   } catch (error: any) {
     console.error('Fetch lesson error:', error.message);
+    throw error;
+  }
+};
+
+export const getSubjectListService = async (): Promise<Subject[]> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/subjects/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+    
+    const data: {results: Subject[]} = await response.json();
+    await AsyncStorage.setItem('subjects', JSON.stringify(data.results));
+    return data.results;
+  } catch (error: any) {
+    console.error('Fetch subjects error:', error.message);
     throw error;
   }
 };

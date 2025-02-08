@@ -10,11 +10,9 @@ import { ru } from 'date-fns/locale';
 import PersonBadge from '../General/NonInteractive/personBadge';
 import commonStyles from '@/styles/CommonStyles';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-function LessonListItemArchive(props: { lesson: Lesson }) {
-  const { lesson } = props;
+function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
+  const { lesson, isTutor } = props;
   const router = useRouter();
 
   const formattedDate = format(new Date(lesson.date_start), 'dd.MM.yyyy', { locale: ru });
@@ -56,10 +54,14 @@ function LessonListItemArchive(props: { lesson: Lesson }) {
       }
     >
       <View style={styles.subjectContainer}>
-        <Text style={styles.subject}>{lesson.subject}</Text>
+        <Text style={styles.subject}>{lesson.subject.title}</Text>
         <Text style={styles.date}>{formattedDate}</Text>
       </View>
-      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name} />
+      {isTutor ? (
+        <PersonBadge name={`${words.learner}: ${lesson?.student.user.first_name} ${lesson?.student.user.last_name}`} />
+      ) : (
+        <PersonBadge name={`${words.tutor}: ${lesson?.tutor.user.first_name} ${lesson?.tutor.user.last_name}`} />
+      )}          
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   lessonDetails: {
+    marginTop: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -42,9 +42,9 @@ const HeaderSmall = ({
   };
 
   const handleBack = () => {
-    try {
+    if (router.canGoBack()) {
       router.back();
-    } catch (error) {
+    } else {
       router.replace('/(tabs)');
     }
   };

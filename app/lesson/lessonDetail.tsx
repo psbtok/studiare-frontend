@@ -69,7 +69,7 @@ export default function LessonDetailScreen() {
       >
         <View style={styles.lessonDetailWrapper}>
           <View style={styles.lessonHeader}>
-            <Text style={styles.lessonSubjectText}>{lessonData?.subject}</Text>
+            <Text style={styles.lessonSubjectText}>{lessonData?.subject.title}</Text>
             <Text style={styles.lessonSubjectText}>{lessonData?.price} {words.currency}</Text>
             <Text style={styles.lessonTimeText}>
               {`${format(new Date(lessonData?.date_start || ''), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}

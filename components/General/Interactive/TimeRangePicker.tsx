@@ -125,7 +125,7 @@ export default function TimeRangePickerComponent({
         <TouchableOpacity onPress={() => handleDurationChange(false)}>
           <AntDesign name="minus" size={36} color={Colors.deepGrey} />
         </TouchableOpacity>
-        <Text style={[commonStyles.label, styles.label, styles.durationLabel]}>{`${duration} мин`}</Text>
+        <Text style={[commonStyles.label, styles.label, styles.durationLabel]}>{`${parseInt(duration)} мин`}</Text>
         <TouchableOpacity onPress={() => handleDurationChange(true)}>
           <AntDesign name="plus" size={36} color={Colors.deepGrey} />
         </TouchableOpacity>

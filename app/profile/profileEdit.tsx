@@ -111,10 +111,10 @@ export default function ProfileEditScreen() {
 
       <View style={styles.buttonBlock}>
         <View style={[styles.buttonContainer, styles.buttonFirst]}>
-          <Button label={words.cancel} onPress={handleCancel} />
+          <Button  label={words.cancel} onPress={handleCancel} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.save} onPress={handleSaveProfile} />
+          <Button  theme="primary" label={words.save} onPress={handleSaveProfile} />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -136,9 +136,8 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    marginTop: 24,
+    marginVertical: 16,
     alignItems: 'center',
-    marginBottom: 16,
   },
   buttonFirst: {
     marginRight: 16,

@@ -1,4 +1,5 @@
 import words from '@/locales/ru';
+import { Subject } from '@/models/models';
 
 export const validateRegistrationInput = (
   email: string,
@@ -41,17 +42,20 @@ export const validateLoginInput = (
 };
 
 export const validateCreateLessonInput = (
-  subject: string,
+  subject: Subject,
   studentId: string,
   dateStart: Date,
   dateEnd: Date,
   price: number
 ): string[] => {
   const errors: string[] = [];
+  // 
+  // FIX LATER
+  // 
 
-  if (!subject.trim()) {
-    errors.push(words.subjectEmpty);
-  }
+  // if (!subject.id) {
+  //   errors.push(words.subjectEmpty);
+  // }
   
   if (!studentId.trim()) {
     errors.push(words.studentIdEmpty);

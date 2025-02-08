@@ -83,7 +83,7 @@ export default function RegistrationDetailsScreen() {
 
         <RoleSelector isTutor={isTutor} setIsTutor={setIsTutor} />
 
-        <Button theme="primary" label={words.save} onPress={submitDetails} />
+        <Button theme="primary" label={words.save} onPress={submitDetails} inline={false} />
       </View>
     </View>
   );

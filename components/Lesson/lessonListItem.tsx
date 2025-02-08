@@ -13,8 +13,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-function LessonListItem(props: { lesson: Lesson }) {
-  const { lesson } = props;
+function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
+  const { lesson, isTutor } = props;
   const router = useRouter();
 
   const formattedTimeStart = format(new Date(lesson.date_start), 'HH:mm', { locale: ru });
@@ -55,8 +55,12 @@ function LessonListItem(props: { lesson: Lesson }) {
       }
 >
 
-      <Text style={styles.subject}>{lesson.subject}</Text>
-      <PersonBadge name={lesson.student.user.last_name + ' ' + lesson.student.user.first_name}></PersonBadge>
+      <Text style={styles.subject}>{lesson.subject.title}</Text>
+      {isTutor ? (
+        <PersonBadge name={`${words.learner}: ${lesson?.student.user.first_name} ${lesson?.student.user.last_name}`} />
+      ) : (
+        <PersonBadge name={`${words.tutor}: ${lesson?.tutor.user.first_name} ${lesson?.tutor.user.last_name}`} />
+      )}      
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
@@ -92,6 +96,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   lessonDetails: {
+    marginTop: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

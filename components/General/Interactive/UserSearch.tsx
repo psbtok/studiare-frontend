@@ -85,7 +85,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setRese
           />
         </View>
         <View style={styles.searchButton}>
-          <Button label={words.search} onPress={handleSearchStudent} inline={true} />
+          <Button label={words.search} onPress={handleSearchStudent} />
         </View>
       </View>
 
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   searchButton: {
     width: 100,
     marginLeft: 8,
+    bottom: 1,
     flexShrink: 1,
   },
   studentItem: {
