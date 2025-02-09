@@ -21,6 +21,7 @@ export default function CreateSubjectScreen() {
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
   const [colorId, setColorId] = useState<number | null>(1); 
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleCreateSubject = async () => {
@@ -35,6 +36,7 @@ export default function CreateSubjectScreen() {
       return;
     }
 
+    setLoading(true); 
     try {
       const subject = await createSubjectService(
         title,
@@ -59,6 +61,8 @@ export default function CreateSubjectScreen() {
     } catch (error: any) {
       console.error('Error creating subject:', error.message);
       Alert.alert(words.error, error.message);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -82,11 +86,6 @@ export default function CreateSubjectScreen() {
           value={title}
           onChangeText={setTitle}
         />
-        <Text style={commonStyles.label}>{words.color}</Text>
-        <ColorPicker
-          onSelect={(id) => setColorId(id)}
-          selectedColorId={colorId}
-        />
         <Text style={commonStyles.label}>{words.notes}</Text>
         <TextInput
           style={commonStyles.input}
@@ -95,13 +94,23 @@ export default function CreateSubjectScreen() {
           value={notes}
           onChangeText={setNotes}
         />
+        <Text style={commonStyles.label}>{words.color}</Text>
+        <ColorPicker
+          onSelect={(id) => setColorId(id)}
+          selectedColorId={colorId}
+        />
       </View>
       <View style={styles.buttonBlock}>
         <View style={[styles.buttonContainer, styles.buttonFirst]}>
           <Button label={words.reset} onPress={handleReset} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.create} onPress={handleCreateSubject} />
+          <Button 
+            theme="primary" 
+            label={loading ? words.creating : words.create} 
+            onPress={handleCreateSubject} 
+            disabled={loading} 
+          />
         </View>
       </View>
     </KeyboardAvoidingView>

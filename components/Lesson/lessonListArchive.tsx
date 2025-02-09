@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert, RefreshControl } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, RefreshControl, ActivityIndicator } from 'react-native';
 import { getLessonListService } from '@/services/lessonService';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
@@ -95,6 +95,14 @@ export default function LessonListArchive() {
     );
   }
 
+  if (loading && !refreshing) {
+    return (
+      <View style={styles.emptyContainer}>
+        <ActivityIndicator size="large" color={Colors.deepGrey} />;
+      </View>
+    )
+  }
+
   return (
     <FlatList
       data={lessons}
@@ -121,6 +129,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   emptyContainer: {
+    backgroundColor: Colors.paleGrey,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -41,7 +41,11 @@ export default function SubjectScreen() {
   }, []);
 
   if (loading && !refreshing) {
-    return <ActivityIndicator size="large" color={Colors.deepGrey} />;
+    return (
+      <View style={styles.emptyContainer}>
+        <ActivityIndicator size="large" color={Colors.deepGrey} />;
+      </View>
+    )
   }
 
   return (
@@ -74,6 +78,7 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
+    backgroundColor: Colors.paleGrey,
     justifyContent: 'center',
     alignItems: 'center',
   },

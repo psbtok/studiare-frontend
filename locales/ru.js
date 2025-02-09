@@ -203,7 +203,9 @@ const words = {
     yesDelete: 'Да, удалить',
     confirmDeleteSubject: 'Вы хотите удалить предмет?',
     subjectDeletedSuccessfully: 'Предмет успешно удален',
-    subjectUpdated: 'Предмет обновлен'
+    subjectUpdated: 'Предмет обновлен',
+    saving: 'Сохранение..',
+    creating: 'Создание..'
   };
   
   export default words

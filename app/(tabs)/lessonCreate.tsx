@@ -27,6 +27,7 @@ export default function CreateLessonScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleCreateLesson = async () => {
+    // ADD LOADING.
     const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
 
     if (errors.length > 0) {

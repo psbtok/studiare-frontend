@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingBottom: 16,
   },
   buttonSmall: {
     flex: 1,

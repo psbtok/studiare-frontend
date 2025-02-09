@@ -26,6 +26,7 @@ export default function SubjectEditScreen() {
   const [title, setTitle] = useState(parsedSubject.title);
   const [notes, setNotes] = useState(parsedSubject.notes || '');
   const [colorId, setColorId] = useState<number | null>(parsedSubject.colorId || 1);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const router = useRouter();
 
   const handleSave = async () => {
@@ -39,6 +40,8 @@ export default function SubjectEditScreen() {
       Alert.alert(words.error, errors.join('\n'));
       return;
     }
+
+    setIsLoading(true); // Start loading
 
     try {
       const updatedSubject = await editSubjectService(
@@ -66,6 +69,8 @@ export default function SubjectEditScreen() {
     } catch (error: any) {
       console.error('Error updating subject:', error.message);
       Alert.alert(words.error, error.message);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -89,11 +94,6 @@ export default function SubjectEditScreen() {
           value={title}
           onChangeText={setTitle}
         />
-        <Text style={commonStyles.label}>{words.color}</Text>
-        <ColorPicker
-          onSelect={(id) => setColorId(id)}
-          selectedColorId={colorId}
-        />
         <Text style={commonStyles.label}>{words.notes}</Text>
         <TextInput
           style={commonStyles.input}
@@ -102,13 +102,23 @@ export default function SubjectEditScreen() {
           value={notes}
           onChangeText={setNotes}
         />
+        <Text style={commonStyles.label}>{words.color}</Text>
+        <ColorPicker
+          onSelect={(id) => setColorId(id)}
+          selectedColorId={colorId}
+        />
       </View>
       <View style={styles.buttonBlock}>
         <View style={[styles.buttonContainer, styles.buttonFirst]}>
           <Button label={words.reset} onPress={handleReset} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.save} onPress={handleSave} />
+          <Button 
+            theme="primary" 
+            label={isLoading ? words.saving : words.save} 
+            onPress={handleSave} 
+            disabled={isLoading} 
+          />
         </View>
       </View>
     </KeyboardAvoidingView>
