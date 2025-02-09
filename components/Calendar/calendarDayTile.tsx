@@ -19,6 +19,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
   const additionalLessons = Math.max(0, totalLessons - maxLines);
 
   const subjectColors = [
+    Colors.subjectColor0,
     Colors.subjectColor1,
     Colors.subjectColor2,
     Colors.subjectColor3,
@@ -31,7 +32,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
 
   const renderLines = () => {
     return lessons.slice(0, maxLines).map((lesson, index) => {
-      const color = subjectColors[lesson.subject.colorId] ?? Colors.stoneGrey;
+      const color = subjectColors[lesson.subject.colorId] ?? Colors.subjectColor0;
       return <View key={index} style={[styles.line, { backgroundColor: color }]} />;
     });
   };

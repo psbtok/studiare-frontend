@@ -72,3 +72,20 @@ export const validateCreateLessonInput = (
   }
   return errors;
 };
+
+export const validateCreateSubjectInput = (
+  title: string,
+  colorId: number,
+): string[] => {
+  const errors: string[] = [];
+
+  if (!title.trim()) {
+    errors.push(words.titleEmpty);
+  }
+
+  if (colorId < 1 || colorId > 9) {
+    errors.push(words.invalidColorId);
+  }
+
+  return errors;
+};

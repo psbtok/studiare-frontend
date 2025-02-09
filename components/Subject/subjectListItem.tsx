@@ -5,12 +5,15 @@ import { Subject } from '@/models/models';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import commonStyles from '@/styles/CommonStyles';
+import { AntDesign } from '@expo/vector-icons';
 
 function SubjectListItem(props: { subject: Subject }) {
   const { subject } = props;
+  const router = useRouter();
 
   const subjectColors = [
+    Colors.subjectColor0,
     Colors.subjectColor1,
     Colors.subjectColor2,
     Colors.subjectColor3,
@@ -21,31 +24,46 @@ function SubjectListItem(props: { subject: Subject }) {
     Colors.subjectColor8,
   ];
 
-  const color = 
-    subject.colorId && subject.colorId < 9 ?
-    subjectColors[subject.colorId] :
-    Colors.lightGrey;
+  const color =
+    subject.colorId && subject.colorId < 10
+      ? subjectColors[subject.colorId - 1]
+      : Colors.subjectColor0;
 
   return (
     <TouchableOpacity
       style={[styles.subjectItem, { borderLeftColor: color }]}
-      onPress={() => { }}
+      onPress={() => {
+        router.push({
+          pathname: '/subject/subjectDetail',
+          params: { subject: JSON.stringify(subject) },
+        });
+      }}
     >
       <View style={styles.subjectHeader}>
-        <Text style={styles.subjectTitle}>{subject.title} {subject.colorId}</Text>
+        <Text style={styles.subjectTitle} numberOfLines={1}>
+          {subject.title}
+        </Text>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.iconBlock}
+            onPress={() => {
+              router.push({
+                pathname: '/subject/subjectEdit',
+                params: { subject: JSON.stringify(subject) },
+              });
+            }}
+          >
+            <AntDesign name="edit" size={24} color={Colors.mediumGrey} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBlock}>
+            <AntDesign name="plus" size={24} color={Colors.mediumGrey} />
+          </TouchableOpacity>
+        </View>
       </View>
-
       {subject.notes && (
-        <Text style={styles.subjectNotes} numberOfLines={2}>
+        <Text style={styles.subjectNotes} numberOfLines={1}>
           {subject.notes}
         </Text>
-      )}
-
-      {subject.price && (
-        <View style={styles.priceContainer}>
-          <MaterialIcons name="attach-money" size={18} color={Colors.deepGrey} />
-          <Text style={styles.priceText}>{subject.price} {words.currency}</Text>
-        </View>
       )}
     </TouchableOpacity>
   );
@@ -78,25 +96,23 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexWrap: 'wrap',
   },
-  colorIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginLeft: 8,
-  },
   subjectNotes: {
     fontSize: Typography.fontSizes.m,
     color: Colors.mediumGrey,
     marginBottom: 8,
   },
-  priceContainer: {
+  iconContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
-  priceText: {
-    fontSize: Typography.fontSizes.m,
-    color: Colors.deepGrey,
-    marginLeft: 4,
+  iconBlock: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+    borderColor: Colors.mediumGrey,
+    borderRadius: 8,
+    borderWidth: 2,
   },
 });
 

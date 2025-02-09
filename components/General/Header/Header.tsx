@@ -1,14 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import { logoutService } from '@/services/authService';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 
-const Header = ({ title, showLogoutButton = false }: any) => {
+const Header = ({ title, showLogoutButton=false, showAddSubject=false }: any) => {
   const router = useRouter();
+
+  const handleAddSubject = () => {
+    router.push('/subject/subjectCreate')
+  }
 
   const handleLogout = async () => {
     Alert.alert(
@@ -45,6 +49,11 @@ const Header = ({ title, showLogoutButton = false }: any) => {
         </TouchableOpacity>
       ) : (
         <View style={styles.iconContainer} />
+      )}
+      {showAddSubject && (
+        <TouchableOpacity onPress={handleAddSubject} style={styles.iconContainer}>
+          <AntDesign name="plus" size={32} color={Colors.mediumGrey} />
+        </TouchableOpacity>
       )}
     </View>
   );

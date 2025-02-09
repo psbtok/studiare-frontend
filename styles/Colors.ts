@@ -10,13 +10,14 @@ export const Colors = {
   skyBlue: 'hsl(216 90.5% 59%)',
   alertRed: 'hsl(10 85.1% 63%)',
 
-  subjectColor1: 'hsl(30, 90%, 60%)', // Vibrant Orange
-  subjectColor2: 'hsl(120, 70%, 50%)', // Fresh Green
-  subjectColor3: 'hsl(200, 80%, 60%)', // Bright Cyan
-  subjectColor4: 'hsl(270, 70%, 60%)', // Soft Purple
-  subjectColor5: 'hsl(0, 80%, 60%)',   // Bold Red
-  subjectColor6: 'hsl(45, 90%, 60%)',  // Sunny Yellow
-  subjectColor7: 'hsl(330, 70%, 60%)', // Pinkish Magenta
-  subjectColor8: 'hsl(180, 70%, 50%)', // Teal
+  subjectColor0: 'hsl(212, 15.50%, 81.00%)', // Vibrant Orange
+  subjectColor1: 'hsl(30, 90.20%, 72.00%)', // Vibrant Orange
+  subjectColor2: 'hsl(120, 70.10%, 67.30%)', // Fresh Green
+  subjectColor3: 'hsl(200, 87.80%, 74.30%)', // Bright Cyan
+  subjectColor4: 'hsl(270, 72.20%, 71.80%)', // Soft Purple
+  subjectColor5: 'hsl(0, 82.10%, 69.40%)',   // Bold Red
+  subjectColor6: 'hsl(45, 84.80%, 69.00%)',  // Sunny Yellow
+  subjectColor7: 'hsl(330, 65.00%, 72.00%)', // Pinkish Magenta
+  subjectColor8: 'hsl(180, 71.00%, 72.90%)', // Teal
 
 };

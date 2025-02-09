@@ -216,3 +216,102 @@ export const getSubjectListService = async (): Promise<Subject[]> => {
     throw error;
   }
 };
+
+export const createSubjectService = async (
+  title: string,
+  colorId: number,
+  notes?: string,
+): Promise<Subject> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/subjects/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify({
+        title,
+        colorId,
+        notes,
+      }),
+    });
+
+    const data: Subject = await response.json();
+    if (!response.ok) {
+      throw new Error(data.notes || words.error);
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error('Create subject error:', error.message);
+    throw error;
+  }
+};
+
+export const deleteSubjectService = async (subjectId: number): Promise<void> => {
+  const token = await AsyncStorage.getItem('login-token');
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/subjects/${subjectId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+  } catch (error: any) {
+    console.error('Delete subject error:', error.message);
+    throw error;
+  }
+};
+
+export const editSubjectService = async (
+  id: number,
+  title?: string | number,
+  colorId?: number,
+  notes?: string,
+): Promise<Subject> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/subjects/${id}/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify({
+        title,
+        colorId,
+        notes,
+      }),
+    });
+
+    const data: Subject = await response.json();
+    if (!response.ok) {
+      throw new Error(data.notes || words.error);
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error('Edit subject error:', error.message);
+    throw error;
+  }
+};

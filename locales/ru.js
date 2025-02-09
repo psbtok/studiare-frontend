@@ -189,7 +189,21 @@ const words = {
     statusAwaitingConfirmation: 'Ожидает подтверждения',
     agreementInfo: 'Ознакомьтесь с нашими ',
     noSubjectsAvailable: 'Список предметов пуст',
-    subject: 'Предмет'
+    subject: 'Предмет',
+
+    titleEmpty: 'Заполните название предмета',
+    invalidColorId: 'Выберите цвет',
+    subjectCreated: "Предмет был успешно создан.",
+    subjectTitle: 'Название предмета',
+    color: 'Цвет',
+    enterSubjectTitle: 'Выберите название предмета',
+    colorNotSelected: 'Цвет не выбран',
+    selectPrice: 'Указать стоимость',
+    delete: 'Удалить',
+    yesDelete: 'Да, удалить',
+    confirmDeleteSubject: 'Вы хотите удалить предмет?',
+    subjectDeletedSuccessfully: 'Предмет успешно удален',
+    subjectUpdated: 'Предмет обновлен'
   };
   
   export default words

@@ -2,7 +2,6 @@ export interface Subject {
   id: number,
   title: string
   notes: string | null
-  price: number | null
   colorId: number
   user: User
 }

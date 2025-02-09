@@ -48,10 +48,12 @@ export default function TabLayout() {
             subject: words.subject
           };
           const showLogoutButton = route.name === 'profile';
+          const showAddSubject = route.name === 'subject';
           return (
             <Header
               title={titles[route.name]}
               showLogoutButton={showLogoutButton}
+              showAddSubject={showAddSubject}
             />
           );
         },
