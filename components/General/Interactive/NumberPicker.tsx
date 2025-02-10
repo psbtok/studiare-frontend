@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import { AntDesign } from '@expo/vector-icons';
@@ -45,6 +45,7 @@ export default function NumberPicker({
         value={inputValue.toString()}
         keyboardType="numeric"
         onChangeText={handleTextInputChange}
+        onSubmitEditing={() => Keyboard.dismiss()} 
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() => handleValueChange(false)}>

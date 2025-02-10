@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Modal, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Modal } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Lesson, Profile } from '@/models/models';
 import { Typography } from '@/styles/Typography';
@@ -17,7 +17,6 @@ interface CalendarLessonListModalProps {
 }
 
 const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonListModalProps) => {
-  const [refreshing, setRefreshing] = useState(false);
   const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
 
   const groupLessonsByDate = (lessons: Lesson[]) => {
@@ -78,9 +77,6 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
               <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
             </View>
           </View>
-        }
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => setRefreshing(true)} colors={[Colors.deepGrey]} />
         }
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}

@@ -23,6 +23,7 @@ export default function AuthLayout() {
     >
       <Stack.Screen name="subjectCreate"/>
       <Stack.Screen name="subjectEdit"/>
+      <Stack.Screen name="subjectDetail"/>
 
     </Stack>
   );

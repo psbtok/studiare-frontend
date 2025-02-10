@@ -311,6 +311,16 @@ export const editSubjectService = async (
       throw new Error(data.notes || words.error);
     }
 
+    const storedSubjectsString = await AsyncStorage.getItem('subjects');
+    if (storedSubjectsString) {
+      const storedSubjects: Subject[] = JSON.parse(storedSubjectsString);
+      const updatedSubjects = storedSubjects.map(subject => 
+        subject.id === id ? { ...subject, ...data } : subject
+      );
+      
+      await AsyncStorage.setItem('subjects', JSON.stringify(updatedSubjects));
+    }
+
     return data;
   } catch (error: any) {
     console.error('Edit subject error:', error.message);

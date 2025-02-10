@@ -32,7 +32,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
 
   const renderLines = () => {
     return lessons.slice(0, maxLines).map((lesson, index) => {
-      const color = subjectColors[lesson.subject.colorId] ?? Colors.subjectColor0;
+      const color = subjectColors[lesson.subject.colorId - 1] ?? Colors.subjectColor0;
       return <View key={index} style={[styles.line, { backgroundColor: color }]} />;
     });
   };
