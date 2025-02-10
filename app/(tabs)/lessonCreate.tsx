@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Keyboard, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import Button from '@/components/General/Interactive/Button';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { createLessonService } from '@/services/lessonService';
@@ -10,12 +10,15 @@ import TimeRangePickerComponent from '@/components/General/Interactive/TimeRange
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
 import UserSearch from '@/components/General/Interactive/UserSearch';
-import { Student } from '@/models/models'; 
+import { Student, Subject } from '@/models/models'; 
+import SubjectSelectionModal from '../subject/subjectSelectionModal';
 
 export default function CreateLessonScreen() {
-  const initialPrice = 1000;
+  const local = useLocalSearchParams();
+  const subjectParam = local.subject ? JSON.parse(local.subject) : {'id': 0};
 
-  const [subject, setSubject] = useState('');
+  const initialPrice = 1000;
+  const [subject, setSubject] = useState<Subject | null>(null);
   const [notes, setNotes] = useState('');
   const [student, setStudent] = useState<Student>({ id: '', first_name: '', last_name: '' });
   const [resetFlag, setResetFlag] = useState(false);
@@ -23,11 +26,25 @@ export default function CreateLessonScreen() {
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
   const [price, setPrice] = useState(initialPrice);
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); 
 
   const scrollViewRef = useRef<ScrollView>(null);
 
+  useEffect(() => {
+    if (subjectParam) {
+      if (subjectParam !== subject) {
+        setSubject(subjectParam);
+        if (subjectParam.notes && subjectParam.notes !== notes) {
+          setNotes(subjectParam.notes);
+        } else {
+          setNotes('')
+        }
+      }
+    }
+  }, [subjectParam.id]);
+
   const handleCreateLesson = async () => {
-    // ADD LOADING.
     const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
 
     if (errors.length > 0) {
@@ -35,10 +52,11 @@ export default function CreateLessonScreen() {
       return;
     }
 
+    setIsLoading(true); 
     try {
       let lesson = await createLessonService(
         parseInt(student.id),
-        subject,
+        subject.id,
         dateStart.toISOString(),
         dateEnd.toISOString(),
         price,
@@ -63,21 +81,30 @@ export default function CreateLessonScreen() {
     } catch (error: any) {
       console.error('Error creating lesson:', error.message);
       Alert.alert(words.error, error.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
   const handleReset = () => {
-    setSubject('');
+    setSubject(null);
     setDateStart(new Date());
     setDateEnd(new Date());
     setNotes('');
-    setStudent({ id: '', first_name: '', last_name: '' }); // Reset student object
+    setStudent({ id: '', first_name: '', last_name: '' }); 
     setPrice(initialPrice);
     setResetFlag(true);
   };
 
   const handleStudentFound = (foundStudent: Student) => {
-    setStudent(foundStudent); // Set the entire Student object
+    setStudent(foundStudent); 
+  };
+
+  const handleSubjectSelect = (selectedSubject: Subject) => {
+    setSubject(selectedSubject);
+    if (selectedSubject.notes?.length) {
+      setNotes(selectedSubject.notes);
+    }
   };
 
   useEffect(() => {
@@ -105,22 +132,17 @@ export default function CreateLessonScreen() {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          <TimeRangePickerComponent
-              onDateTimeChange={(date, startTime, endTime) => {
-                  setDateStart(startTime);
-                  setDateEnd(endTime);
-              }}
-          />
-        </View>
+        <TimeRangePickerComponent
+          onDateTimeChange={(date, startTime, endTime) => {
+            setDateStart(startTime);
+            setDateEnd(endTime);
+          }}
+        />
 
         <Text style={commonStyles.label}>{words.subject}</Text>
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterSubject}
-          placeholderTextColor={Colors.mediumGrey}
-          value={subject}
-          onChangeText={setSubject}
+        <Button 
+          label={subject?.id ? subject.title : words.selectSubject} 
+          onPress={() => setModalVisible(true)} 
         />
 
         <Text style={commonStyles.label}>{words.notes}</Text>
@@ -132,7 +154,6 @@ export default function CreateLessonScreen() {
           onChangeText={setNotes}
         />
 
-        {/* Pass resetFlag to UserSearch */}
         <UserSearch 
           onUserFound={handleStudentFound} 
           resetFlag={resetFlag} 
@@ -152,9 +173,20 @@ export default function CreateLessonScreen() {
           <Button label={words.reset} onPress={handleReset} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.create} onPress={handleCreateLesson} />
+          <Button 
+            theme="primary" 
+            label={isLoading ? words.creating : words.create} 
+            disabled={isLoading}
+            onPress={handleCreateLesson}
+          />
         </View>
       </View>
+
+      <SubjectSelectionModal 
+        visible={modalVisible} 
+        onClose={() => setModalVisible(false)} 
+        onSelect={handleSubjectSelect} 
+      />
     </KeyboardAvoidingView>
   );
 }

@@ -42,20 +42,16 @@ export const validateLoginInput = (
 };
 
 export const validateCreateLessonInput = (
-  subject: Subject,
+  subject: Subject | null,
   studentId: string,
   dateStart: Date,
   dateEnd: Date,
   price: number
 ): string[] => {
   const errors: string[] = [];
-  // 
-  // FIX LATER
-  // 
-
-  // if (!subject.id) {
-  //   errors.push(words.subjectEmpty);
-  // }
+  if (!subject?.id) {
+    errors.push(words.subjectEmpty);
+  }
   
   if (!studentId.trim()) {
     errors.push(words.studentIdEmpty);

@@ -27,6 +27,23 @@ export default function LessonDetailScreen() {
   const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(new Date(parsedLesson.date_end), 'HH:mm', { locale: ru });
 
+  const subjectColors = [
+      Colors.subjectColor0,
+      Colors.subjectColor1,
+      Colors.subjectColor2,
+      Colors.subjectColor3,
+      Colors.subjectColor4,
+      Colors.subjectColor5,
+      Colors.subjectColor6,
+      Colors.subjectColor7,
+      Colors.subjectColor8,
+    ];
+  
+  const color =
+    parsedLesson.subject.colorId && parsedLesson.subject.colorId < 10
+      ? subjectColors[parsedLesson.subject.colorId - 1]
+      : Colors.subjectColor0;
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -68,7 +85,7 @@ export default function LessonDetailScreen() {
         }
       >
         <View style={styles.lessonDetailWrapper}>
-          <View style={styles.lessonHeader}>
+          <View style={[styles.lessonHeader, {borderLeftColor: color}]}>
             <Text style={styles.lessonSubjectText}>{lessonData?.subject.title}</Text>
             <Text style={styles.lessonSubjectText}>{lessonData?.price} {words.currency}</Text>
             <Text style={styles.lessonTimeText}>
@@ -113,8 +130,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
-  actionButtonWrapper: {
-  },
   lessonDetailsSection: {
     paddingVertical: 16,
     flexDirection: 'column',
@@ -131,6 +146,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: Colors.deepGrey,
     borderRadius: 16,
+    borderLeftWidth: 10,
   },
   lessonTimeText: {
     marginTop: 12,

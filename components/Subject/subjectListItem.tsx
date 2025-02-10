@@ -55,7 +55,15 @@ function SubjectListItem(props: { subject: Subject }) {
           >
             <AntDesign name="edit" size={24} color={Colors.mediumGrey} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBlock}>
+          <TouchableOpacity 
+            style={styles.iconBlock}
+            onPress={() => {
+              router.push({
+                pathname: '/(tabs)/lessonCreate',
+                params: { subject: JSON.stringify(subject) },
+              });
+            }}
+            >
             <AntDesign name="plus" size={24} color={Colors.mediumGrey} />
           </TouchableOpacity>
         </View>

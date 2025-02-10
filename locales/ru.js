@@ -120,9 +120,8 @@ const words = {
     notAvailable: 'Отсутствует профиль преподавателя',
     experienceYears: 'Опыт работы, лет',
 
-    subjectEmpty: 'Поле "Предмет" не может быть пустым',
-    studentIdEmpty: 'Поле "ID студента" не может быть пустым',
-    invalidStudentId: 'ID студента должен быть числом',
+    subjectEmpty: 'Выберите предмет',
+    studentIdEmpty: 'Выберите ученика',
     invalidDateRange: 'Дата начала должна быть раньше даты окончания',
     invalidPrice: 'Цена должна быть больше нуля',
 
@@ -191,6 +190,7 @@ const words = {
     noSubjectsAvailable: 'Список предметов пуст',
     subject: 'Предмет',
 
+    selectSubject: 'Выберите предмет',
     titleEmpty: 'Заполните название предмета',
     invalidColorId: 'Выберите цвет',
     subjectCreated: "Предмет был успешно создан.",

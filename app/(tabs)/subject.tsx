@@ -43,7 +43,9 @@ export default function SubjectScreen() {
   if (loading && !refreshing) {
     return (
       <View style={styles.emptyContainer}>
-        <ActivityIndicator size="large" color={Colors.deepGrey} />;
+        <Text>
+          <ActivityIndicator size="large" color={Colors.deepGrey} />;
+        </Text>
       </View>
     )
   }

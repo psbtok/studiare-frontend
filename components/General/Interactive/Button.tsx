@@ -8,15 +8,16 @@ type Props = {
   theme?: 'primary';
   onPress?: () => void;
   inline?: boolean;
-  isClosing?: boolean;
+  hasIcon?: boolean;
+  icon?: string;
   disabled?: boolean; 
 };
 
-export default function Button({ label, theme, onPress, inline=true, isClosing, disabled }: Props) {
+export default function Button({ label, theme, onPress, inline=true, hasIcon=false, icon="close", disabled }: Props) {
   const inlineStyle = inline ? styles.inlineContainer : {};
 
-  const renderContent = isClosing ? (
-    <Ionicons name="close" size={32} color={Colors.deepGrey} />
+  const renderContent = hasIcon ? (
+    <Ionicons name={icon} size={32} color={Colors.mediumGrey} />
   ) : (
     <Text
       style={[

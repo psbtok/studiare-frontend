@@ -21,7 +21,7 @@ export default function CreateSubjectScreen() {
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
   const [colorId, setColorId] = useState<number | null>(1); 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleCreateSubject = async () => {
@@ -36,7 +36,7 @@ export default function CreateSubjectScreen() {
       return;
     }
 
-    setLoading(true); 
+    setIsLoading(true); 
     try {
       const subject = await createSubjectService(
         title,
@@ -62,7 +62,7 @@ export default function CreateSubjectScreen() {
       console.error('Error creating subject:', error.message);
       Alert.alert(words.error, error.message);
     } finally {
-      setLoading(false); 
+      setIsLoading(false); 
     }
   };
 
@@ -107,9 +107,9 @@ export default function CreateSubjectScreen() {
         <View style={styles.buttonContainer}>
           <Button 
             theme="primary" 
-            label={loading ? words.creating : words.create} 
+            label={isLoading ? words.creating : words.create} 
             onPress={handleCreateSubject} 
-            disabled={loading} 
+            disabled={isLoading} 
           />
         </View>
       </View>

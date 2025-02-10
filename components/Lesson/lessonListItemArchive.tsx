@@ -43,9 +43,26 @@ function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
     }
   };
 
+  const subjectColors = [
+          Colors.subjectColor0,
+          Colors.subjectColor1,
+          Colors.subjectColor2,
+          Colors.subjectColor3,
+          Colors.subjectColor4,
+          Colors.subjectColor5,
+          Colors.subjectColor6,
+          Colors.subjectColor7,
+          Colors.subjectColor8,
+        ];
+      
+  const color =
+    lesson.subject.colorId && lesson.subject.colorId < 10
+      ? subjectColors[lesson.subject.colorId - 1]
+      : Colors.subjectColor0;
+
   return (
     <TouchableOpacity
-      style={styles.lessonItem}
+      style={[styles.lessonItem, {borderLeftColor: color}]}
       onPress={() =>
         router.push({
           pathname: '/lesson/lessonDetail',
@@ -93,6 +110,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 4,
+    borderLeftWidth: 6
   },
   subjectContainer: {
     flexDirection: 'row',

@@ -71,7 +71,7 @@ export default function SubjectDetailScreen() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <View style={styles.lessonDetailsHeader}>
+        <View style={[styles.lessonDetailsHeader, {borderLeftColor: color}]}>
           <Text style={styles.lessonSubjectText}>{parsedSubject.title}</Text>
         </View>
 
@@ -82,15 +82,6 @@ export default function SubjectDetailScreen() {
           </View>
         )}
 
-        <View style={styles.lessonDetailsSection}>
-          <Text style={[commonStyles.label, styles.notesLabel]}>{`${words.color}:`}</Text>
-          <View
-            style={[
-              styles.colorBox,
-              { backgroundColor: color },
-            ]}
-          />
-        </View>
       </ScrollView>
 
       <View style={styles.buttonContainer}>
@@ -124,6 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.deepGrey,
     borderRadius: 16,
     marginBottom: 12,
+    borderLeftWidth: 8
   },
   lessonDetailsSection: {
     paddingVertical: 12,

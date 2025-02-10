@@ -7,7 +7,7 @@ const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const createLessonService = async (
   student: number,
-  subject: string,
+  subject: number,
   date_start: string,
   date_end: string,
   price: number,
@@ -137,6 +137,8 @@ export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<
     throw new Error(words.notAuthenticated);
   }
 
+  updatedLesson.subject = updatedLesson.subject.id
+  
   try {
     const response = await fetch(`${API_BASE_URL}/lessons/${updatedLesson.id}/`, {
       method: 'PUT', // Используем PUT для полного обновления

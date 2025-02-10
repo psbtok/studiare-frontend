@@ -9,14 +9,15 @@ import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
-import { Lesson, Student } from '@/models/models';
+import { Lesson, Student, Subject } from '@/models/models'; 
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import UserSearch from '@/components/General/Interactive/UserSearch';
+import SubjectSelectionModal from '../subject/subjectSelectionModal';
 
 export default function LessonEditScreen() {
   const local = useLocalSearchParams();
   const lessonParam = local.lesson;
-  
+
   let lesson: Lesson;
   if (typeof lessonParam === 'string') {
     lesson = JSON.parse(lessonParam) as Lesson;
@@ -26,13 +27,17 @@ export default function LessonEditScreen() {
 
   const initialPrice = 1000;
 
-  const [subject, setSubject] = useState(lesson?.subject || {'title': ''});
+  const [subject, setSubject] = useState<Subject | null>(lesson?.subject || {'title': ''});
   const [notes, setNotes] = useState(lesson?.notes || '');
   const [student, setStudent] = useState<Student>(lesson?.student.user || { id: '', first_name: '', last_name: '' });
   const [resetFlag, setResetFlag] = useState(false);
   const [dateStart, setDateStart] = useState(new Date(lesson?.date_start || Date.now()));
   const [dateEnd, setDateEnd] = useState(new Date(lesson?.date_end || Date.now()));
   const [price, setPrice] = useState(lesson?.price || initialPrice);
+  const [isLoading, setIsLoading] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false); 
+
+  const [initialLesson, setInitialLesson] = useState<Lesson>(lesson);
 
   const scrollViewRef = useRef<ScrollView>(null);
   const router = useRouter();
@@ -45,10 +50,8 @@ export default function LessonEditScreen() {
       return;
     }
 
+    setIsLoading(true); 
     try {
-      // 
-      // FIX LATER
-      // 
       lesson.subject = subject;
       lesson.date_start = dateStart.toISOString();
       lesson.date_end = dateEnd.toISOString();
@@ -73,7 +76,7 @@ export default function LessonEditScreen() {
             onPress: () => {
               router.replace({
                 pathname: '/lesson/lessonDetail',
-                params: { lesson: JSON.stringify(lesson) }
+                params: { lesson: JSON.stringify(lesson) },
               });
             }
           },
@@ -82,16 +85,18 @@ export default function LessonEditScreen() {
     } catch (error: any) {
       console.error('Error updating lesson:', error.message);
       Alert.alert(words.error, error.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
   const handleReset = () => {
-    setSubject('');
-    setDateStart(new Date());
-    setDateEnd(new Date());
-    setNotes('');
-    setStudent({ id: '', first_name: '', last_name: '' });
-    setPrice(initialPrice);
+    setSubject(initialLesson.subject);
+    setDateStart(new Date(initialLesson.date_start));
+    setDateEnd(new Date(initialLesson.date_end));
+    setNotes(initialLesson.notes ?? '');
+    setStudent(initialLesson.student.user);
+    setPrice(initialLesson.price);
     setResetFlag(true);
   };
 
@@ -115,7 +120,14 @@ export default function LessonEditScreen() {
       first_name: student.first_name,
       id: student.id,
       last_name: student.last_name
-    })
+    });
+  };
+
+  const handleSubjectSelect = (selectedSubject: Subject) => {
+    setSubject(selectedSubject);
+    if (selectedSubject.notes?.length) {
+      setNotes(selectedSubject.notes);
+    }
   };
 
   return (
@@ -128,24 +140,19 @@ export default function LessonEditScreen() {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          <TimeRangePickerComponent
-            onDateTimeChange={(date, startTime, endTime) => {
-              setDateStart(startTime);
-              setDateEnd(endTime);
-            }}
-            initialStartTime={new Date(lesson.date_start)}
-            initialEndTime={new Date(lesson.date_end)}
-          />
-        </View>
+        <TimeRangePickerComponent
+          onDateTimeChange={(date, startTime, endTime) => {
+            setDateStart(startTime);
+            setDateEnd(endTime);
+          }}
+          initialStartTime={new Date(lesson.date_start)}
+          initialEndTime={new Date(lesson.date_end)}
+        />
 
         <Text style={commonStyles.label}>{words.subject}</Text>
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterSubject}
-          placeholderTextColor={Colors.mediumGrey}
-          value={subject}
-          onChangeText={setSubject}
+        <Button 
+          label={subject ? subject.title : words.selectSubject} 
+          onPress={() => setModalVisible(true)} 
         />
 
         <Text style={commonStyles.label}>{words.notes}</Text>
@@ -157,7 +164,6 @@ export default function LessonEditScreen() {
           onChangeText={setNotes}
         />
 
-        {/* Pass the lesson object to UserSearch to pre-fill the student data */}
         <UserSearch 
           onUserFound={handleStudentFound} 
           resetFlag={resetFlag} 
@@ -182,9 +188,20 @@ export default function LessonEditScreen() {
           <Button label={words.reset} onPress={handleReset} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button theme="primary" label={words.save} onPress={handleModifyLesson} />
+          <Button 
+            theme="primary" 
+            label={isLoading ? words.saving : words.save} 
+            disabled={isLoading} 
+            onPress={handleModifyLesson} 
+          />
         </View>
       </View>
+
+      <SubjectSelectionModal 
+        visible={modalVisible} 
+        onClose={() => setModalVisible(false)} 
+        onSelect={handleSubjectSelect} 
+      />
     </KeyboardAvoidingView>
   );
 }

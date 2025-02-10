@@ -55,7 +55,7 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
                 <Text style={styles.dateHeader}>{item[0].split(',')[1].trim()}</Text>
               </View>
               <View style={styles.buttonContainer}>
-                <Button onPress={onClose} label={words.close}  isClosing={true}></Button>
+                <Button onPress={onClose} label={words.close}  hasIcon={true} icon='close'></Button>
               </View>
             </View>
             {item[1].map((lesson) => (
@@ -70,8 +70,13 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
           </View>
         )}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
+          <View style={styles.emptyComponent}>
+            <View style={styles.emptyButtonContainer}>
+                <Button onPress={onClose} label={words.close}  hasIcon={true} icon='close'></Button>
+            </View>
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
+            </View>
           </View>
         }
         refreshControl={
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     height: '95%',
     backgroundColor: Colors.paleGrey,
     borderRadius: 16,
-    padding: 16,
+    paddingHorizontal: 16,
     justifyContent: 'space-between',
   },
   closeButton: {
@@ -141,6 +146,11 @@ const styles = StyleSheet.create({
     color: Colors.mediumGrey,
     marginBottom: 8,
   },
+  emptyComponent: {
+    flexDirection: 'column',
+    flex: 1,
+    paddingBottom: 52
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -158,6 +168,10 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttonContainer: {
+    width: 52
+  },
+  emptyButtonContainer: {
+    alignSelf: 'flex-end',
     width: 52
   }
 });
