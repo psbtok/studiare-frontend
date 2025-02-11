@@ -108,7 +108,7 @@ export default function LessonList() {
       return (
         <View style={styles.emptyContainer}>
           <Text>
-            <ActivityIndicator size="large" color={Colors.deepGrey} />;
+            <ActivityIndicator size="large" color={Colors.deepGrey} />
           </Text>
         </View>
       )

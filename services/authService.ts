@@ -93,8 +93,6 @@ export const editProfileService = async (updatedProfile: any) => {
   }
 
   try {
-
-
     const response = await fetch(`${API_BASE_URL}/profile/edit/`, {
       method: 'POST',
       headers: {
@@ -110,7 +108,6 @@ export const editProfileService = async (updatedProfile: any) => {
       throw new Error(data.detail || words.profileUpdateFailed);
     }
 
-    // Update the stored profile in AsyncStorage
     await AsyncStorage.setItem('profile', JSON.stringify(data.profile));
   } catch (error: any) {
     console.error('Edit profile error:', error.message);
@@ -119,7 +116,7 @@ export const editProfileService = async (updatedProfile: any) => {
 };
 
 
-export const getProfileService = async (profileId?: number) => {
+export const getProfileService = async () => {
   const token = await AsyncStorage.getItem('login-token');
 
   if (!token) {
@@ -127,8 +124,7 @@ export const getProfileService = async (profileId?: number) => {
   }
 
   try {
-    const url = profileId ? `${API_BASE_URL}/profile/get/?profile_id=${profileId}` : `${API_BASE_URL}/profile/get/`;
-
+    const url = `${API_BASE_URL}/profile/get/`;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -143,7 +139,7 @@ export const getProfileService = async (profileId?: number) => {
       throw new Error(data.detail || words.profileFetchFailed);
     }
 
-    return data.profile;
+    return data;
   } catch (error: any) {
     console.error('Get profile error:', error.message);
     throw error;

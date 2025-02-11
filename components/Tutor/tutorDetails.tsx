@@ -31,7 +31,7 @@ const calculateAge = (birthDate: string): number | null => {
 };
 
 const getYearsLabel = (y: number): string => {
-  if (!y && y !== 0) return ''; // Пустая строка, если y не передано
+  if (!y && y !== 0) return '';
   return /\d*1\d$/.test(y.toString()) || /[05-9]$/.test(y.toString())
     ? 'лет'
     : /1$/.test(y.toString())
@@ -41,12 +41,14 @@ const getYearsLabel = (y: number): string => {
 
 const TutorDetails = ({ tutor }: TutorDetailsProps) => {
   if (!tutor) {
-    return (
-      <View style={styles.tutorDetails}>
-        <Text style={[commonStyles.label, styles.tutorLabel]}>{words.tutorDetails}:</Text>
-        <Text style={styles.notFilled}>{words.notAvailable}</Text>
-      </View>
-    );
+    tutor= {
+      id: 0,
+      about: "",
+      birth_date: "", 
+      education: "",
+      links: "",
+      experienceYears: 0
+    }
   }
 
   const linksArray = tutor.links ? tutor.links.split(',').map(link => link.trim()) : [];
@@ -78,7 +80,7 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
       
       <Text style={styles.info}>
         <Text style={commonStyles.label}>{words.experience}: </Text>
-        {tutor.experienceYears !== null && tutor.experienceYears !== undefined ? (
+        {tutor.experienceYears && tutor.experienceYears !== undefined ? (
           `${tutor.experienceYears} ${getYearsLabel(tutor.experienceYears)}`
         ) : (
           <Text style={styles.notFilled}>{words.notFilled}</Text>

@@ -5,19 +5,25 @@ import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
   label: string;
-  theme?: 'primary';
+  theme?: 'primary' | string;
   onPress?: () => void;
   inline?: boolean;
   hasIcon?: boolean;
   icon?: string;
-  disabled?: boolean; 
+  disabled?: boolean;
 };
 
-export default function Button({ label, theme, onPress, inline=true, hasIcon=false, icon="close", disabled }: Props) {
+export default function Button({ label, theme, onPress, inline = true, hasIcon = false, icon = "close", disabled }: Props) {
   const inlineStyle = inline ? styles.inlineContainer : {};
 
+  const iconColor = theme === 'primary' ? Colors.paleGrey : Colors.mediumGrey;
+  const iconBackground = theme === 'primary' ? Colors.deepGrey : 'transparent';
+  const iconBorderColor = theme === 'primary' ? Colors.deepGrey : Colors.mediumGrey;
+
   const renderContent = hasIcon ? (
-    <Ionicons name={icon} size={32} color={Colors.mediumGrey} />
+    <View style={[styles.iconContainer]}>
+      <Ionicons name={icon} size={32} color={iconColor} />
+    </View>
   ) : (
     <Text
       style={[
@@ -32,9 +38,12 @@ export default function Button({ label, theme, onPress, inline=true, hasIcon=fal
 
   const buttonStyle = [
     styles.button,
-    theme === 'primary' && { 
+    theme === 'primary' && {
       backgroundColor: Colors.deepGrey,
-      borderColor: Colors.deepGrey
+      borderColor: Colors.deepGrey,
+    },
+    hasIcon && {
+      width: 53
     },
     disabled && styles.disabledButton,
   ];
@@ -58,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
-    backgroundColor: Colors.lightGrey
+    backgroundColor: Colors.lightGrey,
   },
   inlineContainer: {
     height: 53,
@@ -79,11 +88,17 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.s,
     marginBottom: 2,
   },
+  iconContainer: {
+    borderRadius: 16,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   disabledButton: {
-    backgroundColor: Colors.lightGrey, 
-    borderColor: Colors.mediumGrey, 
+    backgroundColor: Colors.lightGrey,
+    borderColor: Colors.mediumGrey,
   },
   disabledText: {
-    color: Colors.mediumGrey, 
+    color: Colors.mediumGrey,
   },
 });

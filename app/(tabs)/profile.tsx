@@ -21,10 +21,10 @@ export default function ProfileScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
 
-  const fetchProfile = async () => {
+  const fetchProfile = async (force=false) => {
     try {
       const storedProfile = await AsyncStorage.getItem('profile');
-      if (storedProfile) {
+      if (storedProfile && !force) {
         setProfile(JSON.parse(storedProfile));
       } else {
         const fetchedProfile = await getProfileService();
@@ -50,7 +50,7 @@ export default function ProfileScreen() {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      await Promise.all([fetchProfile(), fetchBalance()]);
+      await Promise.all([fetchProfile(true), fetchBalance()]);
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
     } finally {

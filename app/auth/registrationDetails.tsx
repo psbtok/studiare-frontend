@@ -50,8 +50,6 @@ export default function RegistrationDetailsScreen() {
     try {
       await editProfileService(updatedProfile);
 
-      await AsyncStorage.setItem('profile', JSON.stringify(updatedProfile));
-
       Alert.alert('', words.registrationDetailsSaved);
       router.replace('/'); 
     } catch (error: any) {
