@@ -52,9 +52,15 @@ export default function LessonEditScreen() {
 
     setIsLoading(true); 
     try {
+      const timezoneOffsetHours = new Date().getTimezoneOffset() / -60; // Convert to hours
+  
+      const adjustedDateStart = new Date(dateStart.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
+      const adjustedDateEnd = new Date(dateEnd.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
+
+
       lesson.subject = subject;
-      lesson.date_start = dateStart.toISOString();
-      lesson.date_end = dateEnd.toISOString();
+      lesson.date_start = adjustedDateStart.toISOString();
+      lesson.date_end = adjustedDateEnd.toISOString();
       lesson.price = price;
       lesson.notes = notes;
 

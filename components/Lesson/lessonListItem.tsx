@@ -6,19 +6,20 @@ import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz'; 
 import { ru } from 'date-fns/locale';
 import PersonBadge from '../General/NonInteractive/personBadge';
 import commonStyles from '@/styles/CommonStyles';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
   const { lesson, isTutor } = props;
   const router = useRouter();
 
-  const formattedTimeStart = format(new Date(lesson.date_start), 'HH:mm', { locale: ru });
-  const formattedTimeEnd = format(new Date(lesson.date_end), 'HH:mm', { locale: ru });
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get user's timezone
+
+  const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
+  const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
 
   const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
     lesson.isCancelled
@@ -45,16 +46,16 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
   };
 
   const subjectColors = [
-        Colors.subjectColor0,
-        Colors.subjectColor1,
-        Colors.subjectColor2,
-        Colors.subjectColor3,
-        Colors.subjectColor4,
-        Colors.subjectColor5,
-        Colors.subjectColor6,
-        Colors.subjectColor7,
-        Colors.subjectColor8,
-      ];
+    Colors.subjectColor0,
+    Colors.subjectColor1,
+    Colors.subjectColor2,
+    Colors.subjectColor3,
+    Colors.subjectColor4,
+    Colors.subjectColor5,
+    Colors.subjectColor6,
+    Colors.subjectColor7,
+    Colors.subjectColor8,
+  ];
     
   const color =
     lesson.subject.colorId && lesson.subject.colorId < 10
@@ -63,15 +64,14 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
 
   return (
     <TouchableOpacity
-      style={[styles.lessonItem, {borderLeftColor: color}]}
+      style={[styles.lessonItem, { borderLeftColor: color }]}
       onPress={() =>
         router.push({
           pathname: '/lesson/lessonDetail',
           params: { lesson: JSON.stringify(lesson) }
         })
       }
->
-
+    >
       <Text style={styles.subject}>{lesson.subject.title}</Text>
       {isTutor ? (
         <PersonBadge name={`${words.learner}: ${lesson?.student.user.first_name} ${lesson?.student.user.last_name}`} />

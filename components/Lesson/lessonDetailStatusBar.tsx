@@ -30,10 +30,14 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     }
 
     const checkStartsSoon = () => {
-        const currentTime = new Date();
-        const timeDifference = lessonStartTime.getTime() - currentTime.getTime();
+        const currentTime = new Date(); 
+        const utcCurrentTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000); 
+                
+        const utcLessonStartTime = new Date(lessonStartTime.getTime() + lessonStartTime.getTimezoneOffset() * 60 * 1000); 
+        
         const threeHoursInMs = 3 * 60 * 60 * 1000; 
-        setStartsSoon(timeDifference <= threeHoursInMs && timeDifference > 0); 
+        const timeDifference = utcLessonStartTime.getTime() - utcCurrentTime.getTime();
+        setStartsSoon(timeDifference < threeHoursInMs); 
     };
 
     useEffect(() => {

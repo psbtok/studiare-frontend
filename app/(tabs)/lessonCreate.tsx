@@ -52,13 +52,18 @@ export default function CreateLessonScreen() {
       return;
     }
 
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
+      const timezoneOffsetHours = new Date().getTimezoneOffset() / -60; // Convert to hours
+  
+      const adjustedDateStart = new Date(dateStart.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
+      const adjustedDateEnd = new Date(dateEnd.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
+  
       let lesson = await createLessonService(
         parseInt(student.id),
         subject.id,
-        dateStart.toISOString(),
-        dateEnd.toISOString(),
+        adjustedDateStart.toISOString(),
+        adjustedDateEnd.toISOString(),
         price,
         notes
       );
@@ -82,7 +87,7 @@ export default function CreateLessonScreen() {
       console.error('Error creating lesson:', error.message);
       Alert.alert(words.error, error.message);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 

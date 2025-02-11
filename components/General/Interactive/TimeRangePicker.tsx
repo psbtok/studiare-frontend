@@ -14,17 +14,17 @@ interface TimeRangePickerComponentProps {
   initialEndTime?: Date;
 }
 
+const adjustForTimezone = (date: Date): Date => {
+  const timezoneOffset = date.getTimezoneOffset(); 
+  const adjustedDate = new Date(date.getTime() + timezoneOffset * 60000); 
+  return adjustedDate;
+};
+
 const roundToNextHour = (date: Date, addMinutes = 0): Date => {
   const newDate = new Date(date);
   newDate.setMinutes(addMinutes, 0, 0);
   newDate.setHours(newDate.getHours() + 1);
   return newDate;
-};
-
-const adjustForTimezone = (date: Date): Date => {
-  const timezoneOffset = date.getTimezoneOffset(); // смещение в минутах от UTC
-  const adjustedDate = new Date(date.getTime() - timezoneOffset * 60000); // корректируем дату на смещение
-  return adjustedDate;
 };
 
 export default function TimeRangePickerComponent({
@@ -47,10 +47,10 @@ export default function TimeRangePickerComponent({
   );
 
   useEffect(() => {
-    // Применяем корректировку времени с учетом временной зоны, но визуально этого не изменяем
     const adjustedStartTime = adjustForTimezone(startTime);
     const adjustedEndTime = adjustForTimezone(endTime);
     const adjustedDate = adjustForTimezone(date);
+        
     onDateTimeChange(adjustedDate, adjustedStartTime, adjustedEndTime, duration);
   }, [date, startTime, endTime, duration]);
 
@@ -70,19 +70,19 @@ export default function TimeRangePickerComponent({
       const newEndTime = mergeDateAndTime(selectedDate, endTime);
       setStartTime(newStartTime);
       setEndTime(newEndTime);
-      onDateTimeChange(selectedDate, newStartTime, newEndTime, duration);
+      onDateTimeChange(selectedDate, adjustForTimezone(newStartTime), adjustForTimezone(newEndTime), duration);
     } else if (showPicker === 'startTime') {
       const newStartTime = mergeDateAndTime(date, selectedDate);
       const newEndTime = new Date(newStartTime.getTime() + duration * 60000);
       setStartTime(newStartTime);
       setEndTime(newEndTime);
-      onDateTimeChange(date, newStartTime, newEndTime, duration);
+      onDateTimeChange(date, adjustForTimezone(newStartTime), adjustForTimezone(newEndTime), duration);
     } else if (showPicker === 'endTime') {
       const newEndTime = mergeDateAndTime(date, selectedDate);
       const newDuration = Math.max(0, (newEndTime.getTime() - startTime.getTime()) / 60000);
       setEndTime(newEndTime);
       setDuration(newDuration);
-      onDateTimeChange(date, startTime, newEndTime, newDuration);
+      onDateTimeChange(date, adjustForTimezone(startTime), adjustForTimezone(newEndTime), newDuration);
     }
   };
 
@@ -92,7 +92,7 @@ export default function TimeRangePickerComponent({
       const validDuration = Math.max(30, newDuration);
       const newEndTime = new Date(startTime.getTime() + validDuration * 60000);
       setEndTime(newEndTime);
-      onDateTimeChange(date, startTime, newEndTime, validDuration);
+      onDateTimeChange(date, adjustForTimezone(startTime), adjustForTimezone(newEndTime), validDuration);
       return validDuration;
     });
   };

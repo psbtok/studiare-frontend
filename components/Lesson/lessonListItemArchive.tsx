@@ -10,14 +10,19 @@ import { ru } from 'date-fns/locale';
 import PersonBadge from '../General/NonInteractive/personBadge';
 import commonStyles from '@/styles/CommonStyles';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { toZonedTime } from 'date-fns-tz';
 
 function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
   const { lesson, isTutor } = props;
   const router = useRouter();
 
-  const formattedDate = format(new Date(lesson.date_start), 'dd.MM.yyyy', { locale: ru });
-  const formattedTimeStart = format(new Date(lesson.date_start), 'HH:mm', { locale: ru });
-  const formattedTimeEnd = format(new Date(lesson.date_end), 'HH:mm', { locale: ru });
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
+
+  const formattedDate = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'dd.MM.yyyy', { locale: ru });
+
+  const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
+  const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
+
 
   const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
     lesson.isCancelled
