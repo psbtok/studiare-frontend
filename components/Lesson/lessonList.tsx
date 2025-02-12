@@ -12,24 +12,62 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LessonList() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
-  const fetchLessons = async (filters = {}) => {
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchLessons = async (currentOffset: number = 0, isRefresh=false) => {
+    if ((loading || !hasMore) && !isRefresh) return;
+    
     setLoading(true);
+    if (currentOffset) {
+      setRefreshing(true)
+    }
+
+    console.log(refreshing)
     try {
-      const today = format(new Date(), 'yyyy-MM-dd 00:00:00');
+      const today = new Date();
+      const utcCurrentTime =format(
+        new Date(today.getTime() + today.getTimezoneOffset() * 60 * 1000), 
+        'yyyy-MM-dd HH:mm:00'
+      ); 
+
       const response = await getLessonListService({
-        date_start_from: today, 
+        date_end_from: utcCurrentTime, 
         orderBy: 'date_start', 
-        ...filters 
+        offset: currentOffset,
+        limit: 10,
       });
-      setLessons(response.results || []);
+
+      if (response.results && response.results.length > 0) {
+        setLessons((prevLessons) => [...prevLessons, ...response.results]);
+        setHasMore(response.results.length === 10 && response.next !== null);
+      } else {
+        setHasMore(false);
+      }
     } catch (error: any) {
     } finally {
       setLoading(false);
+      setRefreshing(false)
     }
   };
+
+  const handleScroll = (e: any) => {
+    const contentHeight = e.nativeEvent.contentSize.height;
+    const contentOffsetY = e.nativeEvent.contentOffset.y;
+    const layoutMeasurementHeight = e.nativeEvent.layoutMeasurement.height;
+
+    if (contentHeight - contentOffsetY - layoutMeasurementHeight < 100 && hasMore && !loading) {
+      setOffset((prevOffset) => {
+        const newOffset = prevOffset + 10;
+        fetchLessons(newOffset, false);
+        return newOffset;
+      });
+    }
+  };
+
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -43,8 +81,11 @@ export default function LessonList() {
 
   const onRefresh = async () => {
     setRefreshing(true);
+    setHasMore(true);
+    setOffset(0);
+    setLessons([]);
     try {
-      await fetchLessons();
+      await fetchLessons(0, true);
     } catch (error: any) {
       Alert.alert(words.error, error.message || words.error);
     } finally {
@@ -88,21 +129,23 @@ export default function LessonList() {
             ))}
           </View>
         )}
-        ListEmptyComponent={
-          !loading ? (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
-            </View>
-          ) : null
-        }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.deepGrey]} />
         }
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
       />
     );
   };
+  
+  if (!lessons.length && !loading) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>{words.noLessonsAvailable}</Text>
+      </View>
+    );
+  }
 
   if (loading && !refreshing) {
       return (

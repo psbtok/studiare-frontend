@@ -21,10 +21,17 @@ export default function LessonListArchive() {
     if ((loading || !hasMore) && !isRefresh) return;
 
     setLoading(true);
+    if (currentOffset) {
+      setRefreshing(true)
+    }
     try {
-      const today = format(new Date(), 'yyyy-MM-dd 00:00:00');
+      const today = new Date();
+      const utcCurrentTime =format(
+        new Date(today.getTime() + today.getTimezoneOffset() * 60 * 1000), 
+        'yyyy-MM-dd HH:mm:00'
+      ); 
       const response = await getLessonListService({
-        date_start_to: today,
+        date_end_to: utcCurrentTime,
         orderBy: '-date_start',
         offset: currentOffset,
         limit: 10,
@@ -40,6 +47,7 @@ export default function LessonListArchive() {
       Alert.alert(words.error, error.message || words.error);
     } finally {
       setLoading(false);
+      setRefreshing(false)
     }
   };
 

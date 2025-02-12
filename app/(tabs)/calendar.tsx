@@ -38,11 +38,20 @@ const CalendarScreen = () => {
       setLoading(true);
       try {
         const startOfMonth = new Date(currentYear, currentMonth, 1);
+        const startOfMonthUTC =format(
+          new Date(startOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000), 
+          'yyyy-MM-dd 00:00:00'
+        );
+
         const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+        const endOfMonthUTC =format(
+          new Date(endOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000), 
+          'yyyy-MM-dd 23:59:59'
+        );
 
         const response = await getLessonListService({
-          date_start_from: format(startOfMonth, 'yyyy-MM-dd 00:00:00'),
-          date_start_to: format(endOfMonth, 'yyyy-MM-dd 23:59:59'),
+          date_end_from: startOfMonthUTC,
+          date_end_to: endOfMonthUTC,
         }, '100');
         setLessons(response.results || []);
       } catch (error: any) {
