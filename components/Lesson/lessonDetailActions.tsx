@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import Button from "../General/Interactive/Button";
 import words from "@/locales/ru";
@@ -18,7 +18,22 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
     const currentParticipant = lesson.participants.find(
         (participant) => participant.profile.user.id === profile.user.id
     );
-    const status = currentParticipant?.status || 'awaiting_confirmation';
+    
+    const [status, setStatus] = useState('awaiting_confirmation')
+
+    useEffect(() => {
+        if (currentParticipant && lesson.participants.length === 1) {
+            setStatus(currentParticipant.status);
+        } else {
+            if (lesson.participants.every(selected => selected.status === "cancelled")) {
+                setStatus('canceled');
+            } else if (lesson.participants.every(selected => ["cancelled", "conducted"].includes(selected.status))) {
+                setStatus('conducted');
+            } else if (lesson.participants.some(selected => selected.status === "confirmed")) {
+                setStatus('confirmed');
+            }
+        }
+    }, [currentParticipant, lesson.participants]);
 
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
     const editingUnavailable = lesson.participants.some(
@@ -81,10 +96,6 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
     };
 
     switch (status) {
-        case 'cancelled':
-            return null; // No buttons for cancelled status
-        case 'conducted':
-            return null; // No buttons for conducted status
         case 'confirmed':
             if (isTutor) {
                 return (

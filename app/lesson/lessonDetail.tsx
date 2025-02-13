@@ -71,8 +71,7 @@ export default function LessonDetailScreen() {
     try {
       const updatedLesson = await getLessonService(parsedLesson.id); 
       setLessonData(updatedLesson); 
-      setRefreshKey(prevKey => prevKey + 1); // Step 2: Increment refreshKey
-      console.log(updatedLesson);
+      setRefreshKey(prevKey => prevKey + 1); 
     } catch (error: {message: string}) {
       console.error('Error refreshing lesson details:', error.message);
     } finally {
