@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import words from '@/locales/ru';
-import { Subject, Lesson, LessonResponse, Profile } from '@/models/models';
+import { Subject, Lesson, LessonResponse, Profile, User } from '@/models/models';
 
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const createLessonService = async (
-  student: number,
+  participants: User[],
   subject: number,
   date_start: string,
   date_end: string,
@@ -27,10 +27,10 @@ export const createLessonService = async (
         'Authorization': `Token ${token}`,
       },
       body: JSON.stringify({
-        student,
         subject,
         date_start,
         date_end,
+        participants: participants.map(participant => participant.id),
         notes,
         price
       }),
@@ -93,26 +93,11 @@ export const getLessonListService = async (filters: Record<string, any> = {}, li
 
 export const updateLessonStatusService = async (
   lesson: Lesson,
-  action: 'cancel' | 'confirm' | 'conduct'
+  action: 'cancel' | 'confirm' | 'conduct',
 ): Promise<Lesson> => {
   const token = await AsyncStorage.getItem('login-token');
   
   if (!token) throw new Error(words.notAuthenticated);
-
-  let payload = {};
-  switch (action) {
-    case 'cancel':
-      payload = { isCancelled: true, cancellationTime: new Date().toISOString(), action };
-      break;
-    case 'confirm':
-      payload = { isConfirmed: true, confirmationTime: new Date().toISOString(), action };
-      break;
-    case 'conduct':
-      payload = { isConducted: true, action };
-      break;
-    default:
-      throw new Error(words.error);
-  }
 
   const response = await fetch(`${API_BASE_URL}/lessons/${lesson.id}/`, {
     method: 'PATCH',
@@ -120,7 +105,7 @@ export const updateLessonStatusService = async (
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({action}),
   });
 
   if (!response.ok) {
@@ -138,15 +123,15 @@ export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<
   }
 
   updatedLesson.subject = updatedLesson.subject.id
-  
+  updatedLesson.participants = [updatedLesson.studentId]
   try {
     const response = await fetch(`${API_BASE_URL}/lessons/${updatedLesson.id}/`, {
-      method: 'PUT', // Используем PUT для полного обновления
+      method: 'PUT', 
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`,
       },
-      body: JSON.stringify(updatedLesson), // Отправляем весь обновленный урок
+      body: JSON.stringify(updatedLesson), 
     });
 
     if (!response.ok) {

@@ -144,7 +144,7 @@ const words = {
     no: 'Нет',
     confirm: 'Подтвердить',
     reject: 'Отменить',
-    lessonCanceled: 'Занятие отменено',
+    lessonCancelled: 'Занятие отменено',
     lessonConducted: 'Занятие проведено',
     lessonUpdated: 'Занятие обновлено!',
     confirmationTitle: 'Подтверждение', 
@@ -182,7 +182,7 @@ const words = {
     agreementLinkInfo: 'пользовательским соглашением',
     agreementSuffix: ', чтобы продолжить.',
     statusTitle: 'Статусы занятий',
-    statusCanceled: 'Отменено',
+    statusCancelled: 'Отменено',
     statusConducted: 'Проведено',
     statusConfirmed: 'Подтверждено',
     statusAwaitingConfirmation: 'Ожидает подтверждения',
@@ -205,7 +205,12 @@ const words = {
     subjectDeletedSuccessfully: 'Предмет успешно удален',
     subjectUpdated: 'Предмет обновлен',
     saving: 'Сохранение..',
-    creating: 'Создание..'
+    creating: 'Создание..',
+    groupLesson: 'Групповое занятие',
+    selectedParticipants: 'Выбранные ученики',
+    enterParticipantName: 'Введите имя ученика',
+    participantNotFound: 'Ученик не найден',
+    participantName: 'Имя ученика'
   };
   
   export default words

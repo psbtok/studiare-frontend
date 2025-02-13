@@ -10,17 +10,19 @@ import TimeRangePickerComponent from '@/components/General/Interactive/TimeRange
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
 import UserSearch from '@/components/General/Interactive/UserSearch';
-import { Student, Subject } from '@/models/models'; 
+import { User, Subject } from '@/models/models'; 
 import SubjectSelectionModal from '../subject/subjectSelectionModal';
 
 export default function CreateLessonScreen() {
+  const emptyUser = { id: '', first_name: '', last_name: '', email: '' }
+  const emptySubject = {id: 0, title: 'string', notes: '', colorId: 1, user: emptyUser}
   const local = useLocalSearchParams();
   const subjectParam = local.subject ? JSON.parse(local.subject) : {'id': 0};
 
   const initialPrice = 1000;
-  const [subject, setSubject] = useState<Subject | null>(null);
+  const [subject, setSubject] = useState<Subject>(emptySubject);
   const [notes, setNotes] = useState('');
-  const [student, setStudent] = useState<Student>({ id: '', first_name: '', last_name: '' });
+  const [participants, setParticipants] = useState<User[]>([emptyUser]);
   const [resetFlag, setResetFlag] = useState(false);
   const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
@@ -45,7 +47,7 @@ export default function CreateLessonScreen() {
   }, [subjectParam.id]);
 
   const handleCreateLesson = async () => {
-    const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
+    const errors = validateCreateLessonInput(subject, participants, dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
@@ -60,7 +62,7 @@ export default function CreateLessonScreen() {
       const adjustedDateEnd = new Date(dateEnd.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
   
       let lesson = await createLessonService(
-        parseInt(student.id),
+        participants,
         subject.id,
         adjustedDateStart.toISOString(),
         adjustedDateEnd.toISOString(),
@@ -92,17 +94,18 @@ export default function CreateLessonScreen() {
   };
 
   const handleReset = () => {
-    setSubject(null);
+    setSubject(emptySubject);
     setDateStart(new Date());
     setDateEnd(new Date());
     setNotes('');
-    setStudent({ id: '', first_name: '', last_name: '' }); 
+    setParticipants([emptyUser]); 
     setPrice(initialPrice);
     setResetFlag(true);
   };
 
-  const handleStudentFound = (foundStudent: Student) => {
-    setStudent(foundStudent); 
+  const handleParticipantsFound = (newparticipants: User[]) => {
+    setParticipants(newparticipants); 
+    console.log(newparticipants)
   };
 
   const handleSubjectSelect = (selectedSubject: Subject) => {
@@ -145,7 +148,7 @@ export default function CreateLessonScreen() {
         />
 
         <UserSearch 
-          onUserFound={handleStudentFound} 
+          onParticipantsSelected={handleParticipantsFound} 
           resetFlag={resetFlag} 
           setResetFlag={setResetFlag} 
         />

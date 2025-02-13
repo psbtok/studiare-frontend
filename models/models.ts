@@ -6,23 +6,21 @@ export interface Subject {
   user: User
 }
 
+export interface lessonParticipant {
+  profile: Profile,
+  status: 'cancelled' | 'conducted' | 'confirmed' | 'awaiting_confirmation',
+  updated_at: string
+}
+
 export interface Lesson {
   id: number;                
   tutor: Profile;             
-  student: Profile;           
+  participants: lessonParticipant[];           
   subject: Subject;           
   date_start: string;              
   date_end: string;          
   notes?: string | null;    
   price: number 
-
-  isConfirmed?: boolean | null;      
-  confirmationTime?: string | null;  
-
-  isCancelled?: boolean | null;      
-  cancellationTime?: string | null;  
-
-  isConducted?: boolean | null;      
 }
 
 export interface Student {

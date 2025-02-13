@@ -29,7 +29,7 @@ export default function LessonEditScreen() {
 
   const [subject, setSubject] = useState<Subject | null>(lesson?.subject || {'title': ''});
   const [notes, setNotes] = useState(lesson?.notes || '');
-  const [student, setStudent] = useState<Student>(lesson?.student.user || { id: '', first_name: '', last_name: '' });
+  const [student, setStudent] = useState<Student>(lesson?.participants[0].profile.user || { id: '', first_name: '', last_name: '' });
   const [resetFlag, setResetFlag] = useState(false);
   const [dateStart, setDateStart] = useState(new Date(lesson?.date_start || Date.now()));
   const [dateEnd, setDateEnd] = useState(new Date(lesson?.date_end || Date.now()));
@@ -64,8 +64,8 @@ export default function LessonEditScreen() {
       lesson.price = price;
       lesson.notes = notes;
 
-      lesson.student.user = {
-        ...lesson.student.user, 
+      lesson.participants[0].profile.user = {
+        ...lesson.participants[0].profile.user, 
         first_name: student.first_name,
         id: student.id,
         last_name: student.last_name
@@ -101,7 +101,7 @@ export default function LessonEditScreen() {
     setDateStart(new Date(initialLesson.date_start));
     setDateEnd(new Date(initialLesson.date_end));
     setNotes(initialLesson.notes ?? '');
-    setStudent(initialLesson.student.user);
+    setStudent(initialLesson.participants[0].profile.user);
     setPrice(initialLesson.price);
     setResetFlag(true);
   };
@@ -161,9 +161,9 @@ export default function LessonEditScreen() {
           resetFlag={resetFlag} 
           setResetFlag={setResetFlag} 
           initialStudent={{ 
-            id: lesson.student.user.id.toString(),
-            first_name: lesson.student.user.first_name, 
-            last_name: lesson.student.user.last_name 
+            id: lesson.participants[0].profile.user.id.toString(),
+            first_name: lesson.participants[0].profile.user.first_name, 
+            last_name: lesson.participants[0].profile.user.last_name 
           }}
         />
 

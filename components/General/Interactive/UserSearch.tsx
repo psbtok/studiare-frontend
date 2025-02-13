@@ -6,101 +6,128 @@ import commonStyles from '@/styles/CommonStyles';
 import Button from '@/components/General/Interactive/Button';
 import { TextInput } from 'react-native';
 import { Colors } from '@/styles/Colors';
-import { Student } from '@/models/models';
+import { User } from '@/models/models';
+import { Typography } from '@/styles/Typography';
 
-interface UserSearchProps {
-  onUserFound: (student: Student) => void;
+interface ParticipantSearchProps {
+  onParticipantsSelected: (participants: User[]) => void;
   resetFlag: boolean;
   setResetFlag: (flag: boolean) => void;
-  initialStudent?: Student;
+  initialParticipants?: User[];
 }
 
-const UserSearch: React.FC<UserSearchProps> = ({ onUserFound, resetFlag, setResetFlag, initialStudent }) => {
-  const [studentName, setStudentName] = useState('');
-  const [students, setStudents] = useState<Student[]>([]);
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSelected, resetFlag, setResetFlag, initialParticipants }) => {
+  const [participantName, setParticipantName] = useState('');
+  const [participants, setParticipants] = useState<User[]>([]);
+  const [chosenParticipants, setChosenParticipants] = useState<User[]>([]);
 
   useEffect(() => {
     if (resetFlag) {
-      setStudentName('');
-      setStudents([]);
-      setSelectedStudentId(null);
+      setParticipantName('');
+      setParticipants([]);
+      setChosenParticipants([]);
       setResetFlag(false);
     }
   }, [resetFlag, setResetFlag]);
 
   useEffect(() => {
-    if (initialStudent && !selectedStudentId) {
-      setStudentName(`${initialStudent.first_name} ${initialStudent.last_name}`);
-      setSelectedStudentId(initialStudent.id);
-      onUserFound(initialStudent);
+    if (initialParticipants && initialParticipants.length > 0) {
+      setChosenParticipants(initialParticipants);
+      onParticipantsSelected(initialParticipants);
     }
-  }, []);
+  }, [initialParticipants, onParticipantsSelected]);
 
-  const handleSearchStudent = async () => {
-    if (!studentName.trim()) {
-      Alert.alert(words.error, words.enterStudentName);
+  const handleSearchParticipant = async () => {
+    if (!participantName.trim()) {
+      Alert.alert(words.error, words.enterParticipantName);
       return;
     }
 
     try {
-      const users = await getUserIdByFullNameService(studentName);
+      const users = await getUserIdByFullNameService(participantName);
       if (users.length === 0) {
-        Alert.alert(words.error, words.studentNotFound);
+        Alert.alert(words.error, words.participantNotFound);
       } else {
-        setStudents(users);
-        if (users.length === 1) {
-          handleSelectStudent(users[0]);
-        }
+        setParticipants(users);
       }
     } catch (error) {
       Alert.alert(words.error);
     }
   };
 
-  const handleSelectStudent = (student: Student) => {
-    setStudentName(`${student.first_name} ${student.last_name}`);
-    setSelectedStudentId(student.id);
-    onUserFound(student);
+  const handleChooseParticipant = (participant: User) => {
+    const exists = chosenParticipants.some(selected => selected.id === participant.id);
+    let updatedChosenParticipants;
+
+    if (exists) {
+      updatedChosenParticipants = chosenParticipants.filter(selected => selected.id !== participant.id);
+    } else {
+      updatedChosenParticipants = [...chosenParticipants, participant];
+    }
+
+    setChosenParticipants(updatedChosenParticipants);
+    onParticipantsSelected(updatedChosenParticipants);
+  };
+
+  const handleDeselectParticipant = (participant: User) => {
+    const updatedChosenParticipants = chosenParticipants.filter(selected => selected.id !== participant.id);
+    setChosenParticipants(updatedChosenParticipants);
+    onParticipantsSelected(updatedChosenParticipants);
   };
 
   const handleSubmitEditing = () => {
-    handleSearchStudent();
+    handleSearchParticipant();
     Keyboard.dismiss();
   };
 
   return (
     <View style={styles.searchContainer}>
-      <Text style={commonStyles.label}>{words.studentName}</Text>
+      <Text style={commonStyles.label}>{words.participantName}</Text>
       <View style={styles.inputContainer}>
         <View style={styles.input}>
           <TextInput
             style={commonStyles.input}
-            placeholder={words.enterStudentName}
+            placeholder={words.enterParticipantName}
             placeholderTextColor={Colors.mediumGrey}
-            value={studentName}
-            onChangeText={setStudentName}
+            value={participantName}
+            onChangeText={setParticipantName}
             onSubmitEditing={handleSubmitEditing}
             returnKeyType="search"
           />
         </View>
         <View style={styles.searchButton}>
-          <Button label={words.search} onPress={handleSearchStudent} />
+          <Button label={words.search} onPress={handleSearchParticipant} />
         </View>
       </View>
 
-      {students.length > 0 &&
-        students.map((item) => (
-          <TouchableOpacity key={item.id} onPress={() => handleSelectStudent(item)}>
-            <View style={styles.studentItem}>
+      {participants.length > 0 &&
+        participants.map((item) => (
+          <TouchableOpacity key={item.id} onPress={() => handleChooseParticipant(item)}>
+            <View style={styles.participantItem}>
               <Text
-                style={[styles.studentName, item.id === selectedStudentId && styles.selectedStudentName]}
+                style={[styles.participantName, chosenParticipants.some(selected => selected.id === item.id) && styles.selectedParticipantName]}
               >
                 {item.first_name} {item.last_name} (ID: {item.id})
               </Text>
             </View>
           </TouchableOpacity>
         ))}
+
+      {chosenParticipants.length > 0 && (
+        <View style={styles.selectedParticipantsContainer}>
+          <Text style={commonStyles.label}>{words.selectedParticipants}</Text>
+          {chosenParticipants.map((participant) => (
+            <View key={participant.id} style={styles.selectedParticipantItem}>
+              <Text style={styles.participantName}>
+                {participant.first_name} {participant.last_name} (ID: {participant.id})
+              </Text>
+              <TouchableOpacity onPress={() => handleDeselectParticipant(participant)}>
+                <Text style={styles.removeParticipant}>-</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 };
@@ -122,19 +149,33 @@ const styles = StyleSheet.create({
     bottom: 1,
     flexShrink: 1,
   },
-  studentItem: {
+  participantItem: {
     padding: 10,
     borderBottomWidth: 2,
     borderBottomColor: Colors.lightGrey,
   },
-  studentName: {
+  participantName: {
     color: Colors.deepGrey,
     fontSize: 16,
   },
-  selectedStudentName: {
+  selectedParticipantName: {
     fontWeight: 'bold',
     color: Colors.mediumGrey,
   },
+  selectedParticipantsContainer: {
+    marginTop: 20,
+  },
+  selectedParticipantItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightGrey,
+  },
+  removeParticipant: {
+    fontSize: Typography.fontSizes.xxl,
+    color: Colors.alertRed,
+  },
 });
 
-export default UserSearch;
+export default ParticipantSearch;

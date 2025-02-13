@@ -4,8 +4,6 @@ import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function LessonInfoScreen() {
   const handleLinkPress = () => {
@@ -27,7 +25,7 @@ export default function LessonInfoScreen() {
     },
     {
       icon: <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />,
-      name: words.statusCanceled,
+      name: words.statusCancelled,
     },
   ];
 

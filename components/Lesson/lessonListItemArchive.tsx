@@ -23,25 +23,15 @@ function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
   const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
 
-
-  const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
-    lesson.isCancelled
-      ? 'canceled'
-      : lesson.isConducted
-      ? 'conducted'
-      : lesson.isConfirmed
-      ? 'confirmed'
-      : 'awaitingConfirmation';
-
-  const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
+  const getStatusIcon = (status: 'cancelled' | 'conducted' | 'confirmed' | 'awaiting_confirmation') => {
     switch (status) {
-      case 'canceled':
+      case 'cancelled':
         return <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />;
       case 'conducted':
         return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
       case 'confirmed':
         return <AntDesign name="checkcircleo" size={22} color={Colors.deepGrey} />;
-      case 'awaitingConfirmation':
+      case 'awaiting_confirmation':
         return <AntDesign name="clockcircleo" size={22} color={Colors.deepGrey} />;
       default:
         return null;
@@ -80,17 +70,26 @@ function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
         <Text style={styles.date}>{formattedDate}</Text>
       </View>
       {isTutor ? (
-        <PersonBadge name={`${words.learner}: ${lesson?.student.user.first_name} ${lesson?.student.user.last_name}`} />
+        lesson.participants.length > 1 ? (
+          <PersonBadge name={words.groupLesson} />
+        ) : (
+          <PersonBadge
+            name={`${lesson.participants[0]?.profile?.user?.first_name || ''} ${lesson.participants[0]?.profile?.user?.last_name || ''}`}
+          />
+        )
       ) : (
-        <PersonBadge name={`${words.tutor}: ${lesson?.tutor.user.first_name} ${lesson?.tutor.user.last_name}`} />
-      )}          
+        <PersonBadge
+          name={`${words.tutor}: ${lesson?.tutor?.user?.first_name || ''} ${lesson?.tutor?.user?.last_name || ''}`}
+        />
+      )}         
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
         </Text>
         <View style={styles.statusContainer}>
           <View style={styles.statusIcon}>
-            {getStatusIcon(status)}
+            {lesson.participants.length == 1 && 
+            getStatusIcon(lesson.participants[0].status)}
           </View>
           <Text style={commonStyles.priceLabel}>
             {lesson.price ?? 0} {words.currency}

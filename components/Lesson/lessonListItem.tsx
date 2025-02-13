@@ -21,30 +21,6 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
   const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
 
-  const status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation' =
-    lesson.isCancelled
-      ? 'canceled'
-      : lesson.isConducted
-      ? 'conducted'
-      : lesson.isConfirmed
-      ? 'confirmed'
-      : 'awaitingConfirmation';
-
-  const getStatusIcon = (status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation') => {
-    switch (status) {
-      case 'canceled':
-        return <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />;
-      case 'conducted':
-        return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
-      case 'confirmed':
-        return <AntDesign name="checkcircleo" size={22} color={Colors.deepGrey} />;
-      case 'awaitingConfirmation':
-        return <AntDesign name="clockcircleo" size={22} color={Colors.deepGrey} />;
-      default:
-        return null;
-    }
-  };
-
   const subjectColors = [
     Colors.subjectColor0,
     Colors.subjectColor1,
@@ -62,6 +38,21 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
       ? subjectColors[lesson.subject.colorId - 1]
       : Colors.subjectColor0;
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'cancelled':
+        return <AntDesign name="closecircle" size={22} color={Colors.deepGrey} />;
+      case 'conducted':
+        return <AntDesign name="checkcircle" size={22} color={Colors.deepGrey} />;
+      case 'confirmed':
+        return <AntDesign name="checkcircleo" size={22} color={Colors.deepGrey} />;
+      case 'awaiting_confirmation':
+        return <AntDesign name="clockcircleo" size={22} color={Colors.deepGrey} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[styles.lessonItem, { borderLeftColor: color }]}
@@ -74,17 +65,27 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
     >
       <Text style={styles.subject}>{lesson.subject.title}</Text>
       {isTutor ? (
-        <PersonBadge name={`${words.learner}: ${lesson?.student.user.first_name} ${lesson?.student.user.last_name}`} />
+        lesson.participants.length > 1 ? (
+          <PersonBadge name={words.groupLesson} />
+        ) : (
+          <PersonBadge
+            name={`${lesson.participants[0]?.profile?.user?.first_name || ''} ${lesson.participants[0]?.profile?.user?.last_name || ''}`}
+          />
+        )
       ) : (
-        <PersonBadge name={`${words.tutor}: ${lesson?.tutor.user.first_name} ${lesson?.tutor.user.last_name}`} />
-      )}      
+        <PersonBadge
+          name={`${words.tutor}: ${lesson?.tutor?.user?.first_name || ''} ${lesson?.tutor?.user?.last_name || ''}`}
+        />
+      )}
+      
       <View style={styles.lessonDetails}>
         <Text style={styles.dates}>
           {formattedTimeStart} - {formattedTimeEnd}
         </Text>
         <View style={styles.statusContainer}>
           <View style={styles.statusIcon}>
-            {getStatusIcon(status)}
+            {lesson.participants.length == 1 && 
+            getStatusIcon(lesson.participants[0].status)}
           </View>
           <Text style={commonStyles.priceLabel}>
             {lesson.price ?? 0} {words.currency}

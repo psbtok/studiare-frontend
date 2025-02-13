@@ -1,5 +1,5 @@
 import words from '@/locales/ru';
-import { Subject } from '@/models/models';
+import { Student, Subject, User } from '@/models/models';
 
 export const validateRegistrationInput = (
   email: string,
@@ -43,7 +43,7 @@ export const validateLoginInput = (
 
 export const validateCreateLessonInput = (
   subject: Subject | null,
-  studentId: string,
+  students: User[],
   dateStart: Date,
   dateEnd: Date,
   price: number
@@ -53,10 +53,8 @@ export const validateCreateLessonInput = (
     errors.push(words.subjectEmpty);
   }
   
-  if (!studentId.trim()) {
+  if (!students.length || !parseInt(students[0].id)) {
     errors.push(words.studentIdEmpty);
-  } else if (isNaN(Number(studentId))) {
-    errors.push(words.invalidStudentId); 
   }
 
   if (dateStart >= dateEnd) {

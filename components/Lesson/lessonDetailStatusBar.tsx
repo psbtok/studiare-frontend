@@ -1,13 +1,11 @@
 import { Lesson, Profile } from "@/models/models";
-import { View, Text, StyleSheet, Alert } from "react-native";
-import Button from "../General/Interactive/Button";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import words from "@/locales/ru";
-import { updateLessonStatusService } from "@/services/lessonService"; 
-import React, { useState, useEffect } from 'react';
 import { Colors } from "@/styles/Colors";
 import commonStyles from "@/styles/CommonStyles";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useRouter } from "expo-router";
+import React, { useState, useEffect } from 'react';
+import LessonParticipantStatusList from "./lessonParticipantStatusList";
 
 function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     const { profile } = props;
@@ -16,25 +14,15 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     const lessonStartTime = new Date(lesson.date_start);
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
 
-    const router = useRouter();
-
-    let status: 'canceled' | 'conducted' | 'confirmed' | 'awaitingConfirmation';
-    if (lesson.isCancelled) {
-        status = 'canceled';
-    } else if (lesson.isConducted) {
-        status = 'conducted';
-    } else if (lesson.isConfirmed) {
-        status = 'confirmed';
-    } else {
-        status = 'awaitingConfirmation';
-    }
+    const currentParticipant = lesson.participants.find(
+        (participant) => participant.profile.user.id === profile.user.id
+    );
+    const status = currentParticipant?.status || lesson.participants[0].status; 
 
     const checkStartsSoon = () => {
         const currentTime = new Date(); 
         const utcCurrentTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000); 
-                
         const utcLessonStartTime = new Date(lessonStartTime.getTime() + lessonStartTime.getTimezoneOffset() * 60 * 1000); 
-        
         const threeHoursInMs = 3 * 60 * 60 * 1000; 
         const timeDifference = utcLessonStartTime.getTime() - utcCurrentTime.getTime();
         setStartsSoon(timeDifference < threeHoursInMs); 
@@ -42,167 +30,71 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
 
     useEffect(() => {
         checkStartsSoon();
-        
         const intervalId = setInterval(() => {
             checkStartsSoon();
         }, 10000);
-        
         return () => clearInterval(intervalId);
     }, [lesson]);
 
-    const handleAction = (action: 'cancel' | 'confirm' | 'conduct') => {
-        let confirmationMessage = '';
-        switch (action) {
-            case 'cancel':
-                if (startsSoon && !isTutor) {
-                    confirmationMessage = words.confirmCancelLessonWithFee;
-                } else {                    
-                    confirmationMessage = words.confirmCancelLesson;
-                }
-                break;
-            case 'confirm':
-                confirmationMessage = words.confirmLesson;
-                break;
-            case 'conduct':
-                confirmationMessage = words.confirmConductLesson;
-                break;
-        }
-    
-        Alert.alert(
-            words.confirmationTitle,
-            confirmationMessage,
-            [
-                { text: words.no, style: "cancel" },
+    return (
+        <View style={styles.container}>
+            <ScrollView>
                 {
-                    text: words.yes,
-                    onPress: async () => {
-                        try {
-                            const updatedLesson = await updateLessonStatusService(lesson, action);
-                            setLesson(updatedLesson);
-                            Alert.alert(words.success, words.lessonUpdated);
-                        } catch (error: any) {
-                            Alert.alert(words.error, error.message);
-                        }
-                    }
-                }
-            ]
-        );
-    };
-
-    const handleEdit = () => {
-        const serializedLesson = encodeURIComponent(JSON.stringify(lesson));
-        router.push(`/lesson/lessonEdit?lesson=${serializedLesson}`);
-    };
-
-    const getAvailableActions = () => {
-        switch (status) {
-            case 'canceled':
-                return (
+                    startsSoon &&
+                    ['awaiting_confirmation', 'confirmed'].includes(status) &&
+                    (
+                    <View style={[styles.actionBlock, styles.actionLabel]}>
+                        <AntDesign style={styles.icon} name="clockcircle" size={22} color={Colors.deepGrey} />
+                        <Text style={commonStyles.label}>
+                            {words.lessonStartsSoon}
+                        </Text>
+                    </View>
+                )}
+                {status === 'cancelled' && (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
                         <AntDesign style={styles.icon} name="closecircle" size={22} color={Colors.deepGrey} />
-                        <Text style={commonStyles.label}>{words.lessonCanceled}</Text>
+                        <Text style={commonStyles.label}>{words.lessonCancelled}</Text>
                     </View>
-                )
-            case 'conducted':
-                return (
+                )}
+                {status === 'conducted' && (
                     <View style={[styles.actionBlock, styles.actionLabel]}>
                         <AntDesign style={styles.icon} name="checkcircle" size={22} color={Colors.deepGrey} />
                         <Text style={commonStyles.label}>{words.lessonConducted}</Text>
                     </View>
-                )
-            case 'confirmed':
-                if (isTutor) {
-                    return (
-                        <View>
-                            <View style={[styles.actionBlock, styles.actionLabel]}>
-                                <Text style={commonStyles.label}>{words.clientConfrimedLesson}</Text>
-                            </View>
-                            <View style={styles.actionBlock}>
-                                <View style={styles.buttonSmall}>
-                                    <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                                </View>
-                                <View style={styles.buttonBig}>
-                                    <Button theme="primary" label={words.isConducted} onPress={() => handleAction('conduct')} />
-                                </View>
-                            </View>
-                        </View>
-                    );
-                } else {
-                    return (
-                        <View>
-                            <View style={[styles.actionBlock, styles.actionLabel]}>
-                                <Text style={commonStyles.label}>{words.youConfrimedLesson}</Text>
-                            </View>
-                            <View style={styles.actionBlock}>
-                                <View style={styles.buttonSmall}>
-                                    <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                                </View>
-                            </View>
-                        </View>
-                    )
-                }
-            case 'awaitingConfirmation':
-                if (isTutor) {
-                    return (
-                        <View>
-                            <View style={[styles.actionBlock, styles.actionLabel]}>
-                                <AntDesign style={styles.icon} name="clockcircleo" size={22} color={Colors.deepGrey} />
-                                <Text style={commonStyles.label}>
-                                    {words.awaitingClientConfirmation}
-                                </Text>
-                            </View>
-                            <View style={styles.actionBlock}>
-                                <View style={styles.buttonSmall}>
-                                    <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                                </View>
-                                {!startsSoon && <View style={styles.buttonBig}>
-                                    <Button theme="primary" label={words.edit} onPress={() => handleEdit()} />
-                                </View>}
-                            </View>
-                        </View>
-                    )
-                }
-                else {
-                    return (
-                        <View>
-                            <View style={[styles.actionBlock, styles.actionLabel]}>
-                                <Text style={commonStyles.label}>{words.youNeedToConfirmLesson}</Text>
-                            </View>
-                            <View style={styles.actionBlock}>
-                                <View style={styles.buttonSmall}>
-                                    <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                                </View>
-                                <View style={styles.buttonBig}>
-                                    <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
-                                </View>
-                            </View>
-                        </View>
-                    );
-                }
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <View>
-            {
-                startsSoon &&
-                ['awaitingConfirmation', 'confirmed'].includes(status) &&
-                (
-                <View style={[styles.actionBlock, styles.actionLabel]}>
-                    <AntDesign style={styles.icon} name="clockcircle" size={22} color={Colors.deepGrey} />
-                    <Text style={commonStyles.label}>
-                        {words.lessonStartsSoon}
-                    </Text>
-                </View>
-            )}
-            {getAvailableActions()}
+                )}
+                {status === 'confirmed' && isTutor && lesson.participants.length == 1 && (
+                    <View style={[styles.actionBlock, styles.actionLabel]}>
+                        <Text style={commonStyles.label}>{words.clientConfrimedLesson}</Text>
+                    </View>
+                )}
+                {status === 'confirmed' && !isTutor && (
+                    <View style={[styles.actionBlock, styles.actionLabel]}>
+                        <Text style={commonStyles.label}>{words.youConfrimedLesson}</Text>
+                    </View>
+                )}
+                {status === 'awaiting_confirmation' && isTutor && lesson.participants.length == 1 && (
+                    <View style={[styles.actionBlock, styles.actionLabel]}>
+                        <AntDesign style={styles.icon} name="clockcircleo" size={22} color={Colors.deepGrey} />
+                        <Text style={commonStyles.label}>
+                            {words.awaitingClientConfirmation}
+                        </Text>
+                    </View>
+                )}
+                {status === 'awaiting_confirmation' && !isTutor && (
+                    <View style={[styles.actionBlock, styles.actionLabel]}>
+                        <Text style={commonStyles.label}>{words.youNeedToConfirmLesson}</Text>
+                    </View>
+                )}
+                {lesson.participants.length > 1 && <LessonParticipantStatusList participants={lesson.participants} />}
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginTop: 12,
+    },
     actionBlock: {
         flexDirection: 'row',
         marginBottom: 12,
@@ -215,13 +107,6 @@ const styles = StyleSheet.create({
     actionLabel: {
         paddingHorizontal: 24,
         paddingBottom: 10,
-    },
-    buttonSmall: {
-        flex: 1
-    },
-    buttonBig: {
-        marginLeft: 16,
-        flex: 1.5
     },
     icon: {
         paddingTop: 3,

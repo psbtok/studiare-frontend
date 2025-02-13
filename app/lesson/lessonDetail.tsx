@@ -13,13 +13,14 @@ import { getProfileService } from '@/services/authService';
 import LessonDetailStatusBar from '@/components/Lesson/lessonDetailStatusBar';
 import commonStyles from '@/styles/CommonStyles';
 import { getLessonService } from '@/services/lessonService';
+import LessonDetailActions from '@/components/Lesson/lessonDetailActions';
 
 export default function LessonDetailScreen() {
   const { lesson } = useLocalSearchParams();
   const lessonString = Array.isArray(lesson) ? lesson[0] : lesson;
   const parsedLesson: Lesson = JSON.parse(lessonString);
 
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | any>({'user' : {'id': 0}});
   const [lessonData, setLessonData] = useState<Lesson>(parsedLesson);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -92,14 +93,22 @@ export default function LessonDetailScreen() {
               {`${format(new Date(lessonData?.date_start || ''), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}
             </Text>
             {isTutor ? (
-              <PersonBadge name={`${words.learner}: ${lessonData?.student.user.first_name} ${lessonData?.student.user.last_name}`} />
+              parsedLesson.participants.length > 1 ? (
+                <PersonBadge name={words.groupLesson} />
+              ) : (
+                <PersonBadge
+                  name={`${parsedLesson.participants[0]?.profile?.user?.first_name || ''} ${parsedLesson.participants[0]?.profile?.user?.last_name || ''}`}
+                />
+              )
             ) : (
-              <PersonBadge name={`${words.tutor}: ${lessonData?.tutor.user.first_name} ${lessonData?.tutor.user.last_name}`} />
+              <PersonBadge
+                name={`${words.tutor}: ${parsedLesson?.tutor?.user?.first_name || ''} ${parsedLesson?.tutor?.user?.last_name || ''}`}
+              />
             )}
           </View>
           {lessonData?.notes ? (
             <View style={styles.lessonDetailsSection}>
-              <Text style={[commonStyles.label, styles.notesLabel]}>
+              <Text style={[commonStyles.label, {marginBottom: 2}]}>
                 {words.notes + ':'}
               </Text>
               <Text style={commonStyles.label}>
@@ -108,10 +117,9 @@ export default function LessonDetailScreen() {
             </View>
           ) : null}
         </View>
-      </ScrollView>
-      <View style={styles.actionButtonWrapper}>
         <LessonDetailStatusBar lesson={lessonData} profile={profile} />
-      </View>
+      </ScrollView>
+      <LessonDetailActions lesson={lessonData} profile={profile} setLesson={setLessonData} ></LessonDetailActions>
     </View>
   );
 }
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   lessonDetailsSection: {
-    paddingVertical: 16,
+    paddingVertical: 8,
     flexDirection: 'column',
     marginTop: 12,
     backgroundColor: Colors.lightGrey,
@@ -149,8 +157,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 10,
   },
   lessonTimeText: {
-    marginTop: 12,
-    marginBottom: 16,
+    marginTop: 4,
+    marginBottom: 8,
     fontSize: Typography.fontSizes.m,
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -160,8 +168,5 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.xl,
     fontWeight: 'bold',
     color: Colors.paleGrey,
-  },
-  notesLabel: {
-    marginBottom: 0,
   },
 });

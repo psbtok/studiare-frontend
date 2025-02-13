@@ -20,13 +20,11 @@ export default function LessonList() {
 
   const fetchLessons = async (currentOffset: number = 0, isRefresh=false) => {
     if ((loading || !hasMore) && !isRefresh) return;
-    
     setLoading(true);
     if (currentOffset) {
       setRefreshing(true)
     }
 
-    console.log(refreshing)
     try {
       const today = new Date();
       const utcCurrentTime =format(
