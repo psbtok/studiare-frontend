@@ -23,8 +23,8 @@ export default function LessonDetailScreen() {
   const [profile, setProfile] = useState<Profile | any>({'user' : {'id': 0}});
   const [lessonData, setLessonData] = useState<Lesson>(parsedLesson);
   const [refreshing, setRefreshing] = useState(false);
-
-  const formattedDate = format(new Date(parsedLesson.date_start), 'dd.MM.yyyy', { locale: ru });
+  const [refreshKey, setRefreshKey] = useState(0); 
+  const [isTutor, setIsTutor] = useState(true);
   const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(new Date(parsedLesson.date_end), 'HH:mm', { locale: ru });
 
@@ -54,6 +54,8 @@ export default function LessonDetailScreen() {
         } else {
           const fetchedProfile = await getProfileService();
           setProfile(fetchedProfile);
+          setIsTutor(parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id)
+
         }
       } catch (error) {
         console.error('Failed to load profile:', error);
@@ -63,19 +65,25 @@ export default function LessonDetailScreen() {
     fetchProfile();
   }, []);
 
-  const isTutor = parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id;
 
   const onRefresh = async () => {
     setRefreshing(true);
     try {
       const updatedLesson = await getLessonService(parsedLesson.id); 
       setLessonData(updatedLesson); 
-    } catch (error) {
+      setRefreshKey(prevKey => prevKey + 1); // Step 2: Increment refreshKey
+      console.log(updatedLesson);
+    } catch (error: {message: string}) {
       console.error('Error refreshing lesson details:', error.message);
     } finally {
       setRefreshing(false);
     }
   };
+
+  const handleActionDone = async (updatedLesson: Lesson) => {
+    setLessonData(updatedLesson); 
+    setRefreshKey(prevKey => prevKey + 1);
+  }
 
   return (
     <View style={styles.container}>
@@ -94,14 +102,16 @@ export default function LessonDetailScreen() {
             </Text>
             {isTutor ? (
               parsedLesson.participants.length > 1 ? (
-                <PersonBadge name={words.groupLesson} />
+                <PersonBadge key={refreshKey} name={words.groupLesson} /> 
               ) : (
                 <PersonBadge
-                  name={`${parsedLesson.participants[0]?.profile?.user?.first_name || ''} ${parsedLesson.participants[0]?.profile?.user?.last_name || ''}`}
+                  key={refreshKey} 
+                  name={`${words.learner}: ${parsedLesson.participants[0]?.profile?.user?.first_name || ''} ${parsedLesson.participants[0]?.profile?.user?.last_name || ''}`}
                 />
               )
             ) : (
               <PersonBadge
+                key={refreshKey} 
                 name={`${words.tutor}: ${parsedLesson?.tutor?.user?.first_name || ''} ${parsedLesson?.tutor?.user?.last_name || ''}`}
               />
             )}
@@ -117,9 +127,9 @@ export default function LessonDetailScreen() {
             </View>
           ) : null}
         </View>
-        <LessonDetailStatusBar lesson={lessonData} profile={profile} />
+        <LessonDetailStatusBar key={refreshKey} lesson={lessonData} profile={profile} /> 
       </ScrollView>
-      <LessonDetailActions lesson={lessonData} profile={profile} setLesson={setLessonData} ></LessonDetailActions>
+      <LessonDetailActions key={refreshKey} lesson={lessonData} profile={profile} setLesson={handleActionDone} /> 
     </View>
   );
 }

@@ -15,7 +15,6 @@ interface LessonDetailActionsProps {
 
 function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActionsProps) {
     const router = useRouter();
-
     const currentParticipant = lesson.participants.find(
         (participant) => participant.profile.user.id === profile.user.id
     );
@@ -23,9 +22,13 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
 
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
     const editingUnavailable = lesson.participants.some(
-        (participant) => ['conducted', 'confirmed', 'cancelled'].includes(participant.status)
+        (participant) => ['conducted', 'confirmed'].includes(participant.status)
     );
 
+    const cancelledCompletely = lesson.participants.every(selected => selected.status === "cancelled");
+
+    if (cancelledCompletely) {return}
+    
     const lessonStartTime = new Date(lesson.date_start);
     const currentTime = new Date();
     const utcCurrentTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000);

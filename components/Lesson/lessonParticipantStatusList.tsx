@@ -20,6 +20,10 @@ function LessonParticipantStatusList({ participants }: ParticipantStatusListProp
         return acc;
     }, {} as Record<string, lessonParticipant[]>);
 
+    const cancelledCompletely = participants.every(selected => selected.status === "cancelled");
+
+    if (cancelledCompletely) {return}
+
     const statusOrder = ['awaiting_confirmation', 'confirmed', 'cancelled', 'conducted'];
 
     const statusIcons = {

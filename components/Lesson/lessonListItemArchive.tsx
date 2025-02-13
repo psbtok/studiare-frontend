@@ -74,7 +74,7 @@ function LessonListItemArchive(props: { lesson: Lesson, isTutor?: boolean }) {
           <PersonBadge name={words.groupLesson} />
         ) : (
           <PersonBadge
-            name={`${lesson.participants[0]?.profile?.user?.first_name || ''} ${lesson.participants[0]?.profile?.user?.last_name || ''}`}
+            name={`${words.learner}: ${lesson.participants[0]?.profile?.user?.first_name || ''} ${lesson.participants[0]?.profile?.user?.last_name || ''}`}
           />
         )
       ) : (

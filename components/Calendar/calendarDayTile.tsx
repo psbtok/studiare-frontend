@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   additionalLessonsText: {
-    fontSize: Typography.fontSizes.s,
+    fontSize: 14,
     color: Colors.mediumGrey,
     marginTop: 2,
     width: '100%',

@@ -35,7 +35,7 @@ export default function TimeRangePickerComponent({
   const defaultStartTime = roundToNextHour(new Date());
   const defaultEndTime = roundToNextHour(new Date(), 60);
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(initialStartTime ?? defaultStartTime));
   const [startTime, setStartTime] = useState(initialStartTime || defaultStartTime);
   const [endTime, setEndTime] = useState(initialEndTime || defaultEndTime);
   

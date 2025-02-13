@@ -105,7 +105,6 @@ export default function CreateLessonScreen() {
 
   const handleParticipantsFound = (newparticipants: User[]) => {
     setParticipants(newparticipants); 
-    console.log(newparticipants)
   };
 
   const handleSubjectSelect = (selectedSubject: Subject) => {

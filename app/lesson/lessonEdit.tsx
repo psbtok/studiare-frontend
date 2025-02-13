@@ -9,12 +9,14 @@ import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
 import { validateCreateLessonInput } from '@/validators/validators';
-import { Lesson, Student, Subject } from '@/models/models'; 
+import { Lesson, User, Subject } from '@/models/models'; 
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import UserSearch from '@/components/General/Interactive/UserSearch';
 import SubjectSelectionModal from '../subject/subjectSelectionModal';
 
 export default function LessonEditScreen() {
+  const emptyUser = { id: '', first_name: '', last_name: '', email: '' }
+  
   const local = useLocalSearchParams();
   const lessonParam = local.lesson;
 
@@ -29,7 +31,10 @@ export default function LessonEditScreen() {
 
   const [subject, setSubject] = useState<Subject | null>(lesson?.subject || {'title': ''});
   const [notes, setNotes] = useState(lesson?.notes || '');
-  const [student, setStudent] = useState<Student>(lesson?.participants[0].profile.user || { id: '', first_name: '', last_name: '' });
+  const [participants, setParticipants] = useState<User[]>(
+    lesson.participants.map(participant => participant.profile.user) || 
+    [emptyUser]
+  );
   const [resetFlag, setResetFlag] = useState(false);
   const [dateStart, setDateStart] = useState(new Date(lesson?.date_start || Date.now()));
   const [dateEnd, setDateEnd] = useState(new Date(lesson?.date_end || Date.now()));
@@ -43,7 +48,7 @@ export default function LessonEditScreen() {
   const router = useRouter();
   
   const handleModifyLesson = async () => {
-    const errors = validateCreateLessonInput(subject, student.id.toString(), dateStart, dateEnd, price);
+    const errors = validateCreateLessonInput(subject, participants, dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));
@@ -57,21 +62,14 @@ export default function LessonEditScreen() {
       const adjustedDateStart = new Date(dateStart.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
       const adjustedDateEnd = new Date(dateEnd.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
 
-
       lesson.subject = subject;
       lesson.date_start = adjustedDateStart.toISOString();
       lesson.date_end = adjustedDateEnd.toISOString();
       lesson.price = price;
       lesson.notes = notes;
+      lesson.participants = participants; 
 
-      lesson.participants[0].profile.user = {
-        ...lesson.participants[0].profile.user, 
-        first_name: student.first_name,
-        id: student.id,
-        last_name: student.last_name
-      }
-
-      await modifyLessonService({...lesson, studentId: student.id});
+      const updatedLesson: Lesson = await modifyLessonService({...lesson});
 
       Alert.alert(
         words.success,
@@ -82,7 +80,7 @@ export default function LessonEditScreen() {
             onPress: () => {
               router.replace({
                 pathname: '/lesson/lessonDetail',
-                params: { lesson: JSON.stringify(lesson) },
+                params: { lesson: JSON.stringify(updatedLesson) },
               });
             }
           },
@@ -101,18 +99,13 @@ export default function LessonEditScreen() {
     setDateStart(new Date(initialLesson.date_start));
     setDateEnd(new Date(initialLesson.date_end));
     setNotes(initialLesson.notes ?? '');
-    setStudent(initialLesson.participants[0].profile.user);
+    setParticipants([emptyUser]);
     setPrice(initialLesson.price);
     setResetFlag(true);
   };
 
-
-  const handleStudentFound = (student: Student) => {
-    setStudent({
-      first_name: student.first_name,
-      id: student.id,
-      last_name: student.last_name
-    });
+  const handleParticipantsFound = (newParticipants: User[]) => {
+    setParticipants(newParticipants);
   };
 
   const handleSubjectSelect = (selectedSubject: Subject) => {
@@ -157,14 +150,10 @@ export default function LessonEditScreen() {
         />
 
         <UserSearch 
-          onUserFound={handleStudentFound} 
+          onParticipantsSelected={handleParticipantsFound} 
           resetFlag={resetFlag} 
           setResetFlag={setResetFlag} 
-          initialStudent={{ 
-            id: lesson.participants[0].profile.user.id.toString(),
-            first_name: lesson.participants[0].profile.user.first_name, 
-            last_name: lesson.participants[0].profile.user.last_name 
-          }}
+          initialParticipants={participants} 
         />
 
         <Text style={commonStyles.label}>{words.lessonPrice}</Text>

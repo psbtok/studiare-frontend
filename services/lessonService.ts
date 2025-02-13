@@ -123,7 +123,7 @@ export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<
   }
 
   updatedLesson.subject = updatedLesson.subject.id
-  updatedLesson.participants = [updatedLesson.studentId]
+  updatedLesson.participants = updatedLesson.participants.map(participant => participant.id)
   try {
     const response = await fetch(`${API_BASE_URL}/lessons/${updatedLesson.id}/`, {
       method: 'PUT', 
