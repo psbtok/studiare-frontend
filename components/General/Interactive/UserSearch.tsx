@@ -50,9 +50,7 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
       } else {
         setParticipants(users);
       }
-    } catch (error) {
-      Alert.alert(words.error);
-    }
+    } catch (error) {}
   };
 
   const handleChooseParticipant = (participant: User) => {

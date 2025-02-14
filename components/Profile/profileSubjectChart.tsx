@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   labelContainer: {
     width: '100%',
     paddingLeft: 24,
-    top: 24,
+    top: 20,
     marginTop: -16
   }
 });
