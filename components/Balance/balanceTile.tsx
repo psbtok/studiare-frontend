@@ -31,9 +31,9 @@ const BalanceTile = ({ balance }: BalanceTileProps) => {
 const styles = StyleSheet.create({
   tileContainer: {
     borderRadius: 8,
-    marginVertical: 8,
     backgroundColor: Colors.deepGrey,
-    padding: 12,
+    marginTop: 6,
+    paddingBottom: 8,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
     flexDirection: 'row',

@@ -5,6 +5,7 @@ import { Colors, subjectColors } from "@/styles/Colors"; // Assuming your colors
 import { getLessonStatsService } from "@/services/lessonService";
 import { pie, arc } from "d3-shape";
 import commonStyles from "@/styles/CommonStyles";
+import words from "@/locales/ru";
 
 interface ChartData {
   subject: string;
@@ -32,7 +33,7 @@ const ProfileSubjectChart: React.FC = () => {
         const formattedData = stats.map((item, index) => ({
           subject: item.subject,
           lesson_count: item.lesson_count,
-          color: subjectColors[item.colorId - 1] || subjectColors[0] // Use your color mapping
+          color: subjectColors[item.colorId - 1] || subjectColors[0] 
         }));
 
         setChartData(formattedData);
@@ -65,14 +66,14 @@ const ProfileSubjectChart: React.FC = () => {
   };
 
   const DonutSlice: React.FC<{ color: string; arcData: any; onSelected: () => void; isActive: boolean }> = ({ color, arcData, onSelected, isActive }) => {
-    const outerRadius = isActive ? 130 : 120; // Increase the outer radius for the active slice
+    const outerRadius = isActive ? 130 : 120;
     const d = arc().outerRadius(outerRadius).innerRadius(60)(arcData);
 
     return (
       <Path
         d={d}
         fill={color}
-        onPressIn={onSelected} // Use onPressIn for better touch handling
+        onPressIn={onSelected}
         stroke={isActive ? Colors.paleGrey : 'none'}
         strokeWidth={isActive ? 8 : 0}
       />
@@ -98,26 +99,29 @@ const ProfileSubjectChart: React.FC = () => {
             );
           })}
         </G>
-        <Text
-          style={[styles.selectedText, commonStyles.label]}
-        >
-          {selectedPie.text}
-        </Text>
       </Svg>
     );
   };
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return <Text>{words.loading}..</Text>;
   }
 
   if (error) {
     return <Text>{error}</Text>;
   }
 
+  if (chartData.length === 0) {
+    return <View></View>
+  }
+
   return (
     <View style={styles.container}>
-      <View>
+        <View style={styles.labelContainer}>
+          <Text style={commonStyles.label}>
+            {selectedPie.text}
+          </Text>
+        </View>
         <Pie
           data={chartData}
           size={250}
@@ -142,7 +146,6 @@ const ProfileSubjectChart: React.FC = () => {
                 </TouchableOpacity>
             ))}
         </View>
-      </View>
     </View>
   );
 };
@@ -151,7 +154,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
   },
   legend: {
     marginTop: 20,
@@ -167,13 +169,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
-  selectedText: {
-    left: -40,
-    top: -10,
-  },
   selectedLabel: {
     fontWeight: '800',
   },
+  labelContainer: {
+    width: '100%',
+    paddingLeft: 24,
+    top: 24,
+    marginTop: -16
+  }
 });
 
 export default ProfileSubjectChart;

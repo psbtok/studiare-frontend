@@ -89,7 +89,7 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
 
 
       <View style={styles.info}>
-        <Text style={commonStyles.label}>{words.links}: </Text>
+        <Text style={[commonStyles.label, {marginBottom: 0}]}>{words.links}: </Text>
         {linksArray.length > 0 ? (
           <View style={styles.linksContainer}>
             {linksArray.map((link, index) => (
@@ -111,17 +111,16 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
 const styles = StyleSheet.create({
   tutorDetails: {
     marginTop: 20,
-    padding: 10,
-    backgroundColor: Colors.paleGrey,
+    padding: 12,
+    backgroundColor: Colors.lightGrey,
     borderRadius: 8,
-    borderWidth: 2,
-    borderColor: Colors.mediumGrey,
     width: '100%',
+    paddingHorizontal: 24,
+    marginBottom: 12,
   },
   tutorLabel: {
-    fontSize: Typography.fontSizes.s,
+    fontSize: Typography.fontSizes.m,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
   info: {
     fontSize: Typography.fontSizes.s,
@@ -131,12 +130,11 @@ const styles = StyleSheet.create({
   linksContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 5,
   },
   link: {
     color: Colors.deepGrey,
     textDecorationLine: 'underline',
-    marginRight: 10,
+    marginRight: 8,
   },
   notFilled: {
     color: Colors.mediumGrey,

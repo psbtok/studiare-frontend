@@ -85,27 +85,17 @@ export default function ProfileScreen() {
       <View style={styles.profileDetails}>
         {profile ? (
           <View>
-            <View>
+            <View style={styles.header}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.name}>{profile.user.last_name} {profile.user.first_name}</Text>
+                <Text style={styles.email}>{profile.user.email}</Text>
+              </View>
               <BalanceTile balance={balance !== null ? balance : 0} />
-              {profile.is_tutor && <TutorStatistics />}
             </View>
+            {profile.is_tutor && <TutorStatistics />}
             <View>
               <ProfileSubjectChart/>
             </View>
-            <View>
-              <Text style={[commonStyles.label, styles.emailBlock]}>{words.email}: </Text>
-              <Text style={styles.info}>
-                {profile.user.email}
-              </Text>
-            </View>
-            <Text style={styles.info}>
-              <Text style={commonStyles.label}>{words.fullName}: </Text>
-              {profile.user.last_name} {profile.user.first_name}
-            </Text>
-            <Text style={styles.info}>
-              <Text style={commonStyles.label}>{words.role}: </Text>
-              {profile.is_tutor ? words.tutor : words.student}
-            </Text>
             {profile.is_tutor && <TutorDetails tutor={profile.tutor} />}
           </View>
         ) : (
@@ -128,24 +118,42 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 16,
     backgroundColor: Colors.paleGrey,
   },
   emailBlock: {
-    marginBottom: 0,
   },
   profileDetails: {
     width: '100%',
-    marginBottom: 24,
   },
   info: {
     fontSize: Typography.fontSizes.m,
     color: Colors.deepGrey,
-    marginBottom: 8,
   },
   loading: {
     fontSize: Typography.fontSizes.m,
     color: Colors.mediumGrey,
-    marginBottom: 24,
   },
+  header: {
+    paddingTop: 8,
+    backgroundColor: Colors.deepGrey,
+    borderRadius: 12,
+  },
+  headerContainer: {
+    flexDirection: 'column',
+    paddingHorizontal: 24,
+    paddingTop: 2,
+  },
+  name: {
+    fontSize: Typography.fontSizes.xl,
+    fontWeight: 500,
+    color: Colors.paleGrey
+  },
+  email: {
+    fontSize: Typography.fontSizes.l,
+    fontWeight: 500,
+    marginTop: -3,
+    color: Colors.stoneGrey
+  },
+  
 });
