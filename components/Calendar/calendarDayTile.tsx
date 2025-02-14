@@ -4,6 +4,7 @@ import { Colors } from '@/styles/Colors';
 import { Lesson } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import CalendarLessonListModal from './calendarLessonListModal';
+import { subjectColors } from '@/styles/Colors';
 
 interface DayTileProps {
   dayNumber: number;
@@ -18,21 +19,9 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
   const totalLessons = lessons.length;
   const additionalLessons = Math.max(0, totalLessons - maxLines);
 
-  const subjectColors = [
-    Colors.subjectColor0,
-    Colors.subjectColor1,
-    Colors.subjectColor2,
-    Colors.subjectColor3,
-    Colors.subjectColor4,
-    Colors.subjectColor5,
-    Colors.subjectColor6,
-    Colors.subjectColor7,
-    Colors.subjectColor8,
-  ];
-
   const renderLines = () => {
     return lessons.slice(0, maxLines).map((lesson, index) => {
-      const color = subjectColors[lesson.subject.colorId - 1] ?? Colors.subjectColor0;
+      const color = subjectColors[lesson.subject.colorId - 1] ?? subjectColors[0];
       return <View key={index} style={[styles.line, { backgroundColor: color }]} />;
     });
   };

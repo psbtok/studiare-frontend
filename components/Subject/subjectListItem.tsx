@@ -3,26 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Subject } from '@/models/models';
 import { Colors } from '@/styles/Colors';
-import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
-import commonStyles from '@/styles/CommonStyles';
 import { AntDesign } from '@expo/vector-icons';
+import { subjectColors } from '@/styles/Colors';
 
 function SubjectListItem(props: { subject: Subject }) {
   const { subject } = props;
   const router = useRouter();
-
-  const subjectColors = [
-    Colors.subjectColor0,
-    Colors.subjectColor1,
-    Colors.subjectColor2,
-    Colors.subjectColor3,
-    Colors.subjectColor4,
-    Colors.subjectColor5,
-    Colors.subjectColor6,
-    Colors.subjectColor7,
-    Colors.subjectColor8,
-  ];
 
   const color =
     subject.colorId && subject.colorId < 10

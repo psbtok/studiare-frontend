@@ -40,10 +40,6 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
         (participant) => ['conducted', 'confirmed'].includes(participant.status)
     );
 
-    const cancelledCompletely = lesson.participants.every(selected => selected.status === "cancelled");
-
-    if (cancelledCompletely) {return}
-    
     const lessonStartTime = new Date(lesson.date_start);
     const currentTime = new Date();
     const utcCurrentTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000);

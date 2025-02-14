@@ -11,6 +11,7 @@ import { ru } from 'date-fns/locale';
 import PersonBadge from '../General/NonInteractive/personBadge';
 import commonStyles from '@/styles/CommonStyles';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { subjectColors } from '@/styles/Colors';
 
 function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
   const { lesson, isTutor } = props;
@@ -20,18 +21,6 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
 
   const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
-
-  const subjectColors = [
-    Colors.subjectColor0,
-    Colors.subjectColor1,
-    Colors.subjectColor2,
-    Colors.subjectColor3,
-    Colors.subjectColor4,
-    Colors.subjectColor5,
-    Colors.subjectColor6,
-    Colors.subjectColor7,
-    Colors.subjectColor8,
-  ];
     
   const color =
     lesson.subject.colorId && lesson.subject.colorId < 10

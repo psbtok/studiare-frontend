@@ -14,6 +14,7 @@ import LessonDetailStatusBar from '@/components/Lesson/lessonDetailStatusBar';
 import commonStyles from '@/styles/CommonStyles';
 import { getLessonService } from '@/services/lessonService';
 import LessonDetailActions from '@/components/Lesson/lessonDetailActions';
+import { subjectColors } from '@/styles/Colors';
 
 export default function LessonDetailScreen() {
   const { lesson } = useLocalSearchParams();
@@ -28,22 +29,10 @@ export default function LessonDetailScreen() {
   const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(new Date(parsedLesson.date_end), 'HH:mm', { locale: ru });
 
-  const subjectColors = [
-      Colors.subjectColor0,
-      Colors.subjectColor1,
-      Colors.subjectColor2,
-      Colors.subjectColor3,
-      Colors.subjectColor4,
-      Colors.subjectColor5,
-      Colors.subjectColor6,
-      Colors.subjectColor7,
-      Colors.subjectColor8,
-    ];
-  
   const color =
     parsedLesson.subject.colorId && parsedLesson.subject.colorId < 10
       ? subjectColors[parsedLesson.subject.colorId - 1]
-      : Colors.subjectColor0;
+      : subjectColors[0];
 
   useEffect(() => {
     const fetchProfile = async () => {

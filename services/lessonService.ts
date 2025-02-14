@@ -312,3 +312,41 @@ export const editSubjectService = async (
     throw error;
   }
 };
+
+export const getLessonStatsService = async (
+  dateStart: string,
+  dateEnd: string,
+  chartType: string = 'subject'
+): Promise<{ subject: string; lesson_count: number, colorId: number }[]> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Construct the URL with query parameters
+    const url = new URL(`${API_BASE_URL}/lesson-counts/`);
+    url.searchParams.append('date_start', dateStart);
+    url.searchParams.append('date_end', dateEnd);
+    url.searchParams.append('chart_type', chartType);
+
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to fetch lesson statistics');
+    }
+
+    const data: { subject: string; lesson_count: number, colorId: number }[] = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Fetch lesson statistics error:', error.message);
+    throw error;
+  }
+};

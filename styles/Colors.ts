@@ -21,3 +21,15 @@ export const Colors = {
   subjectColor8: 'hsl(180, 71.00%, 72.90%)', // Teal
 
 };
+
+export const subjectColors = [
+  Colors.subjectColor0,
+  Colors.subjectColor1,
+  Colors.subjectColor2,
+  Colors.subjectColor3,
+  Colors.subjectColor4,
+  Colors.subjectColor5,
+  Colors.subjectColor6,
+  Colors.subjectColor7,
+  Colors.subjectColor8,
+];

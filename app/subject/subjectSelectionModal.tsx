@@ -7,6 +7,7 @@ import { Subject } from '@/models/models';
 import Button from '@/components/General/Interactive/Button';
 import { getSubjectListService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
+import { subjectColors } from '@/styles/Colors';
 
 interface SubjectSelectionModalProps {
   visible: boolean;
@@ -17,18 +18,6 @@ interface SubjectSelectionModalProps {
 const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionModalProps) => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const subjectColors = [
-    Colors.subjectColor0,
-    Colors.subjectColor1,
-    Colors.subjectColor2,
-    Colors.subjectColor3,
-    Colors.subjectColor4,
-    Colors.subjectColor5,
-    Colors.subjectColor6,
-    Colors.subjectColor7,
-    Colors.subjectColor8,
-  ];
 
   const refreshSubjects = async () => {
     setLoading(true);

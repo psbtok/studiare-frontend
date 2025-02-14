@@ -12,6 +12,7 @@ import BalanceTile from '@/components/Balance/balanceTile';
 import { Typography } from '@/styles/Typography';
 import { getProfileService } from '@/services/authService';
 import TutorStatistics from '@/components/Tutor/tutorStatistics';
+import ProfileSubjectChart from '@/components/Profile/profileSubjectChart';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -87,6 +88,9 @@ export default function ProfileScreen() {
             <View>
               <BalanceTile balance={balance !== null ? balance : 0} />
               {profile.is_tutor && <TutorStatistics />}
+            </View>
+            <View>
+              <ProfileSubjectChart/>
             </View>
             <View>
               <Text style={[commonStyles.label, styles.emailBlock]}>{words.email}: </Text>

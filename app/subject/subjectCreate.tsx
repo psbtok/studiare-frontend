@@ -51,8 +51,8 @@ export default function CreateSubjectScreen() {
             text: words.ok,
             onPress: () => {
               router.replace({
-                pathname: '/subject/subjectDetail',
-                params: { subject: JSON.stringify(subject) },
+                pathname: '/subject',
+                // params: { subject: JSON.stringify(subject) },
               });
             },
           },

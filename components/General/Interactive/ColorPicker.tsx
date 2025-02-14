@@ -1,18 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Colors } from '@/styles/Colors';
-
-const subjectColors = [
-  Colors.subjectColor0,
-  Colors.subjectColor1,
-  Colors.subjectColor2,
-  Colors.subjectColor3,
-  Colors.subjectColor4,
-  Colors.subjectColor5,
-  Colors.subjectColor6,
-  Colors.subjectColor7,
-  Colors.subjectColor8,
-];
+import { subjectColors } from '@/styles/Colors';
 
 interface ColorPickerProps {
   onSelect: (id: number) => void;

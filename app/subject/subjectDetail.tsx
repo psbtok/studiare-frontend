@@ -8,6 +8,7 @@ import { Subject } from '@/models/models';
 import commonStyles from '@/styles/CommonStyles';
 import Button from '@/components/General/Interactive/Button';
 import { deleteSubjectService } from '@/services/lessonService'; 
+import { subjectColors } from '@/styles/Colors';
 
 export default function SubjectDetailScreen() {
   const { subject } = useLocalSearchParams();
@@ -15,22 +16,10 @@ export default function SubjectDetailScreen() {
   const subjectString = Array.isArray(subject) ? subject[0] : subject;
   const parsedSubject: Subject = JSON.parse(subjectString);
 
-  const subjectColors = [
-    Colors.subjectColor0,
-    Colors.subjectColor1,
-    Colors.subjectColor2,
-    Colors.subjectColor3,
-    Colors.subjectColor4,
-    Colors.subjectColor5,
-    Colors.subjectColor6,
-    Colors.subjectColor7,
-    Colors.subjectColor8,
-  ];
-
   const color =
     parsedSubject.colorId && parsedSubject.colorId < 10
       ? subjectColors[parsedSubject.colorId - 1]
-      : Colors.subjectColor0;
+      : subjectColors[0];
 
   const handleEdit = () => {
     router.push({
