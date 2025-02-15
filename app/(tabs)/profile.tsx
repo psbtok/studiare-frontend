@@ -5,7 +5,6 @@ import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
-import commonStyles from '@/styles/CommonStyles';
 import { getBalanceService } from '@/services/balanceService';
 import TutorDetails from '@/components/Tutor/tutorDetails';
 import BalanceTile from '@/components/Balance/balanceTile';
@@ -13,6 +12,10 @@ import { Typography } from '@/styles/Typography';
 import { getProfileService } from '@/services/authService';
 import TutorStatistics from '@/components/Tutor/tutorStatistics';
 import ProfileSubjectChart from '@/components/Profile/profileSubjectChart';
+import { Image } from 'react-native';
+import Constants from 'expo-constants';
+
+const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any | null>(null);
@@ -74,7 +77,6 @@ export default function ProfileScreen() {
   if (error) {
     return <Text>{words.error}</Text>;
   }
-
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -87,8 +89,16 @@ export default function ProfileScreen() {
           <View>
             <View style={styles.header}>
               <View style={styles.headerContainer}>
-                <Text style={styles.name}>{profile.user.last_name} {profile.user.first_name}</Text>
-                <Text style={styles.email}>{profile.user.email}</Text>
+                <View style={styles.headerInfo}>
+                  <Text style={styles.name}>{profile.user.last_name} {profile.user.first_name}</Text>
+                  <Text style={styles.email}>{profile.user.email}</Text>
+                </View>
+                <View style={styles.headerPicture}>
+                  <Image 
+                    source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
+                    style={styles.profilePicture} 
+                  />
+                </View>
               </View>
               <BalanceTile balance={balance !== null ? balance : 0} />
             </View>
@@ -141,8 +151,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   headerContainer: {
-    flexDirection: 'column',
-    paddingHorizontal: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 24,
+    paddingRight: 12,
     paddingTop: 2,
   },
   name: {
@@ -156,5 +168,10 @@ const styles = StyleSheet.create({
     marginTop: -3,
     color: Colors.stoneGrey
   },
-  
+  profilePicture: {
+    width: 64, 
+    height: 64, 
+    borderRadius: 8, 
+    marginBottom: 8, 
+  },
 });

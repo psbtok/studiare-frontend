@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
@@ -9,11 +8,15 @@ import { editProfileService } from '@/services/authService';
 import commonStyles from '@/styles/CommonStyles';
 import TutorEdit from '@/components/Tutor/tutorEdit';
 import LineBreak from '@/components/General/NonInteractive/lineBreak';
+import * as ImagePicker from 'expo-image-picker';
+import Button from '@/components/General/Interactive/Button';
 
 export default function ProfileEditScreen() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profile, setProfile] = useState<any | null>(null);
+  const [profilePictureUri, setProfilePictureUri] = useState<string | null>(null);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export default function ProfileEditScreen() {
 
     loadProfile();
   }, []);
-
+  console.log(profile)
   const handleSaveProfile = async () => {
     try {
       const updatedProfile = {
@@ -45,7 +48,7 @@ export default function ProfileEditScreen() {
         },
       };
 
-      await editProfileService(updatedProfile);
+      await editProfileService(updatedProfile, profilePicture);
 
       Alert.alert(
         words.success,
@@ -75,6 +78,35 @@ export default function ProfileEditScreen() {
       tutor: updatedTutor,
     }));
   };
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert(words.error, words.permissionError);
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setProfilePictureUri(uri);
+
+      const fileInfo = {
+        uri,
+        name: uri.split('/').pop() || 'photo.jpg',
+        type: 'image/jpeg',
+      };
+      setProfilePicture(fileInfo as unknown as File);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -85,6 +117,16 @@ export default function ProfileEditScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View>
+          {profilePictureUri && (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: profilePictureUri }} style={styles.image} />
+            </View>
+          )}
+          <View style={{marginBottom: 8}}>
+            <Button label={words.chooseImage} onPress={pickImage} />
+          </View>
+
+
           <Text style={commonStyles.label}>{words.firstName}</Text>
           <TextInput
             style={commonStyles.input}
@@ -111,10 +153,10 @@ export default function ProfileEditScreen() {
 
       <View style={styles.buttonBlock}>
         <View style={[styles.buttonContainer, styles.buttonFirst]}>
-          <Button  label={words.cancel} onPress={handleCancel} />
+          <Button label={words.cancel} onPress={handleCancel} />
         </View>
         <View style={styles.buttonContainer}>
-          <Button  theme="primary" label={words.save} onPress={handleSaveProfile} />
+          <Button theme="primary" label={words.save} onPress={handleSaveProfile} />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -130,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.paleGrey,
   },
   scrollViewContent: {
-    paddingBottom: 20, 
+    paddingBottom: 20,
   },
   buttonBlock: {
     width: '100%',
@@ -144,6 +186,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    flex: 1.5
+    flex: 1.5,
+  },
+  imageContainer: {
+    marginTop: 16,
+    marginBottom: 8,
+    alignItems: 'center',
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 2,
+    borderColor: Colors.deepGrey,
   },
 });

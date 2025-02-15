@@ -48,6 +48,7 @@ export interface Tutor {
 export interface Profile {
   user: User;
   is_tutor: boolean;
+  profile_picture: string | null;
   tutor?: Tutor | undefined; // Поле может быть необязательным, если пользователь не репетитор
 }
 

@@ -48,7 +48,7 @@ export default function RegistrationDetailsScreen() {
     };
 
     try {
-      await editProfileService(updatedProfile);
+      await editProfileService(updatedProfile, null);
 
       Alert.alert('', words.registrationDetailsSaved);
       router.replace('/'); 

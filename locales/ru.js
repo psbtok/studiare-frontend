@@ -210,7 +210,10 @@ const words = {
     selectedParticipants: 'Выбранные ученики',
     enterParticipantName: 'Введите имя ученика',
     participantNotFound: 'Ученик не найден',
-    participantName: 'Имя ученика'
+    participantName: 'Имя ученика',
+    permissionError: 'Нет доступа',
+    selectedImage: 'Выбранное фото',
+    chooseImage: 'Выберите фото'
   };
   
   export default words

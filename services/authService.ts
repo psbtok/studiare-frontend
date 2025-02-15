@@ -86,22 +86,48 @@ export const logoutService = async () => {
   }
 };
 
-export const editProfileService = async (updatedProfile: any) => {
+export const editProfileService = async (updatedProfile: any, profilePicture: File | null) => {
   const token = await AsyncStorage.getItem('login-token');
   if (!token) {
     throw new Error(words.notAuthenticated);
   }
+  console.log(updatedProfile)
+  const formData = new FormData();
+
+  const flattenObject = (obj: any, parentKey = '', result: any = {}) => {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const newKey = parentKey ? `${parentKey}[${key}]` : key;
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flattenObject(obj[key], newKey, result);
+        } else {
+          result[newKey] = obj[key];
+        }
+      }
+    }
+    return result;
+  };
+
+  const flattenedProfile = flattenObject(updatedProfile);
+
+  for (const key in flattenedProfile) {
+    if (flattenedProfile.hasOwnProperty(key)) {
+      formData.append(key, flattenedProfile[key]);
+    }
+  }
+
+  if (profilePicture) {
+    formData.append('profile_picture', profilePicture);
+  } 
 
   try {
     const response = await fetch(`${API_BASE_URL}/profile/edit/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Token ${token}`,
       },
-      body: JSON.stringify(updatedProfile),
+      body: formData,
     });
-
     const data = await response.json();
 
     if (!response.ok) {
