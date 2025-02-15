@@ -13,6 +13,7 @@ interface TutorDetailsProps {
     education?: string;
     links?: string;
     experienceYears?: number; 
+    paymentMethod?: string;
   } | null;
 }
 
@@ -47,7 +48,8 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
       birth_date: "", 
       education: "",
       links: "",
-      experienceYears: 0
+      experienceYears: 0,
+      paymentMethod: ""
     }
   }
 
@@ -71,6 +73,11 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
       <Text style={styles.info}>
         <Text style={commonStyles.label}>{words.education}: </Text>
         {tutor.education ? tutor.education : <Text style={styles.notFilled}>{words.notFilled}</Text>}
+      </Text>
+
+      <Text style={styles.info}>
+        <Text style={commonStyles.label}>{words.paymentMethod}: </Text>
+        {tutor.paymentMethod ? tutor.paymentMethod : <Text style={styles.notFilled}>{words.notFilled}</Text>}
       </Text>
 
       <Text style={styles.info}>

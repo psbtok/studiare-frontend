@@ -36,7 +36,7 @@ export default function ProfileEditScreen() {
 
     loadProfile();
   }, []);
-  console.log(profile)
+
   const handleSaveProfile = async () => {
     try {
       const updatedProfile = {
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 176,
+    height: 176,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: Colors.deepGrey,
   },

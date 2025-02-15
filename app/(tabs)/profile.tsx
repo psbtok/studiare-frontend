@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
@@ -14,6 +14,7 @@ import TutorStatistics from '@/components/Tutor/tutorStatistics';
 import ProfileSubjectChart from '@/components/Profile/profileSubjectChart';
 import { Image } from 'react-native';
 import Constants from 'expo-constants';
+import ImageModal from '@/components/General/Interactive/imageModal';
 
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
@@ -23,6 +24,8 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [imageUri, setImageUri] = useState(''); 
   const router = useRouter();
 
   const fetchProfile = async (force=false) => {
@@ -74,6 +77,11 @@ export default function ProfileScreen() {
     return <Text>{words.loading}</Text>;
   }
 
+  const handleImagePress = () => {
+    setImageUri(`${API_BASE_URL.split('/api')[0]}${profile.profile_picture}`);
+    setModalVisible(true);
+  };
+
   if (error) {
     return <Text>{words.error}</Text>;
   }
@@ -89,16 +97,16 @@ export default function ProfileScreen() {
           <View>
             <View style={styles.header}>
               <View style={styles.headerContainer}>
-                <View style={styles.headerInfo}>
+                <View>
                   <Text style={styles.name}>{profile.user.last_name} {profile.user.first_name}</Text>
                   <Text style={styles.email}>{profile.user.email}</Text>
                 </View>
-                <View style={styles.headerPicture}>
+                <TouchableOpacity onPress={handleImagePress}>
                   <Image 
                     source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
                     style={styles.profilePicture} 
                   />
-                </View>
+                </TouchableOpacity>
               </View>
               <BalanceTile balance={balance !== null ? balance : 0} />
             </View>
@@ -115,6 +123,11 @@ export default function ProfileScreen() {
       <View>
         <Button theme="primary" label={words.edit} onPress={handleEditProfile} />
       </View>
+      <ImageModal 
+        visible={modalVisible}
+        imageUri={imageUri}
+        onClose={() => setModalVisible(false)} 
+      />
     </ScrollView>
   );
 

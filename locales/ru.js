@@ -109,6 +109,7 @@ const words = {
     links: "Ссылки",
     experience: "Опыт работы",
     education: "Образование",
+    paymentMethod: 'Реквизиты',
     age: "Возраст",
 
     noChangesMade: 'Изменения не найдены',
@@ -213,7 +214,8 @@ const words = {
     participantName: 'Имя ученика',
     permissionError: 'Нет доступа',
     selectedImage: 'Выбранное фото',
-    chooseImage: 'Выберите фото'
+    chooseImage: 'Выберите фото',
+    nooneFound: 'Пользователь не найден'
   };
   
   export default words

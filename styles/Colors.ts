@@ -20,6 +20,7 @@ export const Colors = {
   subjectColor7: 'hsl(330, 65.00%, 72.00%)', // Pinkish Magenta
   subjectColor8: 'hsl(180, 71.00%, 72.90%)', // Teal
 
+  modalBackground: 'rgba(0, 0, 0, 0.5)',
 };
 
 export const subjectColors = [

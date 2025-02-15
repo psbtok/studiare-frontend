@@ -14,7 +14,8 @@ interface TutorEditProps {
     birth_date: string;
     education: string;
     links: string;
-    experienceYears: number; 
+    experienceYears: number;
+    paymentMethod: string;
   } | null;
   onUpdateTutor: (updatedTutor: any) => void;
 }
@@ -25,6 +26,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
   const [links, setLinks] = useState<string>('');
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [experienceYears, setExperienceYears] = useState<number>(0);
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   useEffect(() => {
     if (tutor) {
@@ -33,6 +35,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
       setLinks(tutor.links);
       setBirthDate(tutor.birth_date ? new Date(tutor.birth_date) : null);
       setExperienceYears(tutor.experienceYears || 0);
+      setPaymentMethod(tutor.paymentMethod)
     }
   }, [tutor]);
 
@@ -42,6 +45,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
     if (field === 'links') setLinks(value);
     if (field === 'birth_date') setBirthDate(value);
     if (field === 'experienceYears') setExperienceYears(value);
+    if (field === 'paymentMethod') setPaymentMethod(value);
 
     if (tutor && tutor[field] !== value) {
       onUpdateTutor({ ...tutor, [field]: value });
@@ -68,10 +72,20 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
         onChangeText={(text) => handleChange('education', text)}
       />
 
-      <Text style={commonStyles.label}>{words.birthDate}</Text>
-      <DatePicker
-        onDateChange={(date) => handleChange('birth_date', date.toISOString().split('T')[0])}
+      <Text style={commonStyles.label}>{words.paymentMethod}</Text>
+      <TextInput
+        style={commonStyles.input}
+        placeholder={words.paymentMethod}
+        placeholderTextColor={Colors.mediumGrey}
+        value={paymentMethod}
+        onChangeText={(text) => handleChange('paymentMethod', text)}
       />
+
+      <Text style={commonStyles.label}>{words.birthDate}</Text>
+      {birthDate && <DatePicker
+        onDateChange={(date) => handleChange('birth_date', date.toISOString().split('T')[0])}
+        defaultDate={birthDate}
+      />}
 
       <Text style={commonStyles.label}>{words.experienceYears}</Text>
       <NumberPicker

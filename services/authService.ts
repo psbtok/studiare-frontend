@@ -91,7 +91,6 @@ export const editProfileService = async (updatedProfile: any, profilePicture: Fi
   if (!token) {
     throw new Error(words.notAuthenticated);
   }
-  console.log(updatedProfile)
   const formData = new FormData();
 
   const flattenObject = (obj: any, parentKey = '', result: any = {}) => {

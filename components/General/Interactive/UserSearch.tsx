@@ -20,12 +20,14 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
   const [participantName, setParticipantName] = useState('');
   const [participants, setParticipants] = useState<User[]>([]);
   const [chosenParticipants, setChosenParticipants] = useState<User[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (resetFlag) {
       setParticipantName('');
       setParticipants([]);
       setChosenParticipants([]);
+      setErrorMessage('');
       setResetFlag(false);
     }
   }, [resetFlag, setResetFlag]);
@@ -46,11 +48,14 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
     try {
       const users = await getUserIdByFullNameService(participantName);
       if (users.length === 0) {
-        Alert.alert(words.error, words.participantNotFound);
+        setErrorMessage(words.nooneFound);
       } else {
+        setErrorMessage('');
         setParticipants(users);
       }
-    } catch (error) {}
+    } catch (error) {
+      setErrorMessage(words.nooneFound); // Set error message on failure
+    }
   };
 
   const handleChooseParticipant = (participant: User) => {
@@ -78,6 +83,15 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
     Keyboard.dismiss();
   };
 
+  const handleChangeText = (text: string) => {
+    setParticipantName(text);
+    if (text.trim()) {
+      setErrorMessage(''); 
+    } else {
+      setParticipants([]); 
+    }
+  };
+
   return (
     <View style={styles.searchContainer}>
       <Text style={commonStyles.label}>{words.participantName}</Text>
@@ -88,7 +102,7 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
             placeholder={words.enterParticipantName}
             placeholderTextColor={Colors.mediumGrey}
             value={participantName}
-            onChangeText={setParticipantName}
+            onChangeText={handleChangeText} 
             onSubmitEditing={handleSubmitEditing}
             returnKeyType="search"
           />
@@ -98,7 +112,9 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
         </View>
       </View>
 
-      {participants.length > 0 &&
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text> 
+      ) : (
         participants.map((item) => (
           <TouchableOpacity key={item.id} onPress={() => handleChooseParticipant(item)}>
             <View style={styles.participantItem}>
@@ -109,7 +125,8 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
+        ))
+      )}
 
       {chosenParticipants.length > 0 && (
         <View style={styles.selectedParticipantsContainer}>
@@ -173,6 +190,10 @@ const styles = StyleSheet.create({
   removeParticipant: {
     fontSize: Typography.fontSizes.xxl,
     color: Colors.alertRed,
+  },
+  errorText: {
+    color: Colors.alertRed,
+    marginTop: 10,
   },
 });
 

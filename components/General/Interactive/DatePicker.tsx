@@ -7,8 +7,13 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Typography } from '@/styles/Typography';
 
-export default function DatePicker({ onDateChange }: { onDateChange: (date: Date) => void }) {
-  const [date, setDate] = useState(new Date());
+interface DatePickerProps {
+  onDateChange: (date: Date) => void;
+  defaultDate?: Date; 
+}
+
+export default function DatePicker({ onDateChange, defaultDate }: DatePickerProps) {
+  const [date, setDate] = useState(defaultDate);
   const [showPicker, setShowPicker] = useState(false);
 
   const handlePickerChange = (_: any, selectedDate?: Date) => {
@@ -56,7 +61,9 @@ const styles = StyleSheet.create({
   },
   dateInput: {
     width: '100%',
-    paddingTop: 8,
+    height: 52,
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
   dateLabel: {
     fontSize: Typography.fontSizes.s,

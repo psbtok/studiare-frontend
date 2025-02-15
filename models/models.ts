@@ -43,6 +43,7 @@ export interface Tutor {
   education: string;
   links: string; // Ссылки в виде строки, разделённой запятыми
   age: number;
+  paymentMethod: string;
 }
 
 export interface Profile {
