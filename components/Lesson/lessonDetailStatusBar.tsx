@@ -9,15 +9,31 @@ import LessonParticipantStatusList from "./lessonParticipantStatusList";
 
 function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
     const { profile } = props;
-    const [lesson, setLesson] = useState(props.lesson);
+    const lesson = props.lesson;
     const [startsSoon, setStartsSoon] = useState(false); 
     const lessonStartTime = new Date(lesson.date_start);
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
+    const [status, setStatus] = useState('awaiting_confirmation')
 
     const currentParticipant = lesson.participants.find(
         (participant) => participant.profile.user.id === profile.user.id
     );
-    const status = currentParticipant?.status || lesson.participants[0].status; 
+
+    useEffect(() => {
+        if (currentParticipant && lesson.participants.length === 1) {
+            setStatus(currentParticipant.status);
+        } else {
+            if (lesson.participants.every(selected => selected.status === "cancelled")) {
+                setStatus('canceled');
+            } else if (lesson.participants.every(selected => ["cancelled", "conducted"].includes(selected.status))) {
+                setStatus('conducted');
+            } else if (lesson.participants.some(selected => selected.status === "confirmed")) {
+                setStatus('confirmed');
+            }
+        }
+
+    }, [currentParticipant, lesson.participants]);
+
 
     const checkStartsSoon = () => {
         const currentTime = new Date(); 
@@ -35,7 +51,6 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
         }, 10000);
         return () => clearInterval(intervalId);
     }, [lesson]);
-
     return (
         <View style={styles.container}>
             <ScrollView>
@@ -93,11 +108,11 @@ function LessonDetailStatusBar(props: { lesson: Lesson, profile: Profile }) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 12,
+        marginTop: 8,
     },
     actionBlock: {
         flexDirection: 'row',
-        marginBottom: 12,
+        marginBottom: 8,
         backgroundColor: Colors.lightGrey,
         padding: 16,
         paddingHorizontal: 16,

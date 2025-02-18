@@ -15,6 +15,7 @@ import ProfileSubjectChart from '@/components/Profile/profileSubjectChart';
 import { Image } from 'react-native';
 import Constants from 'expo-constants';
 import ImageModal from '@/components/General/Interactive/imageModal';
+import TutorRatingTile from '@/components/General/NonInteractive/tutorRatingTile';
 
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
@@ -98,21 +99,32 @@ export default function ProfileScreen() {
             <View style={styles.header}>
               <View style={styles.headerContainer}>
                 <View>
-                  <Text style={styles.name}>{profile.user.last_name} {profile.user.first_name}</Text>
+                  <Text style={styles.name}>
+                    {profile.user.last_name} {profile.user.first_name}
+                  </Text>
                   <Text style={styles.email}>{profile.user.email}</Text>
                 </View>
-                <TouchableOpacity onPress={handleImagePress}>
-                  <Image 
-                    source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
-                    style={styles.profilePicture} 
-                  />
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity style={styles.profilePicture} onPress={handleImagePress}>
+                    <Image 
+                      source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
+                      style={styles.profilePicture} 
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <BalanceTile balance={balance !== null ? balance : 0} />
+              <View style={styles.headerFooter}>
+                <BalanceTile balance={balance !== null ? balance : 0} />
+                {profile.is_tutor && profile.tutor && 
+                  <View style={styles.tutorRating}>
+                    <TutorRatingTile profile={profile}></TutorRatingTile>
+                  </View>
+                }
+              </View>
             </View>
             {profile.is_tutor && <TutorStatistics />}
             <View>
-              <ProfileSubjectChart/>
+              <ProfileSubjectChart profile={profile}/>
             </View>
             {profile.is_tutor && <TutorDetails tutor={profile.tutor} />}
           </View>
@@ -185,6 +197,15 @@ const styles = StyleSheet.create({
     width: 64, 
     height: 64, 
     borderRadius: 8, 
-    marginBottom: 8, 
+    marginBottom: 4, 
+    backgroundColor: Colors.mediumGrey
   },
+  headerFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  tutorRating: {
+    marginRight: 12
+  }
 });

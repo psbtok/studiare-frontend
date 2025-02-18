@@ -350,3 +350,37 @@ export const getLessonStatsService = async (
     throw error;
   }
 };
+
+export const rateLessonService = async (
+  lessonId: number,
+  rating: number
+): Promise<void> => {
+  const token = await AsyncStorage.getItem('login-token');
+
+  if (!token) {
+    throw new Error(words.notAuthenticated);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/rate-lesson/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify({
+        lesson_id: lessonId,
+        rating,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || words.error);
+    }
+
+  } catch (error: any) {
+    console.error('Rate lesson error:', error.message);
+    throw error;
+  }
+};

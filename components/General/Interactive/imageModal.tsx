@@ -1,4 +1,3 @@
-// ImageModal.tsx
 import React from 'react';
 import { Modal, View, Image, StyleSheet } from 'react-native';
 import Button from '@/components/General/Interactive/Button';
@@ -13,7 +12,7 @@ interface ImageModalProps {
 }
 const imageSize = Dimensions.get('window').width * 0.9
 
-const ImageModal: React.FC<ImageModalProps> = ({ visible, imageUri, onClose }) => {
+const ImageModal = ({ visible, imageUri, onClose }: ImageModalProps) => {
   return (
     <Modal
       animationType="fade"

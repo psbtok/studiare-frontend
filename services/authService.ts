@@ -114,6 +114,8 @@ export const editProfileService = async (updatedProfile: any, profilePicture: Fi
       formData.append(key, flattenedProfile[key]);
     }
   }
+  
+  formData.delete("profile_picture");
 
   if (profilePicture) {
     formData.append('profile_picture', profilePicture);
@@ -163,6 +165,8 @@ export const getProfileService = async () => {
     if (!response.ok) {
       throw new Error(data.detail || words.profileFetchFailed);
     }
+    
+    await AsyncStorage.setItem('profile', JSON.stringify(data));
 
     return data;
   } catch (error: any) {

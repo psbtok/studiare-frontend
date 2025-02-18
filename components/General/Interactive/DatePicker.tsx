@@ -13,7 +13,7 @@ interface DatePickerProps {
 }
 
 export default function DatePicker({ onDateChange, defaultDate }: DatePickerProps) {
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState(defaultDate ?? new Date());
   const [showPicker, setShowPicker] = useState(false);
 
   const handlePickerChange = (_: any, selectedDate?: Date) => {

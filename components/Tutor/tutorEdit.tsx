@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
@@ -16,28 +16,17 @@ interface TutorEditProps {
     links: string;
     experienceYears: number;
     paymentMethod: string;
-  } | null;
+  };
   onUpdateTutor: (updatedTutor: any) => void;
 }
 
 const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
-  const [about, setAbout] = useState<string>('');
-  const [education, setEducation] = useState<string>('');
-  const [links, setLinks] = useState<string>('');
-  const [birthDate, setBirthDate] = useState<Date | null>(null);
-  const [experienceYears, setExperienceYears] = useState<number>(0);
-  const [paymentMethod, setPaymentMethod] = useState<string>('');
-
-  useEffect(() => {
-    if (tutor) {
-      setAbout(tutor.about);
-      setEducation(tutor.education);
-      setLinks(tutor.links);
-      setBirthDate(tutor.birth_date ? new Date(tutor.birth_date) : null);
-      setExperienceYears(tutor.experienceYears || 0);
-      setPaymentMethod(tutor.paymentMethod)
-    }
-  }, [tutor]);
+  const [about, setAbout] = useState<string>(tutor.about);
+  const [education, setEducation] = useState<string>(tutor.education);
+  const [links, setLinks] = useState<string>(tutor.links);
+  const [birthDate, setBirthDate] = useState<Date>(tutor.birth_date ? new Date(tutor.birth_date) : new Date());
+  const [experienceYears, setExperienceYears] = useState<number>(tutor.experienceYears || 0);
+  const [paymentMethod, setPaymentMethod] = useState<string>(tutor.paymentMethod);
 
   const handleChange = (field: string, value: any) => {
     if (field === 'about') setAbout(value);
@@ -82,10 +71,10 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
       />
 
       <Text style={commonStyles.label}>{words.birthDate}</Text>
-      {birthDate && <DatePicker
+      <DatePicker
         onDateChange={(date) => handleChange('birth_date', date.toISOString().split('T')[0])}
         defaultDate={birthDate}
-      />}
+      />
 
       <Text style={commonStyles.label}>{words.experienceYears}</Text>
       <NumberPicker

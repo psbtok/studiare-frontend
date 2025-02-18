@@ -6,6 +6,11 @@ import { getLessonStatsService } from "@/services/lessonService";
 import { pie, arc } from "d3-shape";
 import commonStyles from "@/styles/CommonStyles";
 import words from "@/locales/ru";
+import { Profile } from "@/models/models";
+
+type Props = {
+  profile: Profile;
+};
 
 interface ChartData {
   subject: string;
@@ -13,7 +18,7 @@ interface ChartData {
   color: string;
 }
 
-const ProfileSubjectChart: React.FC = () => {
+const ProfileSubjectChart = ({ profile }: Props) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,10 +38,12 @@ const ProfileSubjectChart: React.FC = () => {
         const formattedData = stats.map((item, index) => ({
           subject: item.subject,
           lesson_count: item.lesson_count,
-          color: subjectColors[item.colorId - 1] || subjectColors[0] 
+          color: subjectColors[item.colorId - 1] || subjectColors[0]
         }));
 
-        setChartData(formattedData);
+        if (formattedData.length) {
+          setChartData(formattedData);
+        }
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch lesson statistics.");
@@ -56,7 +63,7 @@ const ProfileSubjectChart: React.FC = () => {
       return `${count} занятий`;
     }
   };
-  
+
   const onPieItemSelected = (index: number) => () => {
     const lessonCount = index < 0 ? 0 : chartData[index].lesson_count;
     setSelectedPie(index < 0 ? { index: -1, text: `Выберите элемент` } : {
@@ -65,7 +72,7 @@ const ProfileSubjectChart: React.FC = () => {
     });
   };
 
-  const DonutSlice: React.FC<{ color: string; arcData: any; onSelected: () => void; isActive: boolean }> = ({ color, arcData, onSelected, isActive }) => {
+  const DonutSlice = ({ color, arcData, onSelected, isActive }: { color: string; arcData: any; onSelected: () => void; isActive: boolean }) => {
     const outerRadius = isActive ? 130 : 120;
     const d = arc().outerRadius(outerRadius).innerRadius(60)(arcData);
 
@@ -80,7 +87,7 @@ const ProfileSubjectChart: React.FC = () => {
     );
   };
 
-  const Pie: React.FC<{ data: ChartData[]; size: number; onItemSelected: (index: number) => () => void }> = ({ data, size, onItemSelected }) => {
+  const Pie = ({ data, size, onItemSelected }: { data: ChartData[]; size: number; onItemSelected: (index: number) => () => void }) => {
     const arcs = pie<ChartData>().value(item => item.lesson_count)(data);
 
     return (
@@ -117,35 +124,36 @@ const ProfileSubjectChart: React.FC = () => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.labelContainer}>
-          <Text style={commonStyles.label}>
-            {selectedPie.text}
-          </Text>
-        </View>
-        <Pie
-          data={chartData}
-          size={250}
-          onItemSelected={onPieItemSelected}
-        />
-        <View style={styles.legend}>
-            {chartData.map((item, index) => (
-                <TouchableOpacity
-                style={styles.labelBlock}
-                key={index}
-                onPress={onPieItemSelected(index)}
-                >
-                <View style={[styles.circle, { backgroundColor: item.color }]}></View>
-                <Text style={[
-                    commonStyles.label, 
-                    selectedPie.index === index ? 
-                        {fontWeight: 800} : 
-                        {fontWeight: 500, color: Colors.mediumGrey}]}
-                >
-                    {item.subject}
-                </Text>
-                </TouchableOpacity>
-            ))}
-        </View>
+      <View style={styles.labelContainer}>
+        <Text style={commonStyles.label}>
+          {selectedPie.text}
+        </Text>
+      </View>
+      <Pie
+        data={chartData}
+        size={250}
+        onItemSelected={onPieItemSelected}
+      />
+      <View style={styles.legend}>
+        {chartData.map((item, index) => (
+          <TouchableOpacity
+            style={styles.labelBlock}
+            key={index}
+            onPress={onPieItemSelected(index)}
+          >
+            <View style={[styles.circle, { backgroundColor: item.color }]}></View>
+            <Text style={[
+              commonStyles.label,
+              selectedPie.index === index ?
+                { fontWeight: 800 } :
+                { fontWeight: 500, color: Colors.mediumGrey }
+            ]}
+            >
+              {item.subject}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };

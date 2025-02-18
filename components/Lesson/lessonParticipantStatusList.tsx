@@ -21,11 +21,11 @@ function LessonParticipantStatusList({ participants }: ParticipantStatusListProp
     }, {} as Record<string, lessonParticipant[]>);
 
     const cancelledCompletely = participants.every(selected => selected.status === "cancelled");
-
-    if (cancelledCompletely) {return}
+    if (cancelledCompletely) {
+        return null;
+    }
 
     const statusOrder = ['awaiting_confirmation', 'confirmed', 'cancelled', 'conducted'];
-
     const statusIcons = {
         awaiting_confirmation: 'clockcircleo',
         confirmed: 'checkcircle',
@@ -33,8 +33,10 @@ function LessonParticipantStatusList({ participants }: ParticipantStatusListProp
         conducted: 'checkcircleo',
     };
 
+    const ratedParticipants = participants.filter(participant => !!participant.rating);
+
     return (
-        <View style={styles.container}>
+        <View>
             {statusOrder.map((status) => {
                 const participantsWithStatus = groupedParticipants[status];
                 if (!participantsWithStatus || participantsWithStatus.length === 0) {
@@ -69,20 +71,41 @@ function LessonParticipantStatusList({ participants }: ParticipantStatusListProp
                     </View>
                 );
             })}
+
+            {ratedParticipants.length > 0 && (
+                <View style={styles.statusBlock}>
+                    <View style={styles.statusHeader}>
+                        <AntDesign
+                            name="star"
+                            size={22}
+                            color={Colors.deepGrey}
+                            style={styles.icon}
+                        />
+                        <Text style={commonStyles.label}>
+                            {words.lessonRatedBy}:{}
+                        </Text>
+                    </View>
+                    <View style={styles.participantItem}>
+                        {ratedParticipants.map((participant, index) => (
+                            <Text key={index} style={commonStyles.label}>
+                                {`${participant.profile.user.first_name} ${participant.profile.user.last_name?.charAt(0) || ''}.`}
+                                {index < ratedParticipants.length - 1 && ', '}
+                            </Text>
+                        ))}
+                    </View>
+                </View>
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginBottom: 12,
-    },
     statusBlock: {
         backgroundColor: Colors.lightGrey,
         paddingHorizontal: 24,
         paddingVertical: 12,
         borderRadius: 24,
-        marginBottom: 12,
+        marginBottom: 8,
     },
     statusHeader: {
         flexDirection: 'row',
@@ -91,7 +114,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 8,
-        bottom: 2.5
+        bottom: 2.5,
     },
     participantItem: {
         marginTop: -12,

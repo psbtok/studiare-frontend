@@ -6,6 +6,7 @@ import { Colors } from "@/styles/Colors";
 import { Lesson, Profile } from "@/models/models";
 import { updateLessonStatusService } from "@/services/lessonService"; 
 import { useRouter } from "expo-router";
+import LessonRateModal from './lessonRateModal';
 
 interface LessonDetailActionsProps {
     lesson: Lesson;
@@ -14,12 +15,18 @@ interface LessonDetailActionsProps {
 }
 
 function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActionsProps) {
-    const router = useRouter();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [status, setStatus] = useState('awaiting_confirmation');
+    const [rated, setRated] = useState(false);
     const currentParticipant = lesson.participants.find(
         (participant) => participant.profile.user.id === profile.user.id
     );
-    
-    const [status, setStatus] = useState('awaiting_confirmation')
+
+    useEffect(() => {
+        if (currentParticipant) {
+            setRated(!!currentParticipant.rating);
+        }
+    }, [currentParticipant]);
 
     useEffect(() => {
         if (currentParticipant && lesson.participants.length === 1) {
@@ -36,9 +43,6 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
     }, [currentParticipant, lesson.participants]);
 
     const isTutor = lesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === lesson.tutor.tutor.id;
-    const editingUnavailable = lesson.participants.some(
-        (participant) => ['conducted', 'confirmed'].includes(participant.status)
-    );
 
     const lessonStartTime = new Date(lesson.date_start);
     const currentTime = new Date();
@@ -51,11 +55,7 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
         let confirmationMessage = '';
         switch (action) {
             case 'cancel':
-                if (startsSoon && !isTutor) {
-                    confirmationMessage = words.confirmCancelLessonWithFee;
-                } else {                    
-                    confirmationMessage = words.confirmCancelLesson;
-                }
+                confirmationMessage = startsSoon && !isTutor ? words.confirmCancelLessonWithFee : words.confirmCancelLesson;
                 break;
             case 'confirm':
                 confirmationMessage = words.confirmLesson;
@@ -64,7 +64,7 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
                 confirmationMessage = words.confirmConductLesson;
                 break;
         }
-    
+
         Alert.alert(
             words.confirmationTitle,
             confirmationMessage,
@@ -86,59 +86,68 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
         );
     };
 
-    const handleEdit = () => {
-        const serializedLesson = encodeURIComponent(JSON.stringify(lesson));
-        router.push(`/lesson/lessonEdit?lesson=${serializedLesson}`);
+    const rateLesson = () => {
+        setModalVisible(true);
+    }
+    
+    const handleRate = (rating: number) => {
+        setRated(true);
+
+        const updatedLesson = {
+            ...lesson,
+            participants: lesson.participants.map(participant =>
+                participant.profile.user.id === currentParticipant.profile.user.id
+                    ? { ...participant, rating } 
+                    : participant
+            ),
+        };
+
+        setLesson(updatedLesson);
     };
 
     switch (status) {
         case 'confirmed':
-            if (isTutor) {
-                return (
-                    <View style={styles.actionBlock}>
-                        <View style={styles.buttonSmall}>
-                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                        </View>
+            return (
+                <View style={styles.actionBlock}>
+                    <View style={styles.buttonSmall}>
+                        <Button label={words.reject} onPress={() => handleAction('cancel')} />
+                    </View>
+                    {isTutor ? (
                         <View style={styles.buttonBig}>
                             <Button theme="primary" label={words.isConducted} onPress={() => handleAction('conduct')} />
                         </View>
-                    </View>
-                );
-            } else {
-                return (
-                    <View style={styles.actionBlock}>
-                        <View style={styles.buttonSmall}>
-                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                        </View>
-                    </View>
-                );
-            }
+                    ) : null}
+                </View>
+            );
         case 'awaiting_confirmation':
-            if (isTutor) {
-                return (
-                    <View style={styles.actionBlock}>
-                        <View style={styles.buttonSmall}>
-                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                        </View>
-                        {!startsSoon && !editingUnavailable && (
-                            <View style={styles.buttonBig}>
-                                <Button theme="primary" label={words.edit} onPress={() => handleEdit()} />
-                            </View>
-                        )}
+            return (
+                <View style={styles.actionBlock}>
+                    <View style={styles.buttonSmall}>
+                        <Button label={words.reject} onPress={() => handleAction('cancel')} />
                     </View>
-                );
-            } else {
-                return (
-                    <View style={styles.actionBlock}>
-                        <View style={styles.buttonSmall}>
-                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                        </View>
+                    {!isTutor && (
                         <View style={styles.buttonBig}>
                             <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
                         </View>
-                    </View>
-                );
-            }
+                    )}
+                </View>
+            );
+        case 'conducted':
+            return (
+                <View>
+                    {!isTutor && !rated && (<View style={styles.actionBlock}>
+                        <View style={styles.buttonSmall}>
+                            <Button theme="primary" label={words.rateLesson} onPress={rateLesson} />
+                        </View>
+                        <LessonRateModal 
+                            visible={modalVisible} 
+                            onClose={() => setModalVisible(false)} 
+                            lessonId={lesson.id}
+                            onRate={handleRate}
+                            />
+                    </View>)}
+                </View>
+            );
         default:
             return null;
     }

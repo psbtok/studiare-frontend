@@ -117,7 +117,7 @@ const TutorDetails = ({ tutor }: TutorDetailsProps) => {
 
 const styles = StyleSheet.create({
   tutorDetails: {
-    marginTop: 20,
+    marginTop: 8,
     padding: 12,
     backgroundColor: Colors.lightGrey,
     borderRadius: 8,
@@ -128,11 +128,12 @@ const styles = StyleSheet.create({
   tutorLabel: {
     fontSize: Typography.fontSizes.m,
     fontWeight: 'bold',
+    marginBottom: 6
   },
   info: {
     fontSize: Typography.fontSizes.s,
     color: Colors.deepGrey,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   linksContainer: {
     flexDirection: 'row',

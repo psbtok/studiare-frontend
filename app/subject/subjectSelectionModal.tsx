@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: Colors.paleGrey,
     borderRadius: 16,
-    padding: 16,
+    padding: 8,
   },
   subjectItem: {
     padding: 8,

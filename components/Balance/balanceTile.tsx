@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     marginLeft: 6
   },
   plusButton: {
+    marginLeft: 4
   },
 });
 

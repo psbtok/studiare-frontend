@@ -6,7 +6,8 @@ import { Typography } from '@/styles/Typography';
 function PersonBadge({ name }: { name: string }) {
   return (
     <View style={styles.personContainer}>
-      <Text style={styles.person}>{name}</Text>
+      <Text style={styles.person}>{name}
+      </Text>
     </View>
   );
 }

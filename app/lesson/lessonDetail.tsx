@@ -43,8 +43,6 @@ export default function LessonDetailScreen() {
         } else {
           const fetchedProfile = await getProfileService();
           setProfile(fetchedProfile);
-          setIsTutor(parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id)
-
         }
       } catch (error) {
         console.error('Failed to load profile:', error);
@@ -54,6 +52,11 @@ export default function LessonDetailScreen() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    if (profile && parsedLesson) {
+      setIsTutor(parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id);
+    }
+  }, [profile, parsedLesson]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -107,11 +110,14 @@ export default function LessonDetailScreen() {
           {lessonData?.notes ? (
             <View style={styles.lessonDetailsSection}>
               <Text style={[commonStyles.label, {marginBottom: 2}]}>
-                {words.notes + ':'}
-              </Text>
-              <Text style={commonStyles.label}>
+                {words.notes + ': '}
                 {lessonData?.notes}
               </Text>
+              {lessonData.tutor.tutor?.paymentMethod && (
+                <Text style={commonStyles.label}>
+                  {words.paymentMethod + ':'} {lessonData.tutor.tutor?.paymentMethod}
+                </Text>
+              )}
             </View>
           ) : null}
         </View>

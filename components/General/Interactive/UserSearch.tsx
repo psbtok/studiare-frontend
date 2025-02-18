@@ -8,6 +8,7 @@ import { TextInput } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { User } from '@/models/models';
 import { Typography } from '@/styles/Typography';
+import { AntDesign } from '@expo/vector-icons';
 
 interface ParticipantSearchProps {
   onParticipantsSelected: (participants: User[]) => void;
@@ -16,12 +17,12 @@ interface ParticipantSearchProps {
   initialParticipants?: User[];
 }
 
-const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSelected, resetFlag, setResetFlag, initialParticipants }) => {
+const ParticipantSearch = ({ onParticipantsSelected, resetFlag, setResetFlag, initialParticipants }: ParticipantSearchProps) => {
   const [participantName, setParticipantName] = useState('');
   const [participants, setParticipants] = useState<User[]>([]);
   const [chosenParticipants, setChosenParticipants] = useState<User[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
-
+  
   useEffect(() => {
     if (resetFlag) {
       setParticipantName('');
@@ -49,7 +50,11 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
       const users = await getUserIdByFullNameService(participantName);
       if (users.length === 0) {
         setErrorMessage(words.nooneFound);
-      } else {
+      } else if (users.length === 1) {
+        setParticipants(users);
+        setChosenParticipants([users[0], ...chosenParticipants]);
+      }
+      else {
         setErrorMessage('');
         setParticipants(users);
       }
@@ -63,7 +68,7 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
     let updatedChosenParticipants;
 
     if (exists) {
-      updatedChosenParticipants = chosenParticipants.filter(selected => selected.id !== participant.id);
+      return;
     } else {
       updatedChosenParticipants = [...chosenParticipants, participant];
     }
@@ -121,7 +126,7 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
               <Text
                 style={[styles.participantName, chosenParticipants.some(selected => selected.id === item.id) && styles.selectedParticipantName]}
               >
-                {item.first_name} {item.last_name} (ID: {item.id})
+                {item.first_name} {item.last_name}
               </Text>
             </View>
           </TouchableOpacity>
@@ -134,10 +139,12 @@ const ParticipantSearch: React.FC<ParticipantSearchProps> = ({ onParticipantsSel
           {chosenParticipants.map((participant) => (
             <View key={participant.id} style={styles.selectedParticipantItem}>
               <Text style={styles.participantName}>
-                {participant.first_name} {participant.last_name} (ID: {participant.id})
+                {participant.first_name} {participant.last_name}
               </Text>
               <TouchableOpacity onPress={() => handleDeselectParticipant(participant)}>
-                <Text style={styles.removeParticipant}>-</Text>
+                <Text style={styles.removeParticipant}>
+                  <AntDesign name="minus" size={36} color={Colors.alertRed} />
+                </Text>
               </TouchableOpacity>
             </View>
           ))}

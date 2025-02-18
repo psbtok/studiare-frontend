@@ -10,17 +10,23 @@ export const Colors = {
   skyBlue: 'hsl(216 90.5% 59%)',
   alertRed: 'hsl(10 85.1% 63%)',
 
-  subjectColor0: 'hsl(212, 15.50%, 81.00%)', // Vibrant Orange
-  subjectColor1: 'hsl(30, 90.20%, 72.00%)', // Vibrant Orange
-  subjectColor2: 'hsl(120, 70.10%, 67.30%)', // Fresh Green
-  subjectColor3: 'hsl(200, 87.80%, 74.30%)', // Bright Cyan
-  subjectColor4: 'hsl(270, 72.20%, 71.80%)', // Soft Purple
-  subjectColor5: 'hsl(0, 82.10%, 69.40%)',   // Bold Red
-  subjectColor6: 'hsl(45, 84.80%, 69.00%)',  // Sunny Yellow
-  subjectColor7: 'hsl(330, 65.00%, 72.00%)', // Pinkish Magenta
-  subjectColor8: 'hsl(180, 71.00%, 72.90%)', // Teal
-
   modalBackground: 'rgba(0, 0, 0, 0.5)',
+
+  subjectColor0: 'hsl(212, 15.50%, 81.00%)', 
+  subjectColor1: 'hsl(30, 90.20%, 72.00%)', 
+  subjectColor2: 'hsl(120, 70.10%, 67.30%)', 
+  subjectColor3: 'hsl(200, 87.80%, 74.30%)', 
+  subjectColor4: 'hsl(270, 72.20%, 71.80%)', 
+  subjectColor5: 'hsl(0, 82.10%, 69.40%)',   
+  subjectColor6: 'hsl(45, 84.80%, 69.00%)',  
+  subjectColor7: 'hsl(330, 65.00%, 72.00%)', 
+  subjectColor8: 'hsl(180, 71.00%, 72.90%)', 
+
+  ratingColor0: 'hsl(113, 91.10%, 39.80%)', 
+  ratingColor1: 'hsl(113, 61.90%, 55.70%)', 
+  ratingColor2: 'hsl(93, 66.70%, 63.50%)', 
+  ratingColor3: 'hsl(51, 85.60%, 61.80%)', 
+  ratingColor4: 'hsl(357, 81.80%, 67.60%)', 
 };
 
 export const subjectColors = [
@@ -34,3 +40,11 @@ export const subjectColors = [
   Colors.subjectColor7,
   Colors.subjectColor8,
 ];
+
+export const ratingColors = [
+  Colors.ratingColor0,
+  Colors.ratingColor1,
+  Colors.ratingColor2,
+  Colors.ratingColor3,
+  Colors.ratingColor4,
+]

@@ -59,7 +59,7 @@ const TutorStatistics = () => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    marginVertical: 8,
+    marginTop: 8,
     backgroundColor: Colors.lightGrey,
     padding: 12,
     paddingHorizontal: 24,

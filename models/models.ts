@@ -9,7 +9,8 @@ export interface Subject {
 export interface lessonParticipant {
   profile: Profile,
   status: 'cancelled' | 'conducted' | 'confirmed' | 'awaiting_confirmation',
-  updated_at: string
+  updated_at: string,
+  rating: number | null
 }
 
 export interface Lesson {
@@ -44,6 +45,8 @@ export interface Tutor {
   links: string; // Ссылки в виде строки, разделённой запятыми
   age: number;
   paymentMethod: string;
+  totalRating: number;
+  peopleReacted: number;
 }
 
 export interface Profile {

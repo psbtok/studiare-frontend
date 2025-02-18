@@ -215,7 +215,14 @@ const words = {
     permissionError: 'Нет доступа',
     selectedImage: 'Выбранное фото',
     chooseImage: 'Выберите фото',
-    nooneFound: 'Пользователь не найден'
+    nooneFound: 'Пользователь не найден',
+    rateLesson: 'Оценить занятие',
+    howWasTheLesson: 'Как прошло занятие?',
+    rate: 'Оценить',
+    selectRating: 'Поставьте оценку',
+    ratingSubmitted: 'Занятие оценено!',
+    lessonRated: 'Занятие оценено',
+    lessonRatedBy: 'Занятие оценили'
   };
   
   export default words
