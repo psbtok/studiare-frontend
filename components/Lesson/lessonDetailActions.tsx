@@ -33,7 +33,7 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
             setStatus(currentParticipant.status);
         } else {
             if (lesson.participants.every(selected => selected.status === "cancelled")) {
-                setStatus('canceled');
+                setStatus('cancelled');
             } else if (lesson.participants.every(selected => ["cancelled", "conducted"].includes(selected.status))) {
                 setStatus('conducted');
             } else if (lesson.participants.some(selected => selected.status === "confirmed")) {
