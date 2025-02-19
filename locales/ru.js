@@ -224,7 +224,8 @@ const words = {
     lessonRated: 'Занятие оценено',
     lessonRatedBy: 'Занятие оценили',
     unknownError: 'Неизвестная ошибка',
-    incorrectLoginPassword: 'Неправильный логин или пароль'
+    incorrectLoginPassword: 'Неправильный логин или пароль',
+    refresh: 'Обновить'
   };
   
   export default words

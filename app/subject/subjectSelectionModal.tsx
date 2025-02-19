@@ -8,6 +8,8 @@ import Button from '@/components/General/Interactive/Button';
 import { getSubjectListService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
 import { subjectColors } from '@/styles/Colors';
+import { useRouter } from 'expo-router';
+import { Typography } from '@/styles/Typography';
 
 interface SubjectSelectionModalProps {
   visible: boolean;
@@ -18,20 +20,22 @@ interface SubjectSelectionModalProps {
 const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionModalProps) => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
+  const router = useRouter();
+  
   const refreshSubjects = async () => {
     setLoading(true);
-      try {
-        const subjectsData = await getSubjectListService();
-        if (subjectsData) {
-          setSubjects(subjectsData);
-        }
-      } catch (error: any) {
-        Alert.alert(words.error, error.message || words.error);
-      } finally {
-        setLoading(false);
+    try {
+      const subjectsData = await getSubjectListService();
+      if (subjectsData) {
+        setSubjects(subjectsData);
       }
-  }
+    } catch (error: any) {
+      Alert.alert(words.error, error.message || words.error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -39,7 +43,14 @@ const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionM
       try {
         const subjectsData = await AsyncStorage.getItem('subjects');
         if (subjectsData) {
-          setSubjects(JSON.parse(subjectsData));
+          const parsedData = JSON.parse(subjectsData);
+          if (Array.isArray(parsedData) && parsedData.length > 0) {
+            setSubjects(parsedData);
+          } else {
+            refreshSubjects();
+          }
+        } else {
+          refreshSubjects();
         }
       } catch (error: any) {
         Alert.alert(words.error, error.message || words.error);
@@ -47,9 +58,14 @@ const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionM
         setLoading(false);
       }
     };
-
+  
     fetchSubjects();
   }, []);
+
+  const handleCreate = () => {
+    router.push('/subject/subjectCreate')
+    onClose()
+  }
 
   const renderSubjectItem = (item: Subject) => {
     const color =
@@ -59,7 +75,7 @@ const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionM
 
     return (
       <TouchableOpacity onPress={() => { onSelect(item); onClose(); }}>
-        <View style={[styles.subjectItem, { borderLeftColor: color }]}>
+        <View style={[styles.subjectItem, { borderColor: color }]}>
           <Text style={styles.subjectText}>{item.title}</Text>
         </View>
       </TouchableOpacity>
@@ -75,26 +91,36 @@ const SubjectSelectionModal = ({ visible, onClose, onSelect }: SubjectSelectionM
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <View style={styles.refreshContainer}>
-            {loading ? (
-              <Text style={[commonStyles.label, styles.loadingLabel]}>{words.loading}</Text>
-            ) : (<Text></Text>)}
-            <View style={styles.refreshButton}>
-              <Button onPress={refreshSubjects} label={words.close}  hasIcon={true} icon='refresh'></Button>
-            </View>
-          </View>
-          <FlatList
-            data={subjects}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => renderSubjectItem(item)}
-          />
           <View style={styles.buttonContainer}>
-            <Button
-              label={words.close}
-              theme="primary"
-              onPress={onClose}
-            >
-            </Button>
+              <View style={styles.buttonSmall}>
+                <Button onPress={handleCreate} theme="primary" label={words.create} />
+              </View>
+              <View style={styles.buttonBig}>
+                <Button 
+                  onPress={refreshSubjects} 
+                  theme="primary" 
+                  label={loading ? words.loading : words.refresh} 
+                  disabled={loading}
+                />
+              </View>
+            </View>
+          {subjects.length === 0 ? (
+            <Text style={styles.noSubjectsText}>{words.noSubjectsAvailable}</Text>
+          ) : (
+            <FlatList
+              data={subjects}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => renderSubjectItem(item)}
+            />
+          )}
+          <View style={styles.buttonContainer}>
+            <View style={styles.buttonBig}>
+              <Button
+                label={words.close}
+                theme="primary"
+                onPress={onClose}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -110,24 +136,24 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.modalBackground,
   },
   modalContent: {
-    width: '80%',
+    width: '90%',
     backgroundColor: Colors.paleGrey,
     borderRadius: 16,
-    padding: 8,
   },
   subjectItem: {
     padding: 8,
-    margin: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGrey,
-    borderLeftWidth: 3,
+    marginVertical: 4,
+    marginHorizontal: 16,
+    borderWidth: 4,
+    borderRadius: 12,
+    backgroundColor: Colors.lightGrey
   },
   subjectText: {
-    fontSize: 16,
-    color: Colors.deepGrey,
-  },
-  buttonContainer: {
-    marginTop: 16,
+    fontSize: Typography.fontSizes.m,
+    padding: 2,
+    paddingHorizontal: 12,
+    fontWeight: 600,
+    color: Colors.mediumGrey,
   },
   refreshContainer: {
     width: '100%',
@@ -137,13 +163,30 @@ const styles = StyleSheet.create({
   },
   refreshButton: {
     alignSelf: 'flex-end',
-    width: 52,
   },
   loadingLabel: {
     color: Colors.mediumGrey,
-    fontWeight: 500,
+    fontWeight: '500',
     marginLeft: 12
-  }
+  },
+  noSubjectsText: {
+    textAlign: 'center',
+    color: Colors.mediumGrey,
+    fontSize: 16,
+    marginVertical: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 16
+  },
+  buttonSmall: {
+    flex: 1,
+    marginRight: 12, 
+  },
+  buttonBig: {
+    flex: 1,
+  },
 });
 
 export default SubjectSelectionModal;

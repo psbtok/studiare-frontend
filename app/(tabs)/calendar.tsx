@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
@@ -19,8 +19,10 @@ const CalendarScreen = () => {
   const [previousMonthDays, setPreviousMonthDays] = useState<number>(0);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showMonthPicker, setShowMonthPicker] = useState<boolean>(false); 
-  const today = new Date(); 
+  const [showMonthPicker, setShowMonthPicker] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const today = new Date();
+
   useEffect(() => {
     const calculateDaysInMonth = () => {
       const date = new Date(currentYear, currentMonth + 1, 0);
@@ -34,35 +36,41 @@ const CalendarScreen = () => {
   }, [currentMonth, currentYear]);
 
   useEffect(() => {
-    const fetchLessonsForMonth = async () => {
-      setLoading(true);
-      try {
-        const startOfMonth = new Date(currentYear, currentMonth, 1);
-        const startOfMonthUTC =format(
-          new Date(startOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000), 
-          'yyyy-MM-dd 00:00:00'
-        );
-
-        const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
-        const endOfMonthUTC =format(
-          new Date(endOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000), 
-          'yyyy-MM-dd 23:59:59'
-        );
-
-        const response = await getLessonListService({
-          date_end_from: startOfMonthUTC,
-          date_end_to: endOfMonthUTC,
-        }, '100');
-        setLessons(response.results || []);
-      } catch (error: any) {
-        Alert.alert('Error', error.message || 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchLessonsForMonth();
   }, [currentMonth, currentYear]);
+
+  const fetchLessonsForMonth = async () => {
+    setLoading(true);
+    try {
+      const startOfMonth = new Date(currentYear, currentMonth, 2);
+      const startOfMonthUTC = format(
+        new Date(startOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000),
+        'yyyy-MM-dd 00:00:00'
+      );
+
+      const endOfMonth = new Date(currentYear, currentMonth + 1, 1);
+      const endOfMonthUTC = format(
+        new Date(endOfMonth.getTime() + today.getTimezoneOffset() * 60 * 1000),
+        'yyyy-MM-dd 23:59:59'
+      );
+
+      const response = await getLessonListService({
+        date_end_from: startOfMonthUTC,
+        date_end_to: endOfMonthUTC,
+      }, '100');
+      setLessons(response.results || []);
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchLessonsForMonth();
+    setRefreshing(false);
+  };
 
   const getFirstDayOfMonth = () => {
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -149,70 +157,67 @@ const CalendarScreen = () => {
       today.getFullYear() === currentYear
     );
   };
-
-  if (loading) {
-    return (
-      <View style={[styles.container, { backgroundColor: Colors.paleGrey }]}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.deepGrey} />
-        </View>
-      </View>
-    );
-  }
   
   return (
+    <ScrollView 
+      style={{backgroundColor: Colors.paleGrey}}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.deepGrey]} />
+      }
+    >
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={handlePreviousMonth} style={styles.arrowButton}>
-          <Ionicons name="arrow-back" size={28} color={Colors.deepGrey} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowMonthPicker(true)} style={styles.monthBlockContainer}>
-          <Text style={[commonStyles.label, styles.monthBlock]}>{month}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNextMonth} style={styles.arrowButton}>
-          <Ionicons name="arrow-forward" size={28} color={Colors.deepGrey} />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={handlePreviousMonth} style={styles.arrowButton}>
+            <Ionicons name="arrow-back" size={28} color={Colors.deepGrey} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowMonthPicker(true)} style={styles.monthBlockContainer}>
+            <Text style={[commonStyles.label, styles.monthBlock]}>{month}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNextMonth} style={styles.arrowButton}>
+            <Ionicons name="arrow-forward" size={28} color={Colors.deepGrey} />
+          </TouchableOpacity>
+        </View>
 
-      {showMonthPicker && (
-        <DateTimePicker
-          testID="monthPicker"
-          value={new Date(currentYear, currentMonth, 1)}
-          mode="date"
-          display="default"
-          onChange={handleMonthPickerChange}
-        />
-      )}
+        {showMonthPicker && (
+          <DateTimePicker
+            testID="monthPicker"
+            value={new Date(currentYear, currentMonth, 1)}
+            mode="date"
+            display="default"
+            onChange={handleMonthPickerChange}
+          />
+        )}
 
-      <View style={styles.calendarContainer}>
-        {rows.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.calendarRow}>
-            {row.map((tile, index) => {
-              if (tile.type === 'empty') {
-                return <CalendarEmptyTile key={index} number={tile.number} />;
-              }
+        <View style={styles.calendarContainer}>
+          {rows.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.calendarRow}>
+              {row.map((tile, index) => {
+                if (tile.type === 'empty') {
+                  return <CalendarEmptyTile key={index} number={tile.number} />;
+                }
 
-              const dayLessons = lessonsGroupedByDay[tile.number] || [];
-              return (
-                <CalendarDayTile
-                  key={index}
-                  dayNumber={tile.number}
-                  lessons={dayLessons}
-                  isToday={isToday(tile.number)} 
-                />
-              );
-            })}
-          </View>
-        ))}
-      </View>
+                const dayLessons = lessonsGroupedByDay[tile.number] || [];
+                return (
+                  <CalendarDayTile
+                    key={index}
+                    dayNumber={tile.number}
+                    lessons={dayLessons}
+                    isToday={isToday(tile.number)} 
+                  />
+                );
+              })}
+            </View>
+          ))}
+        </View>
     </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.paleGrey,  // Ensure the background is set here
+    backgroundColor: Colors.paleGrey,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
@@ -250,6 +255,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-})
+});
 
 export default CalendarScreen;

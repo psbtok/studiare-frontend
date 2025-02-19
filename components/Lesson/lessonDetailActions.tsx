@@ -50,7 +50,8 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
     const utcLessonStartTime = new Date(lessonStartTime.getTime() + lessonStartTime.getTimezoneOffset() * 60 * 1000);
     const threeHoursInMs = 3 * 60 * 60 * 1000;
     const startsSoon = utcLessonStartTime.getTime() - utcCurrentTime.getTime() < threeHoursInMs;
-
+    const router = useRouter()
+    
     const handleAction = (action: 'cancel' | 'confirm' | 'conduct') => {
         let confirmationMessage = '';
         switch (action) {
@@ -105,6 +106,11 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
         setLesson(updatedLesson);
     };
 
+    const handleEdit = () => {
+        const serializedLesson = encodeURIComponent(JSON.stringify(lesson));
+        router.push(`/lesson/lessonEdit?lesson=${serializedLesson}`);
+    };
+
     switch (status) {
         case 'confirmed':
             return (
@@ -120,18 +126,31 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
                 </View>
             );
         case 'awaiting_confirmation':
-            return (
-                <View style={styles.actionBlock}>
-                    <View style={styles.buttonSmall}>
-                        <Button label={words.reject} onPress={() => handleAction('cancel')} />
-                    </View>
-                    {!isTutor && (
-                        <View style={styles.buttonBig}>
-                            <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
+            if (isTutor) {
+                return (
+                    <View style={styles.actionBlock}>
+                        <View style={styles.buttonSmall}>
+                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
                         </View>
-                    )}
-                </View>
-            );
+                        {!startsSoon && <View style={styles.buttonBig}>
+                            <Button theme="primary" label={words.edit} onPress={() => handleEdit()} />
+                        </View>}
+                    </View>
+                );
+            } else {
+                return (
+                    <View style={styles.actionBlock}>
+                        <View style={styles.buttonSmall}>
+                            <Button label={words.reject} onPress={() => handleAction('cancel')} />
+                        </View>
+                        {isTutor && (
+                            <View style={styles.buttonBig}>
+                                <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
+                            </View>
+                        )}
+                    </View>
+                );
+            }
         case 'conducted':
             return (
                 <View>

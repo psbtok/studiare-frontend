@@ -24,13 +24,13 @@ export default function CreateLessonScreen() {
   const [notes, setNotes] = useState('');
   const [participants, setParticipants] = useState<User[]>([emptyUser]);
   const [resetFlag, setResetFlag] = useState(false);
-  const router = useRouter();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
   const [price, setPrice] = useState(initialPrice);
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); 
-
+  
+  const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function CreateLessonScreen() {
 
     setIsLoading(true);
     try {
-      const timezoneOffsetHours = new Date().getTimezoneOffset() / -60; // Convert to hours
+      const timezoneOffsetHours = new Date().getTimezoneOffset() / -60; 
   
       const adjustedDateStart = new Date(dateStart.getTime() + timezoneOffsetHours * 60 * 60 * 1000);
       const adjustedDateEnd = new Date(dateEnd.getTime() + timezoneOffsetHours * 60 * 60 * 1000);

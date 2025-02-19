@@ -44,7 +44,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
       <CalendarLessonListModal
         visible={modalVisible}
         lessons={lessons}
-        onClose={() => setModalVisible(false)}
+        onClose={() => {setModalVisible(false)}}
       />
     </TouchableOpacity>
   );

@@ -13,11 +13,15 @@ import commonStyles from '@/styles/CommonStyles';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { subjectColors } from '@/styles/Colors';
 
-function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
-  const { lesson, isTutor } = props;
+function LessonListItem(props: { 
+  lesson: Lesson, 
+  isTutor?: boolean, 
+  onLessonPress?: (lesson: Lesson) => void 
+}) {
+  const { lesson, isTutor, onLessonPress } = props;
   const router = useRouter();
 
-  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get user's timezone
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
 
   const formattedTimeStart = format(toZonedTime(new Date(lesson.date_start), userTimeZone), 'HH:mm', { locale: ru });
   const formattedTimeEnd = format(toZonedTime(new Date(lesson.date_end), userTimeZone), 'HH:mm', { locale: ru });
@@ -42,15 +46,21 @@ function LessonListItem(props: { lesson: Lesson, isTutor?: boolean }) {
     }
   };
 
+  const handlePress = () => {
+    if (onLessonPress) {
+      onLessonPress(lesson);
+    }
+
+    router.push({
+      pathname: '/lesson/lessonDetail',
+      params: { lesson: JSON.stringify(lesson) }
+    });
+  };
+
   return (
     <TouchableOpacity
       style={[styles.lessonItem, { borderLeftColor: color }]}
-      onPress={() =>
-        router.push({
-          pathname: '/lesson/lessonDetail',
-          params: { lesson: JSON.stringify(lesson) }
-        })
-      }
+      onPress={handlePress}
     >
       <Text style={styles.subject}>{lesson.subject.title}</Text>
       {isTutor ? (

@@ -63,7 +63,8 @@ const CalendarLessonListModal = ({ visible, lessons, onClose }: CalendarLessonLi
                 lesson={lesson} 
                 isTutor={
                   lesson.tutor?.tutor && parsedProfile?.tutor?.id && parsedProfile.tutor.id === lesson.tutor.tutor.id
-                }              
+                }     
+                onLessonPress={onClose}          
               />
             ))}
           </View>
