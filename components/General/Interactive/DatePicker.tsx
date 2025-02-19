@@ -19,7 +19,6 @@ export default function DatePicker({ onDateChange, defaultDate, resetDate }: Dat
   
   useEffect(() => {
     if (resetDate) {
-      console.log(defaultDate)
       setDate(defaultDate ?? new Date());
     }
   }, [resetDate, defaultDate]);

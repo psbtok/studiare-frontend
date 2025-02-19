@@ -58,10 +58,12 @@ export const validateLessonInput = (
     errors.push(words.studentIdEmpty);
   }
 
-  const now = new Date();
+  const today = new Date()
+  const now = new Date(today.getTime() + today.getTimezoneOffset() * 60 * 1000);
   if (dateStart < now) {
     errors.push(words.dateStartInPast);
   }
+
   if (dateEnd < now) {
     errors.push(words.dateEndInPast);
   }
