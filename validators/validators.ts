@@ -41,7 +41,7 @@ export const validateLoginInput = (
   return errors;
 };
 
-export const validateCreateLessonInput = (
+export const validateLessonInput = (
   subject: Subject | null,
   participants: User[],
   dateStart: Date,
@@ -49,14 +49,22 @@ export const validateCreateLessonInput = (
   price: number
 ): string[] => {
   const errors: string[] = [];
+
   if (!subject?.id) {
     errors.push(words.subjectEmpty);
   }
-  
+
   if (!participants.length || !parseInt(participants[0].id)) {
     errors.push(words.studentIdEmpty);
   }
 
+  const now = new Date();
+  if (dateStart < now) {
+    errors.push(words.dateStartInPast);
+  }
+  if (dateEnd < now) {
+    errors.push(words.dateEndInPast);
+  }
   if (dateStart >= dateEnd) {
     errors.push(words.invalidDateRange); 
   }
@@ -64,6 +72,7 @@ export const validateCreateLessonInput = (
   if (price <= 0) {
     errors.push(words.invalidPrice); 
   }
+
   return errors;
 };
 

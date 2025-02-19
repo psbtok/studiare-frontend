@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Colors } from '@/styles/Colors';
@@ -10,11 +10,19 @@ import { Typography } from '@/styles/Typography';
 interface DatePickerProps {
   onDateChange: (date: Date) => void;
   defaultDate?: Date; 
+  resetDate: boolean;
 }
 
-export default function DatePicker({ onDateChange, defaultDate }: DatePickerProps) {
+export default function DatePicker({ onDateChange, defaultDate, resetDate }: DatePickerProps) {
   const [date, setDate] = useState(defaultDate ?? new Date());
   const [showPicker, setShowPicker] = useState(false);
+  
+  useEffect(() => {
+    if (resetDate) {
+      console.log(defaultDate)
+      setDate(defaultDate ?? new Date());
+    }
+  }, [resetDate, defaultDate]);
 
   const handlePickerChange = (_: any, selectedDate?: Date) => {
     setShowPicker(false);

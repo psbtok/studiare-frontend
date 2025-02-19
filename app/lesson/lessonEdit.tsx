@@ -8,7 +8,7 @@ import { modifyLessonService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
-import { validateCreateLessonInput } from '@/validators/validators';
+import { validateLessonInput } from '@/validators/validators';
 import { Lesson, User, Subject } from '@/models/models'; 
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import UserSearch from '@/components/General/Interactive/UserSearch';
@@ -48,7 +48,7 @@ export default function LessonEditScreen() {
   const router = useRouter();
   
   const handleModifyLesson = async () => {
-    const errors = validateCreateLessonInput(subject, participants, dateStart, dateEnd, price);
+    const errors = validateLessonInput(subject, participants, dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));

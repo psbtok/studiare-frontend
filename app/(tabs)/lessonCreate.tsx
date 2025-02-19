@@ -8,7 +8,7 @@ import { createLessonService } from '@/services/lessonService';
 import commonStyles from '@/styles/CommonStyles';
 import TimeRangePickerComponent from '@/components/General/Interactive/TimeRangePicker';
 import NumberPicker from '@/components/General/Interactive/NumberPicker';
-import { validateCreateLessonInput } from '@/validators/validators';
+import { validateLessonInput } from '@/validators/validators';
 import UserSearch from '@/components/General/Interactive/UserSearch';
 import { User, Subject } from '@/models/models'; 
 import SubjectSelectionModal from '../subject/subjectSelectionModal';
@@ -47,7 +47,7 @@ export default function CreateLessonScreen() {
   }, [subjectParam.id]);
 
   const handleCreateLesson = async () => {
-    const errors = validateCreateLessonInput(subject, participants, dateStart, dateEnd, price);
+    const errors = validateLessonInput(subject, participants, dateStart, dateEnd, price);
 
     if (errors.length > 0) {
       Alert.alert(words.error, errors.join('\n'));

@@ -227,7 +227,10 @@ const words = {
     incorrectLoginPassword: 'Неправильный логин или пароль',
     refresh: 'Обновить',
     youCanAddFiveLinks: 'Вы можете добавить не более 5 ссылок.',
-    fiveLinksMax: 'Максимум 5 ссылок'
+    fiveLinksMax: 'Максимум 5 ссылок',
+    dateStartInPast: 'Дата начала занятия раньше фактической даты',
+    dateEndInPast: 'Дата конца занятия раньше фактической даты',
+    youShouldBeEighteen: 'Вам должно быть не меньше 18 лет'
   };
   
   export default words

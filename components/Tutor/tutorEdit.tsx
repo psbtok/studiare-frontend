@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
 import TutorLinksEdit from './tutorLinksEdit';
@@ -27,18 +27,46 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
   const [birthDate, setBirthDate] = useState<Date>(tutor.birth_date ? new Date(tutor.birth_date) : new Date());
   const [experienceYears, setExperienceYears] = useState<number>(tutor.experienceYears || 0);
   const [paymentMethod, setPaymentMethod] = useState<string>(tutor.paymentMethod);
+  const [resetDate, setResetDate] = useState(false);
+
+  const defaultDate = tutor.birth_date ? new Date(tutor.birth_date) : new Date()
 
   const handleChange = (field: string, value: any) => {
     if (field === 'about') setAbout(value);
     if (field === 'education') setEducation(value);
     if (field === 'links') setLinks(value);
-    if (field === 'birth_date') setBirthDate(value);
     if (field === 'experienceYears') setExperienceYears(value);
     if (field === 'paymentMethod') setPaymentMethod(value);
 
     if (tutor && tutor[field] !== value) {
       onUpdateTutor({ ...tutor, [field]: value });
     }
+  };
+
+  const handleDateChange = (date: Date) => {
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - date.getFullYear();
+    const monthDifference = currentDate.getMonth() - date.getMonth();
+    
+    if (monthDifference < 0 || (monthDifference === 0 && currentDate.getDate() < date.getDate())) {
+      age--;
+    }
+
+    if (age < 18) {
+      Alert.alert(words.error, words.youShouldBeEighteen);
+      setBirthDate(date);
+      handleResetDate()
+    } else {
+      handleChange('birth_date', date.toISOString().split('T')[0]);
+      setBirthDate(date);
+    }
+  };
+
+  const handleResetDate = () => {
+    setResetDate(true);
+    setTimeout(() => {
+      setResetDate(false); 
+    }, 0);
   };
 
   return (
@@ -75,8 +103,9 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
 
       <Text style={commonStyles.label}>{words.birthDate}</Text>
       <DatePicker
-        onDateChange={(date) => handleChange('birth_date', date.toISOString().split('T')[0])}
-        defaultDate={birthDate}
+        onDateChange={handleDateChange} 
+        defaultDate={defaultDate}
+        resetDate={resetDate}
       />
 
       <Text style={commonStyles.label}>{words.experienceYears}</Text>
