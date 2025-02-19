@@ -99,7 +99,7 @@ export default function LessonEditScreen() {
     setDateStart(new Date(initialLesson.date_start));
     setDateEnd(new Date(initialLesson.date_end));
     setNotes(initialLesson.notes ?? '');
-    setParticipants([emptyUser]);
+    setParticipants(initialLesson.participants.map(participant => participant.profile.user) || [emptyUser]);
     setPrice(initialLesson.price);
     setResetFlag(true);
   };
@@ -146,6 +146,7 @@ export default function LessonEditScreen() {
           placeholder={words.enterNotes}
           placeholderTextColor={Colors.mediumGrey}
           value={notes}
+          maxLength={256}
           onChangeText={setNotes}
         />
 
@@ -160,6 +161,8 @@ export default function LessonEditScreen() {
         <NumberPicker
           value={price}
           step={100}
+          min={0}
+          max={50000}
           onValueChange={setPrice}
         />
       </ScrollView>

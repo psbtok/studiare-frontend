@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,18 +14,22 @@ const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
   const [currentLink, setCurrentLink] = useState<string>('');
   const [linksArray, setLinksArray] = useState<string[]>([]);
 
-  // useEffect для установки начальных значений linksArray
   useEffect(() => {
     const initialLinksArray = links ? links.split(', ').filter(link => link.trim() !== '') : [];
     setLinksArray(initialLinksArray);
-  }, [links]); // Завершаем useEffect на изменении links
+  }, [links]); 
 
   const handleAddLink = () => {
     if (currentLink.trim()) {
+      if (linksArray.length >= 5) {
+        Alert.alert(words.fiveLinksMax, words.youCanAddFiveLinks); 
+        return;
+      }
+      
       const updatedLinksArray = [...linksArray, currentLink.trim()];
       setLinksArray(updatedLinksArray);
       onUpdateLinks(updatedLinksArray.join(', '));
-      setCurrentLink(''); // Очищаем поле ввода после добавления
+      setCurrentLink(''); 
     }
   };
 
@@ -51,6 +55,7 @@ const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
           placeholder={words.enterLink}
           value={currentLink}
           onChangeText={setCurrentLink}
+          maxLength={128}
           onSubmitEditing={handleAddLink} 
           returnKeyType="done"
         />

@@ -133,6 +133,7 @@ export default function ProfileEditScreen() {
             placeholder={words.enterFirstName}
             placeholderTextColor={Colors.mediumGrey}
             value={firstName}
+            maxLength={64}
             onChangeText={setFirstName}
           />
 
@@ -142,6 +143,7 @@ export default function ProfileEditScreen() {
             placeholder={words.enterLastName}
             placeholderTextColor={Colors.mediumGrey}
             value={lastName}
+            maxLength={64}
             onChangeText={setLastName}
           />
           <LineBreak />

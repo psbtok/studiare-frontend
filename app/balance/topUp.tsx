@@ -79,6 +79,8 @@ const BalanceTopUp = () => {
           <NumberPicker
             value={amount}
             step={100}
+            max={100000}
+            min={100}
             onValueChange={handleAmountChange}
           />
         </View>

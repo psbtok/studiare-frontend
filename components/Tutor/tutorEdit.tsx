@@ -49,6 +49,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
         placeholder={words.about}
         placeholderTextColor={Colors.mediumGrey}
         value={about}
+        maxLength={256}
         onChangeText={(text) => handleChange('about', text)}
       />
 
@@ -58,6 +59,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
         placeholder={words.education}
         placeholderTextColor={Colors.mediumGrey}
         value={education}
+        maxLength={128}
         onChangeText={(text) => handleChange('education', text)}
       />
 
@@ -67,6 +69,7 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
         placeholder={words.paymentMethod}
         placeholderTextColor={Colors.mediumGrey}
         value={paymentMethod}
+        maxLength={128}
         onChangeText={(text) => handleChange('paymentMethod', text)}
       />
 
@@ -80,6 +83,8 @@ const TutorEdit = ({ tutor, onUpdateTutor }: TutorEditProps) => {
       <NumberPicker
         value={experienceYears}
         step={1}
+        min={0}
+        max={100}
         onValueChange={(value) => {
           if (value !== experienceYears) {
             handleChange('experienceYears', value);

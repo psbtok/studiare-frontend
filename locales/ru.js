@@ -225,7 +225,9 @@ const words = {
     lessonRatedBy: 'Занятие оценили',
     unknownError: 'Неизвестная ошибка',
     incorrectLoginPassword: 'Неправильный логин или пароль',
-    refresh: 'Обновить'
+    refresh: 'Обновить',
+    youCanAddFiveLinks: 'Вы можете добавить не более 5 ссылок.',
+    fiveLinksMax: 'Максимум 5 ссылок'
   };
   
   export default words

@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
   },
   legend: {
     marginTop: 20,
+    paddingHorizontal: 16,
   },
   circle: {
     width: 16,

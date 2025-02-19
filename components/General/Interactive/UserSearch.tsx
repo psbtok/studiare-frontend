@@ -27,8 +27,13 @@ const ParticipantSearch = ({ onParticipantsSelected, resetFlag, setResetFlag, in
     if (resetFlag) {
       setParticipantName('');
       setParticipants([]);
-      setChosenParticipants([]);
-      setErrorMessage('');
+      setErrorMessage('');      
+
+      if (initialParticipants?.length) {
+        setChosenParticipants(initialParticipants);
+      } else {
+        setChosenParticipants([]);
+      }
       setResetFlag(false);
     }
   }, [resetFlag, setResetFlag]);
@@ -38,7 +43,11 @@ const ParticipantSearch = ({ onParticipantsSelected, resetFlag, setResetFlag, in
       setChosenParticipants(initialParticipants);
       onParticipantsSelected(initialParticipants);
     }
-  }, [initialParticipants, onParticipantsSelected]);
+  }, []);
+
+  useEffect(() => {
+      onParticipantsSelected(chosenParticipants);
+  }, [chosenParticipants]);
 
   const handleSearchParticipant = async () => {
     if (!participantName.trim()) {
@@ -52,31 +61,27 @@ const ParticipantSearch = ({ onParticipantsSelected, resetFlag, setResetFlag, in
         setErrorMessage(words.nooneFound);
       } else if (users.length === 1) {
         setParticipants(users);
-        setChosenParticipants([users[0], ...chosenParticipants]);
+        handleChooseParticipant(users[0])
       }
       else {
         setErrorMessage('');
         setParticipants(users);
       }
     } catch (error) {
-      setErrorMessage(words.nooneFound); // Set error message on failure
+      setErrorMessage(words.nooneFound); 
     }
   };
 
   const handleChooseParticipant = (participant: User) => {
     const exists = chosenParticipants.some(selected => selected.id === participant.id);
-    let updatedChosenParticipants;
-
-    if (exists) {
-      return;
-    } else {
-      updatedChosenParticipants = [...chosenParticipants, participant];
+    
+    if (!exists) {
+      const updatedChosenParticipants = [...chosenParticipants, participant];
+      setChosenParticipants(updatedChosenParticipants);
+      onParticipantsSelected(updatedChosenParticipants);
     }
-
-    setChosenParticipants(updatedChosenParticipants);
-    onParticipantsSelected(updatedChosenParticipants);
   };
-
+  
   const handleDeselectParticipant = (participant: User) => {
     const updatedChosenParticipants = chosenParticipants.filter(selected => selected.id !== participant.id);
     setChosenParticipants(updatedChosenParticipants);
@@ -179,6 +184,11 @@ const styles = StyleSheet.create({
   participantName: {
     color: Colors.deepGrey,
     fontSize: 16,
+    flex: 1, 
+    marginRight: 10, 
+    flexWrap: 'nowrap', 
+    overflow: 'hidden', 
+    textOverflow: 'ellipsis', 
   },
   selectedParticipantName: {
     fontWeight: 'bold',
@@ -190,6 +200,7 @@ const styles = StyleSheet.create({
   selectedParticipantItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center', 
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightGrey,
@@ -197,6 +208,8 @@ const styles = StyleSheet.create({
   removeParticipant: {
     fontSize: Typography.fontSizes.xxl,
     color: Colors.alertRed,
+    width: 36, 
+    textAlign: 'center', 
   },
   errorText: {
     color: Colors.alertRed,

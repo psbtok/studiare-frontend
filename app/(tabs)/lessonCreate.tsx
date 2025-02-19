@@ -22,7 +22,7 @@ export default function CreateLessonScreen() {
   const initialPrice = 1000;
   const [subject, setSubject] = useState<Subject>(emptySubject);
   const [notes, setNotes] = useState('');
-  const [participants, setParticipants] = useState<User[]>([emptyUser]);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [resetFlag, setResetFlag] = useState(false);
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -98,7 +98,7 @@ export default function CreateLessonScreen() {
     setDateStart(new Date());
     setDateEnd(new Date());
     setNotes('');
-    setParticipants([emptyUser]); 
+    setParticipants([]); 
     setPrice(initialPrice);
     setResetFlag(true);
   };
@@ -143,6 +143,8 @@ export default function CreateLessonScreen() {
           placeholder={words.enterNotes}
           placeholderTextColor={Colors.mediumGrey}
           value={notes}
+          maxLength={256}
+          multiline={true}
           onChangeText={setNotes}
         />
 
@@ -156,6 +158,8 @@ export default function CreateLessonScreen() {
         <NumberPicker
           value={price}
           step={100}
+          min={0}
+          max={50000}
           onValueChange={setPrice}
         />
       </ScrollView>

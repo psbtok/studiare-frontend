@@ -43,7 +43,7 @@ export const validateLoginInput = (
 
 export const validateCreateLessonInput = (
   subject: Subject | null,
-  students: User[],
+  participants: User[],
   dateStart: Date,
   dateEnd: Date,
   price: number
@@ -53,7 +53,7 @@ export const validateCreateLessonInput = (
     errors.push(words.subjectEmpty);
   }
   
-  if (!students.length || !parseInt(students[0].id)) {
+  if (!participants.length || !parseInt(participants[0].id)) {
     errors.push(words.studentIdEmpty);
   }
 

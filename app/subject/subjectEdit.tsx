@@ -97,6 +97,7 @@ export default function SubjectEditScreen() {
           placeholder={words.enterSubjectTitle}
           placeholderTextColor={Colors.mediumGrey}
           value={title}
+          maxLength={64}
           onChangeText={setTitle}
         />
         <Text style={commonStyles.label}>{words.notes}</Text>
@@ -105,6 +106,7 @@ export default function SubjectEditScreen() {
           placeholder={words.enterNotes}
           placeholderTextColor={Colors.mediumGrey}
           value={notes}
+          maxLength={256}
           onChangeText={setNotes}
         />
       </View>

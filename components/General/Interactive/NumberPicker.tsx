@@ -5,27 +5,31 @@ import commonStyles from '@/styles/CommonStyles';
 import { AntDesign } from '@expo/vector-icons';
 
 interface NumberPickerProps {
-  value: number;           // Теперь это не initialValue, а value
+  value: number;           
   step: number;
+  min?: number;            
+  max?: number;            
   onValueChange: (value: number) => void; 
 }
 
 export default function NumberPicker({
   value,
   step,
+  min = 1,                
+  max = 1000,             
   onValueChange
 }: NumberPickerProps) {
   const [inputValue, setInputValue] = useState(value);
 
   useEffect(() => {
-    setInputValue(value); // синхронизация с родительским состоянием
+    setInputValue(value); 
   }, [value]);
 
   const handleValueChange = (increment: boolean) => {
     setInputValue((prevValue) => {
       const newValue = increment ? prevValue + step : prevValue - step;
-      const clampedValue = Math.max(0, newValue);
-      onValueChange(clampedValue);  // Отправка нового значения в родительский компонент
+      const clampedValue = Math.max(min, Math.min(max, newValue)); 
+      onValueChange(clampedValue);  
       return clampedValue;
     });
   };
@@ -33,8 +37,9 @@ export default function NumberPicker({
   const handleTextInputChange = (text: string) => {
     const numericValue = Number(text);
     if (!isNaN(numericValue)) {
-      setInputValue(numericValue);
-      onValueChange(numericValue);  // Отправка нового значения в родительский компонент
+      const clampedValue = Math.max(min, Math.min(max, numericValue)); 
+      setInputValue(clampedValue);
+      onValueChange(clampedValue);  
     }
   };
 

@@ -40,6 +40,7 @@ export default function LoginScreen() {
           placeholder={words.enterEmail}
           placeholderTextColor={Colors.mediumGrey}
           value={username}
+          maxLength={64}
           onChangeText={setUsername}
         />
 
@@ -50,6 +51,7 @@ export default function LoginScreen() {
             placeholderTextColor={Colors.mediumGrey}
             secureTextEntry={!showPassword} 
             value={password}
+            maxLength={64}
             onChangeText={setPassword}
           />
           <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>

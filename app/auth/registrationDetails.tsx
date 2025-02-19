@@ -69,6 +69,7 @@ export default function RegistrationDetailsScreen() {
           placeholderTextColor={Colors.mediumGrey}
           value={firstName}
           onChangeText={setFirstName}
+          maxLength={64}
         />
 
         <TextInput
@@ -76,6 +77,7 @@ export default function RegistrationDetailsScreen() {
           placeholder={words.enterLastName}
           placeholderTextColor={Colors.mediumGrey}
           value={lastName}
+          maxLength={64}
           onChangeText={setLastName}
         />
 

@@ -45,6 +45,7 @@ export default function RegistrationScreen() {
           placeholder={words.enterEmail}
           placeholderTextColor={Colors.mediumGrey}
           value={email}
+          maxLength={64}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
@@ -54,8 +55,9 @@ export default function RegistrationScreen() {
             style={commonStyles.input}
             placeholder={words.enterPassword}
             placeholderTextColor={Colors.mediumGrey}
-            secureTextEntry={!showPassword} // Use the visibility state
+            secureTextEntry={!showPassword} 
             value={password}
+            maxLength={64}
             onChangeText={setPassword}
           />
           <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
@@ -68,8 +70,9 @@ export default function RegistrationScreen() {
             style={commonStyles.input}
             placeholder={words.confirmPassword}
             placeholderTextColor={Colors.mediumGrey}
-            secureTextEntry={!showConfirmPassword} // Use the visibility state for confirm password
+            secureTextEntry={!showConfirmPassword} 
             value={confirmPassword}
+            maxLength={64}
             onChangeText={setConfirmPassword}
           />
           <TouchableOpacity onPress={toggleConfirmPasswordVisibility} style={styles.eyeIcon}>

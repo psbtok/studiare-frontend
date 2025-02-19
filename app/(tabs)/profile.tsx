@@ -1,5 +1,14 @@
+// Existing imports remain unchanged
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
@@ -25,11 +34,11 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false); 
-  const [imageUri, setImageUri] = useState(''); 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [imageUri, setImageUri] = useState('');
   const router = useRouter();
 
-  const fetchProfile = async (force=false) => {
+  const fetchProfile = async (force = false) => {
     try {
       const storedProfile = await AsyncStorage.getItem('profile');
       if (storedProfile && !force) {
@@ -86,6 +95,7 @@ export default function ProfileScreen() {
   if (error) {
     return <Text>{words.error}</Text>;
   }
+  
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -98,33 +108,31 @@ export default function ProfileScreen() {
           <View>
             <View style={styles.header}>
               <View style={styles.headerContainer}>
-                <View>
+                <View style={styles.infoContainer}>
                   <Text style={styles.name}>
                     {profile.user.last_name} {profile.user.first_name}
                   </Text>
                   <Text style={styles.email}>{profile.user.email}</Text>
                 </View>
-                <View>
-                  <TouchableOpacity style={styles.profilePicture} onPress={handleImagePress}>
-                    <Image 
-                      source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
-                      style={styles.profilePicture} 
-                    />
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.profilePicture} onPress={handleImagePress}>
+                  <Image 
+                    source={{ uri: `${API_BASE_URL.split('/api')[0]}${profile.profile_picture}` }} 
+                    style={styles.profilePictureImage} 
+                  />
+                </TouchableOpacity>
               </View>
               <View style={styles.headerFooter}>
                 <BalanceTile balance={balance !== null ? balance : 0} />
                 {profile.is_tutor && profile.tutor && 
                   <View style={styles.tutorRating}>
-                    <TutorRatingTile profile={profile}></TutorRatingTile>
+                    <TutorRatingTile profile={profile} />
                   </View>
                 }
               </View>
             </View>
             {profile.is_tutor && <TutorStatistics />}
             <View>
-              <ProfileSubjectChart profile={profile}/>
+              <ProfileSubjectChart profile={profile} />
             </View>
             {profile.is_tutor && <TutorDetails tutor={profile.tutor} />}
           </View>
@@ -157,18 +165,8 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     backgroundColor: Colors.paleGrey,
   },
-  emailBlock: {
-  },
   profileDetails: {
     width: '100%',
-  },
-  info: {
-    fontSize: Typography.fontSizes.m,
-    color: Colors.deepGrey,
-  },
-  loading: {
-    fontSize: Typography.fontSizes.m,
-    color: Colors.mediumGrey,
   },
   header: {
     paddingTop: 8,
@@ -178,34 +176,47 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start', 
     paddingLeft: 24,
     paddingRight: 12,
     paddingTop: 2,
   },
+  infoContainer: {
+    flex: 1, 
+    paddingRight: 12, 
+  },
   name: {
     fontSize: Typography.fontSizes.xl,
-    fontWeight: 500,
-    color: Colors.paleGrey
+    fontWeight: '500',
+    color: Colors.paleGrey,
   },
   email: {
     fontSize: Typography.fontSizes.l,
-    fontWeight: 500,
+    fontWeight: '500',
     marginTop: -3,
-    color: Colors.stoneGrey
+    color: Colors.stoneGrey,
   },
   profilePicture: {
-    width: 64, 
-    height: 64, 
-    borderRadius: 8, 
-    marginBottom: 4, 
-    backgroundColor: Colors.mediumGrey
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+    backgroundColor: Colors.mediumGrey,
+  },
+  profilePictureImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
   headerFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   tutorRating: {
-    marginRight: 12
-  }
+    marginRight: 12,
+  },
+  loading: {
+    fontSize: Typography.fontSizes.m,
+    color: Colors.mediumGrey,
+  },
 });
