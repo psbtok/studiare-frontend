@@ -222,7 +222,9 @@ const words = {
     selectRating: 'Поставьте оценку',
     ratingSubmitted: 'Занятие оценено!',
     lessonRated: 'Занятие оценено',
-    lessonRatedBy: 'Занятие оценили'
+    lessonRatedBy: 'Занятие оценили',
+    unknownError: 'Неизвестная ошибка',
+    incorrectLoginPassword: 'Неправильный логин или пароль'
   };
   
   export default words

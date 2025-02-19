@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, Switch } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import Button from '@/components/General/Interactive/Button';
 import { useRouter } from 'expo-router';
 import { registerService, loginService } from '@/services/authService';
@@ -7,24 +7,33 @@ import { Colors } from '@/styles/Colors';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
+import { Ionicons } from '@expo/vector-icons'; // Import an icon library for eye icons
 
 export default function RegistrationScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
   const router = useRouter();
 
   const register = async () => {
     try {
       await registerService(email, password, confirmPassword);
       Alert.alert('', words.registrationSuccess);
-
       await loginService(email, password);
-
       router.replace('/auth/agreement');
     } catch (error: any) {
       Alert.alert(words.registrationFailed, error.message);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -40,23 +49,34 @@ export default function RegistrationScreen() {
           keyboardType="email-address"
         />
 
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.enterPassword}
-          placeholderTextColor={Colors.mediumGrey}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={commonStyles.input}
+            placeholder={words.enterPassword}
+            placeholderTextColor={Colors.mediumGrey}
+            secureTextEntry={!showPassword} // Use the visibility state
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+            <Ionicons name={showPassword ? 'eye' : 'eye-off'} size={24} color={Colors.deepGrey} />
+          </TouchableOpacity>
+        </View>
 
-        <TextInput
-          style={commonStyles.input}
-          placeholder={words.confirmPassword}
-          placeholderTextColor={Colors.mediumGrey}
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={commonStyles.input}
+            placeholder={words.confirmPassword}
+            placeholderTextColor={Colors.mediumGrey}
+            secureTextEntry={!showConfirmPassword} // Use the visibility state for confirm password
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+          <TouchableOpacity onPress={toggleConfirmPasswordVisibility} style={styles.eyeIcon}>
+            <Ionicons name={showConfirmPassword ? 'eye' : 'eye-off'} size={24} color={Colors.deepGrey} />
+          </TouchableOpacity>
+        </View>
+
         <Button theme="primary" label={words.register} onPress={register} inline={false} />
       </View>
 
@@ -91,15 +111,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'left',
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
+  passwordContainer: {
+    position: 'relative',
   },
-  label: {
-    fontSize: Typography.fontSizes.s,
-    color: Colors.deepGrey,
-    marginRight: 10,
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 14,
   },
   link: {
     color: Colors.deepGrey,

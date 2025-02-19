@@ -86,6 +86,11 @@ export default function SubjectEditScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.formContainer}>
+        <Text style={commonStyles.label}>{words.color}</Text>
+        <ColorPicker
+          onSelect={(id) => setColorId(id)}
+          selectedColorId={colorId}
+        />
         <Text style={commonStyles.label}>{words.subjectTitle}</Text>
         <TextInput
           style={commonStyles.input}
@@ -101,11 +106,6 @@ export default function SubjectEditScreen() {
           placeholderTextColor={Colors.mediumGrey}
           value={notes}
           onChangeText={setNotes}
-        />
-        <Text style={commonStyles.label}>{words.color}</Text>
-        <ColorPicker
-          onSelect={(id) => setColorId(id)}
-          selectedColorId={colorId}
         />
       </View>
       <View style={styles.buttonBlock}>

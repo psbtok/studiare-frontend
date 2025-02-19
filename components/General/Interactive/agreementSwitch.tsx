@@ -1,49 +1,64 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import { Typography } from '@/styles/Typography';
-import Button from './Button';
-import commonStyles from '@/styles/CommonStyles';
 
-export default function AgreementSwitch({ isAgreed, setIsAgreed }: { isAgreed: boolean; setIsAgreed: (value: boolean) => void }) {
-  const [theme, setTheme] = useState('secondary') 
-  const [icon, setIcon] = useState("close")
-  const onPress = () => {
-    setIsAgreed(!isAgreed)
-    setTheme(!isAgreed ? 'primary' : "secondary")
-    setIcon(!isAgreed ? 'checkmark-outline' : "close") 
-  }
+export default function AgreementSelector({ isAgreed, setIsAgreed }: { isAgreed: boolean; setIsAgreed: (value: boolean) => void }) {
   return (
-    <View style={styles.switchContainer}>
-      <Button 
-        onPress={onPress} 
-        label={words.close}  
-        hasIcon={true} 
-        icon={icon} 
-        theme={theme}
-      ></Button>      
-      <Text style={[commonStyles.label, {marginLeft: 12}]}>
-        {isAgreed ? words.agreed : words.notAgreed}
-      </Text>
+    <View style={styles.agreementContainer}>
+      <TouchableOpacity
+        style={[styles.agreementButton, isAgreed ? styles.inactiveAgreement : styles.activeAgreement]}
+        onPress={() => setIsAgreed(false)}
+      >
+        <Text style={[styles.agreementText, isAgreed ? styles.inactiveText : styles.activeText]}>
+          {words.notAgreed}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.agreementButton, isAgreed ? styles.activeAgreement : styles.inactiveAgreement]}
+        onPress={() => setIsAgreed(true)}
+      >
+        <Text style={[styles.agreementText, isAgreed ? styles.activeText : styles.inactiveText]}>
+          {words.agreed}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  switchContainer: {
-    height: 64,
+  agreementContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     borderRadius: 16,
+    backgroundColor: Colors.lightGrey,
+    padding: 4,
+    paddingVertical: 6,
     marginBottom: 16,
   },
-  switchButton: {
+  agreementButton: {
     flex: 1,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
-    borderWidth: 2,
+    borderRadius: 10,
+    marginHorizontal: 4,
+  },
+  activeAgreement: {
+    backgroundColor: Colors.deepGrey,
+  },
+  inactiveAgreement: {
+    backgroundColor: Colors.lightGrey,
+  },
+  agreementText: {
+    fontSize: Typography.fontSizes.s,
+    fontWeight: 'bold',
+  },
+  activeText: {
+    color: Colors.paleGrey,
+  },
+  inactiveText: {
+    color: Colors.mediumGrey,
   },
 });
