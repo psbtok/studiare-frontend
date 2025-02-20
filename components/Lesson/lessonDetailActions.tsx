@@ -143,11 +143,9 @@ function LessonDetailActions({ lesson, profile, setLesson }: LessonDetailActions
                         <View style={styles.buttonSmall}>
                             <Button label={words.reject} onPress={() => handleAction('cancel')} />
                         </View>
-                        {isTutor && (
-                            <View style={styles.buttonBig}>
-                                <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
-                            </View>
-                        )}
+                        <View style={styles.buttonBig}>
+                            <Button theme="primary" label={words.confirm} onPress={() => handleAction('confirm')} />
+                        </View>
                     </View>
                 );
             }
