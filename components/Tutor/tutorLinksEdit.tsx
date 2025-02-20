@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import commonStyles from '@/styles/CommonStyles';
 import words from '@/locales/ru';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,115 +11,77 @@ interface TutorLinksEditProps {
 }
 
 const TutorLinksEdit = ({ links, onUpdateLinks }: TutorLinksEditProps) => {
-  const [currentLink, setCurrentLink] = useState<string>('');
-  const [linksArray, setLinksArray] = useState<string[]>([]);
+  const [linksArray, setLinksArray] = useState<string[]>(new Array(5).fill(''));
+  const inputRefs = useRef<(TextInput | null)[]>([]);
 
   useEffect(() => {
-    const initialLinksArray = links ? links.split(', ').filter(link => link.trim() !== '') : [];
+    const initialLinksArray = links
+      ? links.split(', ').map(link => link.trim()).filter(link => link !== '').concat('').slice(0, 5)
+      : [''];
     setLinksArray(initialLinksArray);
-  }, [links]); 
+  }, [links]);
 
-  const handleAddLink = () => {
-    if (currentLink.trim()) {
-      if (linksArray.length >= 5) {
-        Alert.alert(words.fiveLinksMax, words.youCanAddFiveLinks); 
-        return;
-      }
-      
-      const updatedLinksArray = [...linksArray, currentLink.trim()];
-      setLinksArray(updatedLinksArray);
-      onUpdateLinks(updatedLinksArray.join(', '));
-      setCurrentLink(''); 
-    }
+  const handleChangeLink = (index: number, value: string) => {
+    const updatedLinksArray = [...linksArray];
+    updatedLinksArray[index] = value;
+    
+    const filteredLinks = updatedLinksArray.filter(link => link !== '');
+    const finalLinksArray = [...filteredLinks, ''];
+    
+    setLinksArray(finalLinksArray);
+    onUpdateLinks(finalLinksArray.join(', ').replace(/,\s*$/, '')); 
   };
 
   const handleRemoveLink = (index: number) => {
-    const updatedLinksArray = linksArray.filter((_, i) => i !== index);
-    setLinksArray(updatedLinksArray);
-    onUpdateLinks(updatedLinksArray.join(', '));
-  };
+    const updatedLinksArray = [...linksArray];
+    updatedLinksArray[index] = ''; 
 
-  const handleOpenLink = (link: string) => {
-    const formattedLink = link.startsWith('http') ? link : `https://${link}`;
-    Linking.openURL(formattedLink).catch((err) => console.error('Не удалось открыть URL', err));
+    const filteredLinks = updatedLinksArray.filter(link => link !== '');
+    const finalLinksArray = [...filteredLinks, ''];
+    
+    setLinksArray(finalLinksArray);
+    onUpdateLinks(finalLinksArray.join(', ').replace(/,\s*$/, '')); 
   };
 
   return (
     <View>
       <Text style={commonStyles.label}>{words.links}</Text>
 
-      <View style={styles.addLinkContainer}>
-        <TextInput
-          style={[commonStyles.input, styles.input]}
-          placeholderTextColor={Colors.mediumGrey}
-          placeholder={words.enterLink}
-          value={currentLink}
-          onChangeText={setCurrentLink}
-          maxLength={128}
-          onSubmitEditing={handleAddLink} 
-          returnKeyType="done"
-        />
-
-        <TouchableOpacity onPress={handleAddLink} style={styles.addButton}>
-          <AntDesign name="plus" size={36} color={Colors.deepGrey} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.linksList}>
-        {linksArray.map((link, index) => (
-          <View key={index} style={styles.linkItem}>
-            <TouchableOpacity onPress={() => handleOpenLink(link)} style={styles.linkButton}>
-              <Text
-                style={[commonStyles.label, styles.link]}
-                numberOfLines={1} 
-                ellipsizeMode="tail"
-              >
-                {link}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleRemoveLink(index)} style={styles.removeButton}>
-              <AntDesign name="minus" size={36} color={Colors.deepGrey} />
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
+      {linksArray.slice(0, 5).map((link, index) => (
+        <View key={index} style={styles.linkItem}>
+          <TextInput
+            ref={el => inputRefs.current[index] = el}
+            style={[commonStyles.input, styles.input]}
+            placeholderTextColor={Colors.mediumGrey}
+            placeholder={words.enterLink}
+            value={link}
+            onChangeText={value => handleChangeLink(index, value)}
+            maxLength={128}
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
+          />
+          <TouchableOpacity onPress={() => handleRemoveLink(index)} style={styles.removeButton}>
+            <AntDesign name="minus" size={36} color={Colors.alertRed} />
+          </TouchableOpacity>
+        </View>
+      ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  linksList: {
-    marginHorizontal: 8,
-  },
   linkItem: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
-  },
-  linkButton: {
-    flex: 1, 
   },
   removeButton: {
     marginLeft: 8,
+    marginBottom: 16
   },
   input: {
     flex: 1,
-  },
-  addLinkContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  addButton: {
-    marginLeft: 16,
-    paddingBottom: 16,
-  },
-  link: {
-    color: Colors.deepGrey,
-    textDecorationLine: 'underline',
-    flexShrink: 1,
   },
 });
 
