@@ -5,6 +5,7 @@ import { Lesson } from '@/models/models';
 import { Typography } from '@/styles/Typography';
 import CalendarLessonListModal from './calendarLessonListModal';
 import { subjectColors } from '@/styles/Colors';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 interface DayTileProps {
   dayNumber: number;
@@ -53,7 +54,7 @@ const CalendarDayTile = ({ dayNumber, isToday, lessons }: DayTileProps) => {
 const styles = StyleSheet.create({
   dayTile: {
     flex: 1,
-    height: 80,
+    height: responsiveHeight(9),
     backgroundColor: Colors.lightGrey,
     margin: 4,
     flexDirection: 'column',

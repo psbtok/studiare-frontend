@@ -11,6 +11,7 @@ import commonStyles from '@/styles/CommonStyles';
 import { getLessonListService } from '@/services/lessonService';
 import { Lesson } from '@/models/models';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 const CalendarScreen = () => {
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
   calendarRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: responsiveHeight(1),
   },
 });
 

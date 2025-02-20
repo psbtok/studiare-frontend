@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 interface EmptyTileProps {
   number: number;
@@ -18,7 +19,7 @@ const CalendarEmptyTile = ({ number }: EmptyTileProps) => {
 const styles = StyleSheet.create({
   dayTile: {
     flex: 1,
-    height: 80,
+    height: responsiveHeight(9),
     backgroundColor: Colors.lightGrey,
     margin: 4,
     flexDirection: 'row',
