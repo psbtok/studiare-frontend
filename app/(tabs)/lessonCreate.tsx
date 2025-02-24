@@ -12,6 +12,8 @@ import { validateLessonInput } from '@/validators/validators';
 import UserSearch from '@/components/General/Interactive/UserSearch';
 import { User, Subject } from '@/models/models'; 
 import SubjectSelectionModal from '../subject/subjectSelectionModal';
+import { useDispatch } from 'react-redux';
+import { setUpdateLesson } from '../store/store';
 
 export default function CreateLessonScreen() {
   const emptyUser = { id: '', first_name: '', last_name: '', email: '' }
@@ -29,6 +31,7 @@ export default function CreateLessonScreen() {
   const [price, setPrice] = useState(initialPrice);
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); 
+  const dispatch = useDispatch();
   
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -70,6 +73,7 @@ export default function CreateLessonScreen() {
         notes
       );
 
+      dispatch(setUpdateLesson(lesson));
       Alert.alert(
         words.success,
         words.lessonCreated,
@@ -77,7 +81,8 @@ export default function CreateLessonScreen() {
           {
             text: words.ok,
             onPress: () => {
-              router.replace({
+              router.navigate('/(tabs)');
+              router.navigate({
                 pathname: '/lesson/lessonDetail',
                 params: { lesson: JSON.stringify(lesson) }
               });

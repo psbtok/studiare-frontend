@@ -26,10 +26,12 @@ export default function LessonList() {
     if (updatedLesson) {
       const lessonIndex = lessons.findIndex((lesson) => lesson.id === updatedLesson.id);
       
+      const updatedLessons = [...lessons];
       if (lessonIndex !== -1) {
-        const updatedLessons = [...lessons];
         updatedLessons[lessonIndex] = updatedLesson;
         setLessons(updatedLessons);
+      } else {
+        setLessons([updatedLesson, ...updatedLessons]);
       }
     }
   }, [updatedLesson]);
