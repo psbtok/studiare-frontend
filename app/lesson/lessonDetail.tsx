@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, RefreshControl, ScrollView } from 'react-native';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
@@ -15,6 +15,8 @@ import commonStyles from '@/styles/CommonStyles';
 import { getLessonService } from '@/services/lessonService';
 import LessonDetailActions from '@/components/Lesson/lessonDetailActions';
 import { subjectColors } from '@/styles/Colors';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 export default function LessonDetailScreen() {
   const { lesson } = useLocalSearchParams();
@@ -26,8 +28,15 @@ export default function LessonDetailScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); 
   const [isTutor, setIsTutor] = useState(true);
-  const formattedTimeStart = format(new Date(parsedLesson.date_start), 'HH:mm', { locale: ru });
-  const formattedTimeEnd = format(new Date(parsedLesson.date_end), 'HH:mm', { locale: ru });
+  const updatedLesson = useSelector((state: RootState) => state.app.updatedLesson);
+
+  const formattedTimeStart = useMemo(() => {
+    return format(new Date(lessonData.date_start), 'HH:mm', { locale: ru });
+  }, [lessonData.date_start]);
+  
+  const formattedTimeEnd = useMemo(() => {
+    return format(new Date(lessonData.date_end), 'HH:mm', { locale: ru });
+  }, [lessonData.date_end]);
 
   const color =
     parsedLesson.subject.colorId && parsedLesson.subject.colorId < 10
@@ -53,6 +62,13 @@ export default function LessonDetailScreen() {
   }, []);
 
   useEffect(() => {
+      if (updatedLesson?.id === lessonData.id) {
+        setLessonData(updatedLesson)
+        setRefreshKey(prevKey => prevKey + 1)
+      }
+    }, [updatedLesson]);
+
+  useEffect(() => {
     if (profile && parsedLesson) {
       setIsTutor(parsedLesson.tutor?.tutor && profile?.tutor?.id && profile.tutor.id === parsedLesson.tutor.tutor.id);
     }
@@ -61,8 +77,9 @@ export default function LessonDetailScreen() {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      const updatedLesson = await getLessonService(parsedLesson.id); 
-      setLessonData(updatedLesson); 
+      const refreshedLesson = await getLessonService(parsedLesson.id); 
+      setLessonData(refreshedLesson); 
+      console.log('refreshed')
       setRefreshKey(prevKey => prevKey + 1); 
     } catch (error: {message: string}) {
       console.error('Error refreshing lesson details:', error.message);
@@ -71,8 +88,8 @@ export default function LessonDetailScreen() {
     }
   };
 
-  const handleActionDone = async (updatedLesson: Lesson) => {
-    setLessonData(updatedLesson); 
+  const handleActionDone = async (refreshedLesson: Lesson) => {
+    setLessonData(refreshedLesson); 
     setRefreshKey(prevKey => prevKey + 1);
   }
 
@@ -92,18 +109,16 @@ export default function LessonDetailScreen() {
               {`${format(new Date(lessonData?.date_start || ''), 'd MMMM', { locale: ru })}`} {formattedTimeStart} - {formattedTimeEnd}
             </Text>
             {isTutor ? (
-              parsedLesson.participants.length > 1 ? (
-                <PersonBadge key={refreshKey} name={words.groupLesson} /> 
+              lessonData.participants.length > 1 ? (
+                <PersonBadge name={words.groupLesson} />
               ) : (
                 <PersonBadge
-                  key={refreshKey} 
-                  name={`${words.learner}: ${parsedLesson.participants[0]?.profile?.user?.first_name || ''} ${parsedLesson.participants[0]?.profile?.user?.last_name || ''}`}
+                  name={`${words.learner}: ${lessonData.participants[0]?.profile?.user?.first_name || ''} ${lessonData.participants[0]?.profile?.user?.last_name || ''}`}
                 />
               )
             ) : (
               <PersonBadge
-                key={refreshKey} 
-                name={`${words.tutor}: ${parsedLesson?.tutor?.user?.first_name || ''} ${parsedLesson?.tutor?.user?.last_name || ''}`}
+                name={`${words.tutor}: ${lessonData?.tutor?.user?.first_name || ''} ${lessonData?.tutor?.user?.last_name || ''}`}
               />
             )}
           </View>

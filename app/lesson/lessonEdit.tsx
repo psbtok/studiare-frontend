@@ -80,10 +80,7 @@ export default function LessonEditScreen() {
           {
             text: words.ok,
             onPress: () => {
-              router.replace({
-                pathname: '/lesson/lessonDetail',
-                params: { lesson: JSON.stringify(updatedLesson) },
-              });
+              router.back()
             }
           },
         ]
