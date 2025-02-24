@@ -19,6 +19,7 @@
         "foregroundImage": "./assets/icon.png"
       },
       "package": "com.petosbratok.studiare_frontend",
+      "googleServicesFile": "./android/app/google-services.json",
       "permissions": [
         "NOTIFICATIONS" 
       ]
@@ -43,8 +44,8 @@
       "router": {
         "origin": false
       },
-      // "API_BASE_URL": "https://petosbratok.pythonanywhere.com/api",
-      "API_BASE_URL": "http://192.168.0.105:8000/api",
+      "API_BASE_URL": "https://petosbratok.pythonanywhere.com/api",
+      // "API_BASE_URL": "http://192.168.0.105:8000/api",
       "eas": {
         "projectId": "80d44f41-edbe-4c09-997b-5d785c8f5204"
       }

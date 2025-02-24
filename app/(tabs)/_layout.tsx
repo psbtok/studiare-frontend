@@ -6,8 +6,11 @@ import Header from '@/components/General/Header/Header';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { usePushNotifications } from '@/services/notificationService';
 
 export default function TabLayout() {
+  // const {expoPushToken, notification} = usePushNotifications()
+  // const data = JSON.stringify(notification, undefined, 2)
   const [isTutor, setIsTutor] = useState(false);
 
   useEffect(() => {
