@@ -13,6 +13,7 @@ import { Lesson, User, Subject } from '@/models/models';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import UserSearch from '@/components/General/Interactive/UserSearch';
 import SubjectSelectionModal from '../subject/subjectSelectionModal';
+import { useDispatch } from 'react-redux';
 
 export default function LessonEditScreen() {
   const emptyUser = { id: '', first_name: '', last_name: '', email: '' }
@@ -46,6 +47,7 @@ export default function LessonEditScreen() {
 
   const scrollViewRef = useRef<ScrollView>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
   
   const handleModifyLesson = async () => {
     const errors = validateLessonInput(subject, participants, dateStart, dateEnd, price);
@@ -69,7 +71,7 @@ export default function LessonEditScreen() {
       lesson.notes = notes;
       lesson.participants = participants; 
 
-      const updatedLesson: Lesson = await modifyLessonService({...lesson});
+      const updatedLesson: Lesson = await modifyLessonService({...lesson}, dispatch);
 
       Alert.alert(
         words.success,

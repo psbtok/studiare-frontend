@@ -6,7 +6,7 @@ export interface Subject {
   user: User
 }
 
-export interface lessonParticipant {
+export interface LessonParticipant {
   profile: Profile,
   status: 'cancelled' | 'conducted' | 'confirmed' | 'awaiting_confirmation',
   updated_at: string,
@@ -16,7 +16,7 @@ export interface lessonParticipant {
 export interface Lesson {
   id: number;                
   tutor: Profile;             
-  participants: lessonParticipant[];           
+  participants: LessonParticipant[];           
   subject: Subject;           
   date_start: string;              
   date_end: string;          

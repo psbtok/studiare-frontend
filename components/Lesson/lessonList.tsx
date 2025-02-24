@@ -9,6 +9,8 @@ import { Typography } from '@/styles/Typography';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 export default function LessonList() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -17,6 +19,20 @@ export default function LessonList() {
   const [parsedProfile, setParsedProfile] = useState<Profile | object>({})
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+
+  const updatedLesson = useSelector((state: RootState) => state.app.updatedLesson);
+
+  useEffect(() => {
+    if (updatedLesson) {
+      const lessonIndex = lessons.findIndex((lesson) => lesson.id === updatedLesson.id);
+      
+      if (lessonIndex !== -1) {
+        const updatedLessons = [...lessons];
+        updatedLessons[lessonIndex] = updatedLesson;
+        setLessons(updatedLessons);
+      }
+    }
+  }, [updatedLesson]);
 
   const fetchLessons = async (currentOffset: number = 0, isRefresh=false) => {
     if ((loading || !hasMore) && !isRefresh) return;
@@ -136,7 +152,7 @@ export default function LessonList() {
       />
     );
   };
-  
+
   if (!lessons.length && !loading) {
     return (
       <View style={styles.emptyContainer}>
@@ -154,7 +170,7 @@ export default function LessonList() {
         </View>
       )
     }
-  
+
 
   return renderGroupedLessons();
 }
@@ -163,7 +179,7 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    flexGrow: 1, // Важно для отображения в пустом состоянии
+    flexGrow: 1,
   },
   groupContainer: {
     marginBottom: 16,

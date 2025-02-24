@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from "@/styles/Colors";
 import commonStyles from "@/styles/CommonStyles";
-import { lessonParticipant } from '@/models/models';
+import { LessonParticipant } from '@/models/models';
 import words from '@/locales/ru';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface ParticipantStatusListProps {
-    participants: lessonParticipant[];
+    participants: LessonParticipant[];
 }
 
 function LessonParticipantStatusList({ participants }: ParticipantStatusListProps) {
@@ -18,7 +18,7 @@ function LessonParticipantStatusList({ participants }: ParticipantStatusListProp
         }
         acc[status].push(participant);
         return acc;
-    }, {} as Record<string, lessonParticipant[]>);
+    }, {} as Record<string, LessonParticipant[]>);
 
     const cancelledCompletely = participants.every(selected => selected.status === "cancelled");
     if (cancelledCompletely) {

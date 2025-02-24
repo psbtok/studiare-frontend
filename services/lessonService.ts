@@ -1,7 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import words from '@/locales/ru';
-import { Subject, Lesson, LessonResponse, Profile, User } from '@/models/models';
+import { 
+  Subject, 
+  Lesson, 
+  LessonResponse, 
+  Profile, 
+  User
+} from '@/models/models';
+import { AppDispatch, setUpdateLesson } from '@/app/store/store';
 
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
@@ -116,22 +123,26 @@ export const updateLessonStatusService = async (
   return await response.json();
 };
 
-export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<Lesson> => {
+export const modifyLessonService = async (
+  updatedLesson: Lesson | any,
+  dispatch: AppDispatch
+): Promise<Lesson> => {
   const token = await AsyncStorage.getItem('login-token');
   if (!token) {
     throw new Error(words.notAuthenticated);
   }
 
-  updatedLesson.subject = updatedLesson.subject.id
-  updatedLesson.participants = updatedLesson.participants.map(participant => participant.id)
+  updatedLesson.subject = updatedLesson.subject.id;
+  updatedLesson.participants = updatedLesson.participants.map((participant: User) => participant.id);
+
   try {
     const response = await fetch(`${API_BASE_URL}/lessons/${updatedLesson.id}/`, {
-      method: 'PUT', 
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Token ${token}`,
+        Authorization: `Token ${token}`,
       },
-      body: JSON.stringify(updatedLesson), 
+      body: JSON.stringify(updatedLesson),
     });
 
     if (!response.ok) {
@@ -140,6 +151,9 @@ export const modifyLessonService = async (updatedLesson: Lesson | any): Promise<
     }
 
     const data: Lesson = await response.json();
+
+    dispatch(setUpdateLesson(data));
+
     return data;
   } catch (error: any) {
     console.error('Modify lesson error:', error.message);
