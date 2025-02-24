@@ -22,17 +22,22 @@ export default function LessonList() {
 
   const updatedLesson = useSelector((state: RootState) => state.app.updatedLesson);
 
+  const insertAndSortLessons = (lessons: Lesson[], newLesson: Lesson) => {
+    const lessonIndex = lessons.findIndex((lesson) => lesson.id === newLesson.id);
+  
+    let updatedLessons = [...lessons];
+    if (lessonIndex !== -1) {
+      updatedLessons[lessonIndex] = newLesson;
+    } else {
+      updatedLessons.push(newLesson);
+    }
+  
+    return updatedLessons.sort((a, b) => new Date(a.date_end).getTime() - new Date(b.date_end).getTime());
+  };
+  
   useEffect(() => {
     if (updatedLesson) {
-      const lessonIndex = lessons.findIndex((lesson) => lesson.id === updatedLesson.id);
-      
-      const updatedLessons = [...lessons];
-      if (lessonIndex !== -1) {
-        updatedLessons[lessonIndex] = updatedLesson;
-        setLessons(updatedLessons);
-      } else {
-        setLessons([updatedLesson, ...updatedLessons]);
-      }
+      setLessons((prevLessons) => insertAndSortLessons(prevLessons, updatedLesson));
     }
   }, [updatedLesson]);
 
