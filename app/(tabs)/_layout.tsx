@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Header from '@/components/General/Header/Header';
 import { Colors } from '@/styles/Colors';
 import words from '@/locales/ru';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { usePushNotifications } from '@/services/notificationService';
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
-export default function TabLayout() {
-  // const {expoPushToken, notification} = usePushNotifications()
-  // const data = JSON.stringify(notification, undefined, 2)
+function TabLayoutComponent() {
   const [isTutor, setIsTutor] = useState(false);
 
   useEffect(() => {
@@ -31,74 +30,45 @@ export default function TabLayout() {
   );
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors.darkBlue,
-        tabBarStyle: {
-          backgroundColor: Colors.paleGrey,
-          height: 56,
-          width: isTutor ? '100%' : '167%',
-          paddingLeft: isTutor ? 0 : 16,
-          paddingRight: isTutor ? 0 : 16
-        },
-        tabBarShowLabel: false,
-        header: ({ route }) => {
-          const titles: Record<string, string> = {
-            index: words.lessonList,
-            lessonCreate: words.lessonCreation,
-            profile: words.profile,
-            calendar: words.calendar,
-            subject: words.subject
-          };
-          const showLogoutButton = route.name === 'profile';
-          const showAddSubject = route.name === 'subject';
-          return (
-            <Header
-              title={titles[route.name]}
-              showLogoutButton={showLogoutButton}
-              showAddSubject={showAddSubject}
-            />
-          );
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: words.exercises,
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'list' : 'list-outline'}
-              color={color}
-              size={28}
-            />
-          ),
-          tabBarButton: (props) => <CustomTabBarButton {...props} />,
+    <View style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors.darkBlue,
+          tabBarStyle: {
+            backgroundColor: Colors.paleGrey,
+            height: 56,
+            width: isTutor ? '100%' : '167%',
+            paddingLeft: isTutor ? 0 : 16,
+            paddingRight: isTutor ? 0 : 16
+          },
+          tabBarShowLabel: false,
+          header: ({ route }) => {
+            const titles: Record<string, string> = {
+              index: words.lessonList,
+              lessonCreate: words.lessonCreation,
+              profile: words.profile,
+              calendar: words.calendar,
+              subject: words.subject
+            };
+            const showLogoutButton = route.name === 'profile';
+            const showAddSubject = route.name === 'subject';
+            return (
+              <Header
+                title={titles[route.name]}
+                showLogoutButton={showLogoutButton}
+                showAddSubject={showAddSubject}
+              />
+            );
+          },
         }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: words.calendar,
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'calendar' : 'calendar-outline'}
-              color={color}
-              size={28}
-            />
-          ),
-          tabBarButton: (props) => <CustomTabBarButton {...props} />,
-        }}
-      />
-      
-      {isTutor && (
+      >
         <Tabs.Screen
-          name="subject"
+          name="index"
           options={{
-            title: words.subject,
+            title: words.exercises,
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
-                name={focused ? 'book' : 'book-outline'}
+                name={focused ? 'list' : 'list-outline'}
                 color={color}
                 size={28}
               />
@@ -106,16 +76,13 @@ export default function TabLayout() {
             tabBarButton: (props) => <CustomTabBarButton {...props} />,
           }}
         />
-      )}
-
-    {isTutor && (
         <Tabs.Screen
-          name="lessonCreate"
+          name="calendar"
           options={{
-            title: words.createLesson,
+            title: words.calendar,
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
-                name={focused ? 'add-circle' : 'add-circle-outline'}
+                name={focused ? 'calendar' : 'calendar-outline'}
                 color={color}
                 size={28}
               />
@@ -123,23 +90,65 @@ export default function TabLayout() {
             tabBarButton: (props) => <CustomTabBarButton {...props} />,
           }}
         />
-      )}
+        
+        {isTutor && (
+          <Tabs.Screen
+            name="subject"
+            options={{
+              title: words.subject,
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons
+                  name={focused ? 'book' : 'book-outline'}
+                  color={color}
+                  size={28}
+                />
+              ),
+              tabBarButton: (props) => <CustomTabBarButton {...props} />,
+            }}
+          />
+        )}
 
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: words.profile,
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'person' : 'person-outline'}
-              color={color}
-              size={28}
-            />
-          ),
-          tabBarButton: (props) => <CustomTabBarButton {...props} />,
-        }}
-      />
-    </Tabs>
+        {isTutor && (
+          <Tabs.Screen
+            name="lessonCreate"
+            options={{
+              title: words.createLesson,
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons
+                  name={focused ? 'add-circle' : 'add-circle-outline'}
+                  color={color}
+                  size={28}
+                />
+              ),
+              tabBarButton: (props) => <CustomTabBarButton {...props} />,
+            }}
+          />
+        )}
+
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: words.profile,
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? 'person' : 'person-outline'}
+                color={color}
+                size={28}
+              />
+            ),
+            tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          }}
+        />
+      </Tabs>
+    </View>
+  );
+}
+
+export default function TabLayout() {
+  return (
+    <Provider store={store}>
+      <TabLayoutComponent />
+    </Provider>
   );
 }
 

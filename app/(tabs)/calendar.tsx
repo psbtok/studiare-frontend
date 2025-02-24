@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, Alert, TouchableOpacity, RefreshControl, ScrollView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/styles/Colors';
 import { Typography } from '@/styles/Typography';
@@ -12,6 +12,8 @@ import { getLessonListService } from '@/services/lessonService';
 import { Lesson } from '@/models/models';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 const CalendarScreen = () => {
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
@@ -23,6 +25,23 @@ const CalendarScreen = () => {
   const [showMonthPicker, setShowMonthPicker] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const today = new Date();
+  const updatedLesson = useSelector((state: RootState) => state.app.updatedLesson);
+
+  useEffect(() => {
+    if (updatedLesson) {
+      setLessons((prevLessons) => {
+        const lessonIndex = prevLessons.findIndex((lesson) => lesson.id === updatedLesson.id);
+
+        if (lessonIndex !== -1) {
+          const updatedLessons = [...prevLessons];
+          updatedLessons[lessonIndex] = updatedLesson;
+          return updatedLessons;
+        } else {
+          return [updatedLesson, ...prevLessons];
+        }
+      });
+    }
+  }, [updatedLesson]);
 
   useEffect(() => {
     const calculateDaysInMonth = () => {
@@ -184,10 +203,13 @@ const CalendarScreen = () => {
             testID="monthPicker"
             value={new Date(currentYear, currentMonth, 1)}
             mode="date"
-            display="default"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleMonthPickerChange}
+            minimumDate={new Date(2000, 0, 1)} 
+            maximumDate={new Date(2100, 11, 31)}
           />
         )}
+
 
         <View style={styles.calendarContainer}>
           {rows.map((row, rowIndex) => (
