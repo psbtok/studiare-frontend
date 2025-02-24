@@ -28,20 +28,26 @@ export default function LessonDetailScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); 
   const [isTutor, setIsTutor] = useState(true);
+  const [color, setColor] = useState(
+    parsedLesson.subject.colorId && parsedLesson.subject.colorId < 10
+      ? subjectColors[parsedLesson.subject.colorId - 1]
+      : subjectColors[0]
+  );
   const updatedLesson = useSelector((state: RootState) => state.app.updatedLesson);
 
   const formattedTimeStart = useMemo(() => {
     return format(new Date(lessonData.date_start), 'HH:mm', { locale: ru });
   }, [lessonData.date_start]);
-  
+
   const formattedTimeEnd = useMemo(() => {
     return format(new Date(lessonData.date_end), 'HH:mm', { locale: ru });
   }, [lessonData.date_end]);
 
-  const color =
-    parsedLesson.subject.colorId && parsedLesson.subject.colorId < 10
-      ? subjectColors[parsedLesson.subject.colorId - 1]
+  const getLessonColor = (lesson: Lesson) => {
+    return lesson.subject.colorId && lesson.subject.colorId < 10
+      ? subjectColors[lesson.subject.colorId - 1]
       : subjectColors[0];
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -62,11 +68,12 @@ export default function LessonDetailScreen() {
   }, []);
 
   useEffect(() => {
-      if (updatedLesson?.id === lessonData.id) {
-        setLessonData(updatedLesson)
-        setRefreshKey(prevKey => prevKey + 1)
-      }
-    }, [updatedLesson]);
+    if (updatedLesson?.id === lessonData.id) {
+      setLessonData(updatedLesson);
+      setColor(getLessonColor(updatedLesson));
+      setRefreshKey((prevKey) => prevKey + 1);
+    }
+  }, [updatedLesson, lessonData.id]);
 
   useEffect(() => {
     if (profile && parsedLesson) {
@@ -79,8 +86,8 @@ export default function LessonDetailScreen() {
     try {
       const refreshedLesson = await getLessonService(parsedLesson.id); 
       setLessonData(refreshedLesson); 
-      console.log('refreshed')
-      setRefreshKey(prevKey => prevKey + 1); 
+      setColor(getLessonColor(refreshedLesson));
+      setRefreshKey((prevKey) => prevKey + 1); 
     } catch (error: {message: string}) {
       console.error('Error refreshing lesson details:', error.message);
     } finally {
@@ -90,8 +97,10 @@ export default function LessonDetailScreen() {
 
   const handleActionDone = async (refreshedLesson: Lesson) => {
     setLessonData(refreshedLesson); 
-    setRefreshKey(prevKey => prevKey + 1);
-  }
+    setColor(getLessonColor(refreshedLesson));
+    setRefreshKey((prevKey) => prevKey + 1);
+  };
+
 
   return (
     <View style={styles.container}>
